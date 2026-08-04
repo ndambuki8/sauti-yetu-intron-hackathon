@@ -1,0 +1,4 @@
+filename,language_pair,domain,accent_country,device_type,noise_condition,reference_transcript
+sample_sw_en_fever.wav,Swahili-English,healthcare,Kenya,smartphone,quiet indoor,"Nina homa kali tangu jana na headache mbaya sana, nimekunywa panadol lakini fever haijashuka"
+sample_ha_en_chest.wav,Hausa-English,healthcare,Nigeria,smartphone,clinic background noise,"Ina jin chest pain sosai, kuma breathing yana da wahala tun da safe"
+sample_pcm_stomach.wav,Pidgin-English,healthcare,Nigeria,laptop mic,quiet indoor,"My belle dey pain me since morning, I don vomit two times and I no fit chop anything"

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice Triage Hint</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Voice Triage Hint</h1>
+      <p class="subtitle">
+        The patient speaks in their own language (code-switching is fine).
+        The system transcribes with Intron Sahara, then takes a triage action:
+        topic, urgency, department routing, intake card, and questions to ask.
+      </p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="triage">Triage</button>
+      <button class="tab" data-tab="benchmark">Model Benchmark</button>
+    </nav>
+
+    <!-- ======================= TRIAGE ======================= -->
+    <section id="tab-triage" class="tab-panel">
+      <div class="controls">
+        <label for="triage-language">Patient language</label>
+        <select id="triage-language"></select>
+
+        <div class="audio-inputs">
+          <button id="record-btn" class="btn">Start recording</button>
+          <span class="or">or</span>
+          <input type="file" id="triage-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.flac" />
+        </div>
+        <p class="hint">Max 120 seconds per clip (Sahara sync limit).</p>
+        <audio id="triage-preview" controls hidden></audio>
+        <button id="triage-submit" class="btn primary" disabled>Run triage</button>
+      </div>
+
+      <div id="triage-status" class="status" hidden></div>
+
+      <div id="triage-result" hidden>
+        <div class="card urgency-card">
+          <span id="urgency-badge" class="badge"></span>
+          <div>
+            <h2 id="topic"></h2>
+            <p id="department" class="department"></p>
+            <p id="other-topics" class="muted"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Intake card</h3>
+          <dl id="intake-card"></dl>
+        </div>
+
+        <div class="card">
+          <h3>Clarifying questions for the nurse</h3>
+          <ul id="questions"></ul>
+        </div>
+
+        <div class="card">
+          <h3>What the patient said</h3>
+          <p class="label">Transcript (patient language)</p>
+          <p id="transcript" class="transcript"></p>
+          <p class="label">Summary (English)</p>
+          <p id="summary" class="transcript"></p>
+          <div id="suggestions-block" hidden>
+            <p class="label">Sahara clinical suggestions</p>
+            <p id="suggestions" class="transcript"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BENCHMARK ====================== -->
+    <section id="tab-benchmark" class="tab-panel" hidden>
+      <p class="subtitle">
+        Compare code-switched transcription across three models:
+        Intron Sahara, OpenAI Whisper (local), and Meta MMS (local).
+        Provide the audio and the human reference transcript.
+      </p>
+      <div class="controls">
+        <label for="bench-language">Language of the clip</label>
+        <select id="bench-language"></select>
+
+        <label for="bench-file">Audio clip</label>
+        <input type="file" id="bench-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.flac" />
+
+        <label for="bench-reference">Reference transcript (ground truth)</label>
+        <textarea id="bench-reference" rows="3"
+          placeholder="Type the exact words spoken in the clip, code-switching included..."></textarea>
+
+        <button id="bench-submit" class="btn primary" disabled>Run benchmark</button>
+        <p class="hint">First run downloads Whisper/MMS weights and is slow.</p>
+      </div>
+
+      <div id="bench-status" class="status" hidden></div>
+
+      <div id="bench-result" hidden>
+        <p id="bench-best" class="best"></p>
+        <table id="bench-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>WER</th>
+              <th>CER</th>
+              <th>Latency (s)</th>
+              <th>Transcript</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      MLC (Africa) &times; Intron Agentic Voice AI Challenge &mdash; healthcare vertical.
+      Not a medical device; hints only, clinical judgement always required.
+    </footer>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

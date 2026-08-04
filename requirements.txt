@@ -1,0 +1,17 @@
+# Core app
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+requests>=2.32
+python-dotenv>=1.0
+
+# Benchmark metrics
+jiwer>=3.0
+
+# Local ASR models (benchmark). Heavy; installed lazily-used at runtime.
+# ffmpeg must be installed on the system (sudo apt install ffmpeg).
+openai-whisper>=20240930
+torch>=2.2
+transformers>=4.44
+soundfile>=0.12
+accelerate>=0.30
