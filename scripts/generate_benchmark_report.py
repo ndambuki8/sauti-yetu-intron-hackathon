@@ -150,6 +150,12 @@ def make_charts(overall: dict, by_pair: dict) -> list[Path]:
     return paths
 
 
+def _latin1(text: str) -> str:
+    """Helvetica (core font) only supports latin-1; replace anything else so
+    transcripts with curly quotes/diacritics can't crash the render."""
+    return str(text).encode("latin-1", "replace").decode("latin-1")
+
+
 class ReportPDF(FPDF):
     def header(self):
         self.set_font("Helvetica", "B", 9)
@@ -164,31 +170,42 @@ class ReportPDF(FPDF):
         self.set_text_color(130)
         self.cell(0, 6, f"Page {self.page_no()}", align="C")
 
+    def para(self, text):
+        """Full-width paragraph. fpdf2's multi_cell leaves the cursor at the
+        RIGHT margin by default, which gives the next full-width cell zero
+        width and raises "Not enough horizontal space"; always returning the
+        cursor to the left margin prevents that."""
+        self.set_x(self.l_margin)
+        self.multi_cell(0, 5, _latin1(text), new_x="LMARGIN", new_y="NEXT")
+
     def h1(self, text):
         self.set_font("Helvetica", "B", 16)
-        self.multi_cell(0, 8, text)
+        self.set_x(self.l_margin)
+        self.multi_cell(0, 8, _latin1(text), new_x="LMARGIN", new_y="NEXT")
         self.ln(2)
 
     def h2(self, text):
         self.set_font("Helvetica", "B", 12)
-        self.multi_cell(0, 7, text)
+        self.set_x(self.l_margin)
+        self.multi_cell(0, 7, _latin1(text), new_x="LMARGIN", new_y="NEXT")
         self.ln(1)
 
     def body(self, text):
         self.set_font("Helvetica", "", 10)
-        self.multi_cell(0, 5.5, text)
+        self.set_x(self.l_margin)
+        self.multi_cell(0, 5.5, _latin1(text), new_x="LMARGIN", new_y="NEXT")
         self.ln(2)
 
     def table(self, headers, rows, col_widths):
         self.set_font("Helvetica", "B", 9)
         for h, w in zip(headers, col_widths):
-            self.cell(w, 7, h, border=1)
+            self.cell(w, 7, _latin1(h), border=1)
         self.ln()
         self.set_font("Helvetica", "", 9)
         for row in rows:
             # crude row-height handling: truncate long cells
             for value, w in zip(row, col_widths):
-                text = str(value)
+                text = _latin1(value)
                 max_chars = int(w / 1.9)
                 if len(text) > max_chars:
                     text = text[: max_chars - 3] + "..."
@@ -269,13 +286,12 @@ def build_pdf(results: list[dict], overall: dict, by_pair: dict, by_noise: dict,
     for clip in results:
         meta = clip["metadata"]
         pdf.set_font("Helvetica", "B", 10)
-        pdf.multi_cell(
-            0, 5.5,
+        pdf.para(
             f"{meta['filename']} | {meta['language_pair']} | {meta['accent_country']} | "
-            f"{meta['device_type']} | {meta['noise_condition']}",
+            f"{meta['device_type']} | {meta['noise_condition']}"
         )
         pdf.set_font("Helvetica", "", 9)
-        pdf.multi_cell(0, 5, f"Reference: {meta['reference_transcript']}")
+        pdf.para(f"Reference: {meta['reference_transcript']}")
         for r in clip["benchmark"]["results"]:
             if r["error"]:
                 line = f"{r['model']}: ERROR - {r['error']}"
@@ -284,7 +300,7 @@ def build_pdf(results: list[dict], overall: dict, by_pair: dict, by_noise: dict,
                     f"{r['model']} (WER {fmt(r['wer'])}, CER {fmt(r['cer'])}, "
                     f"{fmt(r['latency_seconds'])}s): {r['transcript']}"
                 )
-            pdf.multi_cell(0, 5, line)
+            pdf.para(line)
         pdf.ln(3)
 
     pdf.h2("6. Limitations and bias notes")
@@ -306,6 +322,25 @@ def build_pdf(results: list[dict], overall: dict, by_pair: dict, by_noise: dict,
 
 
 def main():
+    results_path = REPORTS_DIR / "results.json"
+
+    if "--rebuild-only" in sys.argv:
+        # Rebuild charts + PDF from a previous run without re-running models.
+        if not results_path.exists():
+            print(f"No saved results at {results_path}; run without --rebuild-only first.")
+            sys.exit(1)
+        with open(results_path, encoding="utf-8") as fh:
+            saved = json.load(fh)
+        results = saved["clips"]
+        overall = saved["overall"]
+        by_pair = saved["by_language_pair"]
+        by_noise = saved["by_noise_condition"]
+        print(f"Rebuilding report from {results_path} ({len(results)} clips)...")
+        charts = make_charts(overall, by_pair)
+        pdf_path = build_pdf(results, overall, by_pair, by_noise, charts)
+        print(f"Report written to {pdf_path}")
+        return
+
     rows = load_metadata()
     if not rows:
         print(
