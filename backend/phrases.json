@@ -1,0 +1,29 @@
+{
+  "_comment": "Quick-reply phrase bank. 'phrases' holds the English source lines. 'translations' is a cache keyed by language code then English phrase; entries are auto-filled by NLLB on first use and can be manually corrected/vetted by a native speaker - manual edits are never overwritten.",
+  "phrases": [
+    "Please wait, a doctor will see you shortly.",
+    "Where exactly does it hurt?",
+    "How long have you been feeling this way?",
+    "Have you taken any medicine for this already?",
+    "We need to take a blood sample for testing.",
+    "We need to check your temperature and blood pressure.",
+    "Do you have any allergies or ongoing illnesses?",
+    "Please follow me to the examination room.",
+    "You are safe here, we will take care of you.",
+    "Do you have someone with you who can help translate?"
+  ],
+  "translations": {
+    "sw": {
+      "Please wait, a doctor will see you shortly.": "Tafadhali subiri, daktari atakuona hivi karibuni.",
+      "Where exactly does it hurt?": "Ni wapi hasa ambapo huumiza?",
+      "How long have you been feeling this way?": "Umejisikia hivyo kwa muda gani?",
+      "Have you taken any medicine for this already?": "Je, tayari umepata dawa yoyote ya kuondoa ugonjwa huo?",
+      "We need to take a blood sample for testing.": "Tunahitaji kuchukua sampuli ya damu kwa ajili ya mtihani.",
+      "We need to check your temperature and blood pressure.": "Tunahitaji kuangalia joto na shinikizo lako la damu.",
+      "Do you have any allergies or ongoing illnesses?": "Je, una allergies au ugonjwa unaoendelea?",
+      "Please follow me to the examination room.": "Tafadhali nifuate hadi kwenye chumba cha uchunguzi.",
+      "You are safe here, we will take care of you.": "Wewe ni salama hapa, sisi kutunza wewe.",
+      "Do you have someone with you who can help translate?": "Je, una mtu yeyote pamoja nawe ambaye anaweza kusaidia kutafsiri?"
+    }
+  }
+}
