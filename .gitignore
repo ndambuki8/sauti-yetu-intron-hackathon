@@ -175,3 +175,7 @@ run_ids.txt
 # Virtual environments
 *_venv
 *_myenv
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
