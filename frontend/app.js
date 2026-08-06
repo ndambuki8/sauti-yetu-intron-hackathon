@@ -29,6 +29,14 @@ async function loadLanguages() {
 }
 loadLanguages();
 
+// ---------- Consent gate ----------
+$("consent-check").addEventListener("change", (e) => {
+  const consented = e.target.checked;
+  $("record-btn").disabled = !consented;
+  $("triage-file").disabled = !consented;
+  if (!consented) $("triage-submit").disabled = true;
+});
+
 // ---------- Audio capture (record or upload) ----------
 let triageBlob = null;
 let triageFilename = "recording.webm";
@@ -101,12 +109,143 @@ $("triage-submit").addEventListener("click", async () => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
     renderTriage(data);
+    addPatientTurn(data);
+    loadQuickReplies();
     showStatus("triage-status", "");
   } catch (err) {
     showStatus("triage-status", `Triage failed: ${err.message}`, true);
   } finally {
     $("triage-submit").disabled = false;
   }
+});
+
+// ---------- Conversation thread ----------
+function addPatientTurn(data) {
+  const item = document.createElement("div");
+  item.className = "turn patient";
+  const who = document.createElement("p");
+  who.className = "who";
+  who.textContent = "Patient";
+  const said = document.createElement("p");
+  said.textContent = data.transcript || "(no transcript)";
+  item.append(who, said);
+  if (data.summary) {
+    const sum = document.createElement("p");
+    sum.className = "muted";
+    sum.textContent = `English summary: ${data.summary}`;
+    item.appendChild(sum);
+  }
+  appendTurn(item);
+}
+
+function addWorkerTurn(data) {
+  const item = document.createElement("div");
+  item.className = "turn worker";
+  const who = document.createElement("p");
+  who.className = "who";
+  who.textContent = "Health worker";
+  const original = document.createElement("p");
+  original.textContent = data.original_text;
+  item.append(who, original);
+  if (data.translated_text && data.translated_text !== data.original_text) {
+    const translated = document.createElement("p");
+    translated.className = "muted";
+    translated.textContent = `Spoken to patient: ${data.translated_text}`;
+    item.appendChild(translated);
+  }
+  if (data.english_fallback) {
+    const note = document.createElement("p");
+    note.className = "muted";
+    note.textContent =
+      "No native voice for this language yet - audio is spoken in English; translated text shown above.";
+    item.appendChild(note);
+  }
+  const audio = document.createElement("audio");
+  audio.controls = true;
+  audio.src = `data:audio/${data.audio_format};base64,${data.audio_base64}`;
+  item.appendChild(audio);
+  appendTurn(item);
+  audio.play().catch(() => {}); // autoplay may be blocked; controls remain
+}
+
+function appendTurn(item) {
+  $("thread-items").appendChild(item);
+  $("conversation").hidden = false;
+  item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+// ---------- Quick replies + speak ----------
+let quickRepliesLoadedFor = null;
+
+$("triage-language").addEventListener("change", () => {
+  quickRepliesLoadedFor = null;
+});
+
+async function loadQuickReplies() {
+  const lang = $("triage-language").value;
+  if (quickRepliesLoadedFor === lang) return;
+  const container = $("quick-replies");
+  container.innerHTML = "<span class='muted'>Loading quick replies...</span>";
+  try {
+    const res = await fetch(`/api/phrases?language_code=${encodeURIComponent(lang)}`);
+    const data = await res.json();
+    container.innerHTML = "";
+    data.phrases.forEach((p) => {
+      const btn = document.createElement("button");
+      btn.className = "btn chip";
+      btn.textContent = p.english;
+      if (p.translated && p.translated !== p.english) btn.title = p.translated;
+      btn.addEventListener("click", () => speakToPatient(p.english));
+      container.appendChild(btn);
+    });
+    quickRepliesLoadedFor = lang;
+  } catch (err) {
+    container.innerHTML = "";
+    showStatus("reply-status", `Could not load quick replies: ${err.message}`, true);
+  }
+}
+
+$("speak-btn").addEventListener("click", () => {
+  const text = $("reply-text").value.trim();
+  if (!text) {
+    showStatus("reply-status", "Type a reply or pick a quick phrase.", true);
+    return;
+  }
+  speakToPatient(text);
+});
+
+async function speakToPatient(text) {
+  showStatus("reply-status", "Translating and generating speech...");
+  $("speak-btn").disabled = true;
+  try {
+    const res = await fetch("/api/respond", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        language_code: $("triage-language").value,
+        voice_gender: $("voice-gender").value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+    addWorkerTurn(data);
+    $("reply-text").value = "";
+    showStatus("reply-status", "");
+  } catch (err) {
+    showStatus("reply-status", `Reply failed: ${err.message}`, true);
+  } finally {
+    $("speak-btn").disabled = false;
+  }
+}
+
+// Loop back: scroll up to the recorder for the patient's next turn.
+$("patient-again-btn").addEventListener("click", () => {
+  triageBlob = null;
+  $("triage-preview").hidden = true;
+  $("triage-submit").disabled = true;
+  $("record-btn").scrollIntoView({ behavior: "smooth", block: "center" });
+  if (!$("record-btn").disabled) $("record-btn").click();
 });
 
 function renderTriage(data) {

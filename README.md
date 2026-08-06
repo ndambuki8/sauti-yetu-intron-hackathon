@@ -9,7 +9,13 @@ uses **Intron Sahara** to transcribe and extract clinical structure, then an
 level, routes to a suggested department, auto-fills an intake card, and proposes
 clarifying questions for the nurse — all rendered on a simple white page.
 
-Voice drives a downstream task (triage + routing + intake), not just transcription.
+The loop is **two-way**: the health worker replies with a quick phrase or typed
+English, the reply is translated locally (NLLB-200) into the patient's language,
+and **Intron TTS speaks it aloud with a native voice** — so patient and worker
+hold a conversation with no shared language.
+
+Voice drives a downstream task (triage + routing + intake + spoken response),
+not just transcription.
 
 ## How it works
 
@@ -33,7 +39,16 @@ Agentic triage layer (backend/triage.py)
   - clarifying questions for the nurse
         |
         v
-Practitioner triage card (white page UI)
+Practitioner triage card + conversation thread (white page UI)
+        |
+        v
+Worker reply (quick phrase or typed English)
+        |
+        v
+NLLB-200 local translation -> Intron TTS native voice
+        |
+        v
+Patient hears the reply in their own language -> speaks again (loop)
 ```
 
 A second endpoint, `POST /api/benchmark`, runs the same audio through
@@ -75,10 +90,27 @@ Open http://localhost:8000 — record from the mic or upload a clip
 (max 120 seconds, per the Sahara sync endpoint limit).
 
 Notes:
-- The local benchmark models (Whisper, MMS) are lazy-loaded on first use;
-  the first benchmark request downloads model weights and is slow.
+- The local models (Whisper, MMS, NLLB) are lazy-loaded on first use;
+  the first benchmark or reply request downloads model weights and is slow.
 - The triage flow only needs the Intron API key; it works even if the local
-  models are not installed.
+  models are not installed. Replies to `en`/`pcm` patients also skip
+  translation entirely.
+- Quick-reply translations are cached in `backend/phrases.json`; a native
+  speaker can hand-correct entries there and corrections are kept.
+
+## Benchmark report (submission PDF)
+
+Record your code-switched clips into `data/samples/`, register them in
+`metadata.csv`, then run:
+
+```bash
+python -m scripts.generate_benchmark_report
+```
+
+This writes `reports/benchmark_report.pdf` (methodology, overall and
+per-language-pair/per-noise WER/CER/latency, charts, per-clip transcripts,
+limitations) and `reports/results.json` (raw outputs for reproducibility).
+Draft answers to the 8 submission questions live in [SUBMISSION.md](SUBMISSION.md).
 
 ## Supported patient languages (code-switch capable)
 
@@ -99,16 +131,22 @@ or via `POST /api/benchmark`.
 
 ```
 backend/
-  app.py            FastAPI app: /, /api/triage, /api/benchmark
+  app.py            FastAPI app: /, /api/triage, /api/respond, /api/phrases, /api/benchmark
   config.py         .env loading
-  intron_client.py  Sahara sync upload + status-poll fallback
+  intron_client.py  Sahara STT sync upload + status-poll fallback
+  tts_client.py     Sahara TTS generate + status-poll fallback, voice mapping
+  translator.py     local NLLB-200 English -> patient-language translation
+  phrases.py/.json  quick-reply bank with cached, vettable translations
   triage.py         agentic layer: topic, urgency, department, intake, questions
   asr_models.py     local Whisper + Meta MMS wrappers
   benchmark.py      WER/CER (jiwer) + latency across the 3 models
+scripts/
+  generate_benchmark_report.py   batch benchmark -> reports/benchmark_report.pdf
 frontend/
   index.html, app.js, styles.css   simple white-background UI
 data/
   samples/          code-switched audio + metadata.csv
+SUBMISSION.md       draft answers to the 8 submission questions
 ```
 
 ## Out of scope (hackathon simplicity)

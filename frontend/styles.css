@@ -93,3 +93,25 @@ td.err { color: #a12a20; font-size: 0.85rem; }
 footer { margin-top: 40px; color: #999; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 16px; }
 
 audio { max-width: 420px; }
+
+/* Consent */
+.consent { background: #fafafa; }
+.consent-label { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: #444; cursor: pointer; }
+.consent-label input { margin-top: 3px; }
+
+/* Conversation thread */
+.thread { margin-bottom: 20px; }
+.turn { border: 1px solid #e2e2e2; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; max-width: 85%; }
+.turn.patient { background: #f7f7f7; }
+.turn.worker { background: #eef4ee; margin-left: auto; }
+.turn .who { margin: 0 0 4px; font-size: 0.75rem; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+.turn p { margin: 0 0 4px; }
+.turn audio { width: 100%; margin-top: 6px; }
+
+/* Reply panel */
+.quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip { font-size: 0.82rem; padding: 6px 12px; border-radius: 999px; }
+.reply-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.inline-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #333; }
+.reply-panel textarea { width: 100%; }
+.reply-panel .status { margin: 10px 0 0; }

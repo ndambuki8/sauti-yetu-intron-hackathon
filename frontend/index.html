@@ -24,21 +24,35 @@
 
     <!-- ======================= TRIAGE ======================= -->
     <section id="tab-triage" class="tab-panel">
+      <div class="consent card">
+        <label class="consent-label">
+          <input type="checkbox" id="consent-check" />
+          The patient consents to this recording. Audio is sent to Intron for
+          processing to assist triage and is not stored by this app.
+        </label>
+      </div>
+
       <div class="controls">
         <label for="triage-language">Patient language</label>
         <select id="triage-language"></select>
 
         <div class="audio-inputs">
-          <button id="record-btn" class="btn">Start recording</button>
+          <button id="record-btn" class="btn" disabled>Start recording</button>
           <span class="or">or</span>
-          <input type="file" id="triage-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.flac" />
+          <input type="file" id="triage-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.flac" disabled />
         </div>
-        <p class="hint">Max 120 seconds per clip (Sahara sync limit).</p>
+        <p class="hint">Max 120 seconds per clip (Sahara sync limit). Tick the consent box to enable recording.</p>
         <audio id="triage-preview" controls hidden></audio>
         <button id="triage-submit" class="btn primary" disabled>Run triage</button>
       </div>
 
       <div id="triage-status" class="status" hidden></div>
+
+      <!-- Conversation thread: patient and worker turns -->
+      <div id="conversation" class="thread" hidden>
+        <h3>Conversation</h3>
+        <div id="thread-items"></div>
+      </div>
 
       <div id="triage-result" hidden>
         <div class="card urgency-card">
@@ -70,6 +84,29 @@
             <p class="label">Sahara clinical suggestions</p>
             <p id="suggestions" class="transcript"></p>
           </div>
+        </div>
+
+        <!-- Reply panel: worker responds, patient hears it in their language -->
+        <div class="card reply-panel">
+          <h3>Reply to patient</h3>
+          <p class="hint">
+            Pick a quick phrase or type in English. It is translated and
+            spoken aloud in the patient's language.
+          </p>
+          <div id="quick-replies" class="quick-replies"></div>
+          <textarea id="reply-text" rows="2"
+            placeholder="Type a reply in English..."></textarea>
+          <div class="reply-controls">
+            <label class="inline-label">Voice
+              <select id="voice-gender">
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+              </select>
+            </label>
+            <button id="speak-btn" class="btn primary">Speak to patient</button>
+            <button id="patient-again-btn" class="btn">Patient speaks again</button>
+          </div>
+          <div id="reply-status" class="status" hidden></div>
         </div>
       </div>
     </section>
