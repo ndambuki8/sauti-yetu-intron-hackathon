@@ -1,4 +1,28 @@
 filename,language_pair,domain,accent_country,device_type,noise_condition,reference_transcript
-sample_sw_en_fever.wav,Swahili-English,healthcare,Kenya,smartphone,quiet indoor,"Nina homa kali tangu jana na headache mbaya sana, nimekunywa panadol lakini fever haijashuka"
-sample_ha_en_chest.wav,Hausa-English,healthcare,Nigeria,smartphone,clinic background noise,"Ina jin chest pain sosai, kuma breathing yana da wahala tun da safe"
-sample_pcm_stomach.wav,Pidgin-English,healthcare,Nigeria,laptop mic,quiet indoor,"My belle dey pain me since morning, I don vomit two times and I no fit chop anything"
+afrispeech_sw_0.wav,English,clinical,swahili (KE),afrispeech-200 corpus,corpus recording,"Usually, the patient should be identified using two methods."
+afrispeech_sw_1.wav,English,clinical,swahili (KE),afrispeech-200 corpus,corpus recording,Adverse effects First-dose hypotension and postural hypotension are adverse effects.
+afrispeech_sw_2.wav,English,general,swahili (KE),afrispeech-200 corpus,corpus recording,A footpath and National Cycle Network cycleway run alongside the Portishead Railway and along the old towpath .
+afrispeech_ha_0.wav,English,clinical,hausa (NG),afrispeech-200 corpus,corpus recording,"However, data are not sufficient to draw conclusions about the vitamins effects on human cancers."
+afrispeech_ha_1.wav,English,clinical,hausa (NG),afrispeech-200 corpus,corpus recording,"Unspecified superficial injury of unspecified elbow, initial encounter. TABLET, ORAL CIPROFLOXACIN HYDROCHLORIDE, CIPROFLOXACIN HYDROCHLORIDE, EQ 750MG BASE. Pedestrian with other conveyance injured in collision with pedal cycle"
+afrispeech_ha_2.wav,English,clinical,hausa (NG),afrispeech-200 corpus,corpus recording,PULMONARY WEDGE { a/v/m } 21/22/20
+afrispeech_yo_0.wav,English,general,yoruba (NG),afrispeech-200 corpus,corpus recording,A second impact tore open the second of the two watertight compartments flooding it.
+afrispeech_yo_1.wav,English,clinical,yoruba (US),afrispeech-200 corpus,corpus recording,X-ray examination of the mastoids is of little value though it may show areas of bone destruction and enlargement of jugular foramen.
+afrispeech_yo_2.wav,English,general,yoruba (NG),afrispeech-200 corpus,corpus recording,Confederate infantry assaults
+afrispeech_ig_0.wav,English,clinical,igbo (NG),afrispeech-200 corpus,corpus recording,To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party.
+afrispeech_ig_1.wav,English,general,igbo (NG),afrispeech-200 corpus,corpus recording,"He stated, Some were discriminated against while others were completely disenfranchised and their teeming supporters, who were amongst the delegates, could not cast their votes while the exercise lasted."
+afrispeech_ig_2.wav,English,general,igbo (NG),afrispeech-200 corpus,corpus recording,"Tuesday 28 April, 1998 next line. Neuro: Pt Daramola Achike 08 February, 2003"
+afrispeech_zu_0.wav,English,clinical,zulu (ZA),afrispeech-200 corpus,corpus recording,Check the product labeling for correct amount of productneeded Figure 1.
+afrispeech_zu_1.wav,English,general,zulu (LS),afrispeech-200 corpus,corpus recording,The military should not alienate them by further high-handedness.
+afrispeech_zu_2.wav,English,clinical,zulu (ZA),afrispeech-200 corpus,corpus recording,Dense old scars may undergo hyaline degeneration and subsequent calcification.
+afrispeech_af_0.wav,English,general,afrikaans (ZA),afrispeech-200 corpus,corpus recording,The forum said it still awaits the actual cause of his death.
+afrispeech_af_1.wav,English,general,afrikaans (ZA),afrispeech-200 corpus,corpus recording,"Its completely improbable that each of the 12 women who testified misunderstood their night with Mr. McKnight, Crown prosecutor Katherine Fraser told the jury Monday during closing arguments."
+afrispeech_af_2.wav,English,general,afrikaans (ZA),afrispeech-200 corpus,corpus recording,"Earlier speaking, on behalf of state Governor Dr Abdullahi Umar Ganduje, the Secretary to the State Government, Alhaji Usman Alhaji, stated the Kano State Governments readiness toward curtailing the menace in the state."
+afrispeech_lg_0.wav,English,clinical,luganda (UG),afrispeech-200 corpus,corpus recording,"Since the degree of effect produced by a drug is generally a function of the amount administered, we can express this relationship in terms of a dose-response curve."
+afrispeech_lg_1.wav,English,clinical,luganda (UG),afrispeech-200 corpus,corpus recording,Theapplication of cold therapy reduces bleeding and hematoma formation.
+afrispeech_lg_2.wav,English,clinical,luganda (UG),afrispeech-200 corpus,corpus recording,"In addition, the cappedvenous access device will remain patent."
+afrispeech_rw_0.wav,English,general,kinyarwanda (RW),afrispeech-200 corpus,corpus recording,"Apart from the paucity of funding and insecurity in parts of the country, successive governments fail to perform."
+afrispeech_rw_1.wav,English,general,kinyarwanda (RW),afrispeech-200 corpus,corpus recording,"Im not the first person to think he should run for higher office, by the way."
+afrispeech_rw_2.wav,English,clinical,kinyarwanda (RW),afrispeech-200 corpus,corpus recording,"All of them, especially the phalanges, are slightly concave on the inferior plantar side."
+afrispeech_pcm_0.wav,English,general,pidgin (NG),afrispeech-200 corpus,corpus recording,She was selected Best Young Player awards in 2000 season.
+afrispeech_pcm_1.wav,English,clinical,pidgin (NG),afrispeech-200 corpus,corpus recording,"ManagementI n primary hyperparathyroidism ,  surgical removal of the parathyroids is curative."
+afrispeech_pcm_2.wav,English,clinical,pidgin (NG),afrispeech-200 corpus,corpus recording,Minor anaphylactic reactions such as urticaria can be treated with oral or intramuscular chlorpheniramine.

@@ -41,6 +41,22 @@ def _headers() -> dict:
     return {"Authorization": f"Bearer {INTRON_API_KEY}"}
 
 
+def _request(method: str, url: str, **kwargs) -> requests.Response:
+    """requests call with transport errors normalized to IntronError,
+    so the API returns a clean 502 instead of an unhandled 500 traceback."""
+    try:
+        return requests.request(method, url, **kwargs)
+    except requests.exceptions.SSLError as exc:
+        raise IntronError(
+            "TLS certificate verification failed while contacting Intron. "
+            "This is a local environment issue (outdated CA certificates or a "
+            "TLS-inspecting antivirus/proxy), not an Intron outage. "
+            f"Detail: {exc}"
+        ) from exc
+    except requests.RequestException as exc:
+        raise IntronError(f"Could not reach the Intron API: {exc}") from exc
+
+
 def transcribe_telehealth(
     audio_bytes: bytes,
     filename: str,
@@ -63,8 +79,8 @@ def transcribe_telehealth(
         form[key] = (None, value)
     form["audio_file_blob"] = (filename, audio_bytes)
 
-    response = requests.post(
-        SYNC_UPLOAD_URL, headers=_headers(), files=form, timeout=150
+    response = _request(
+        "POST", SYNC_UPLOAD_URL, headers=_headers(), files=form, timeout=150
     )
 
     if response.status_code == 200:
@@ -92,8 +108,8 @@ def transcribe_plain(audio_bytes: bytes, filename: str, language_code: str = "en
         "audio_file_blob": (filename, audio_bytes),
     }
     start = time.monotonic()
-    response = requests.post(
-        SYNC_UPLOAD_URL, headers=_headers(), files=form, timeout=150
+    response = _request(
+        "POST", SYNC_UPLOAD_URL, headers=_headers(), files=form, timeout=150
     )
     if response.status_code == 503:
         file_id = _extract_file_id(response)
@@ -123,7 +139,8 @@ def _poll_status(file_id: str) -> dict:
     url = STATUS_URL.format(file_id=file_id)
     deadline = time.monotonic() + POLL_TIMEOUT_SECONDS
     while time.monotonic() < deadline:
-        response = requests.get(
+        response = _request(
+            "GET",
             url,
             headers=_headers(),
             params={"get_structured_post_processing": "t"},
