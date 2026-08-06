@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-800 antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl bg-white ring-1 ring-slate-200 shadow-sm;
+  }
+  .card-title {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-slate-500;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
+      transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+      focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-blue-600 text-white hover:bg-blue-700;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50;
+  }
+  .input {
+    @apply w-full rounded-lg border-0 bg-white px-3 py-2 text-sm text-slate-800 ring-1 ring-slate-300
+      focus:ring-2 focus:ring-blue-600 focus:outline-none;
+  }
+}
+
+/* Cytoscape container needs an explicit height. */
+.graph-canvas {
+  height: 100%;
+  min-height: 480px;
+}
+
+/* Pulse animation for newly added graph nodes (applied via class toggle). */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.35); }
+  100% { box-shadow: 0 0 0 12px rgba(29, 78, 216, 0); }
+}
