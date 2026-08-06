@@ -3,6 +3,7 @@ import CapturePanel from "./components/CapturePanel";
 import ClinicalRail from "./components/ClinicalRail";
 import ConversationTimeline from "./components/ConversationTimeline";
 import ReasoningGraph from "./components/ReasoningGraph";
+import ReplyPanel from "./components/ReplyPanel";
 import TopBar from "./components/TopBar";
 import { ConsultationProvider, useConsultation } from "./state/consultation";
 
@@ -11,6 +12,7 @@ function TriageWorkspace() {
     <main className="mx-auto grid max-w-[1600px] grid-cols-1 gap-5 px-5 py-5 lg:grid-cols-[360px_minmax(0,1fr)_340px]">
       <div className="space-y-5">
         <CapturePanel />
+        <ReplyPanel />
         <ConversationTimeline />
       </div>
       <ReasoningGraph />

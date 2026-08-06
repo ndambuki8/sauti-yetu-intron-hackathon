@@ -68,6 +68,7 @@ export interface BenchmarkResponse {
 /** One recording's worth of conversation, derived client-side from a
  * TriageResponse and kept in consultation state for the timeline. */
 export interface Turn {
+  kind: "patient";
   index: number;
   timestamp: string;
   languageName: string;
@@ -79,3 +80,32 @@ export interface Turn {
   conditions: string[];
   redFlags: string[];
 }
+
+/** A quick-reply phrase from GET /api/phrases. */
+export interface Phrase {
+  english: string;
+  translated: string;
+  translation_error?: string;
+}
+
+/** POST /api/respond response: worker reply translated + synthesized. */
+export interface RespondResponse {
+  original_text: string;
+  translated_text: string;
+  was_translated: boolean;
+  english_fallback: boolean;
+  audio_base64: string;
+  audio_format: string;
+}
+
+/** A worker reply spoken to the patient, kept in the timeline. */
+export interface WorkerReply {
+  kind: "worker";
+  timestamp: string;
+  originalText: string;
+  translatedText: string;
+  englishFallback: boolean;
+  audioUrl: string;
+}
+
+export type TimelineItem = Turn | WorkerReply;

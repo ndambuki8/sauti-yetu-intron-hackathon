@@ -6,27 +6,37 @@ import {
   type ReactNode,
 } from "react";
 import { getLanguages } from "../api/client";
-import type { Graph, TriageResponse, Turn } from "../api/types";
+import type {
+  Graph,
+  RespondResponse,
+  TimelineItem,
+  TriageResponse,
+  Turn,
+  WorkerReply,
+} from "../api/types";
 import { splitExtraction, splitRedFlags } from "../lib/extraction";
 
 export type Tab = "triage" | "benchmark";
 
 interface ConsultationState {
   sessionId: string | null;
-  turns: Turn[];
+  turns: TimelineItem[];
   graph: Graph | null;
   analysing: boolean;
   error: string | null;
   tab: Tab;
   languages: Record<string, string>;
+  languageCode: string;
 }
 
 type Action =
   | { type: "languagesLoaded"; languages: Record<string, string> }
   | { type: "tabChanged"; tab: Tab }
+  | { type: "languageChanged"; languageCode: string }
   | { type: "sessionStarted"; sessionId: string }
   | { type: "analysisStarted" }
   | { type: "turnAdded"; response: TriageResponse; languageName: string }
+  | { type: "replyAdded"; reply: WorkerReply }
   | { type: "analysisFailed"; message: string }
   | { type: "reset" };
 
@@ -38,10 +48,29 @@ const initialState: ConsultationState = {
   error: null,
   tab: "triage",
   languages: {},
+  languageCode: "sw",
 };
+
+/** Build a timeline item from a spoken worker reply, decoding the audio
+ * into an object URL the <audio> element can replay. */
+export function toWorkerReply(response: RespondResponse): WorkerReply {
+  const bytes = Uint8Array.from(atob(response.audio_base64), (c) =>
+    c.charCodeAt(0),
+  );
+  const blob = new Blob([bytes], { type: `audio/${response.audio_format}` });
+  return {
+    kind: "worker",
+    timestamp: new Date().toISOString(),
+    originalText: response.original_text,
+    translatedText: response.translated_text,
+    englishFallback: response.english_fallback,
+    audioUrl: URL.createObjectURL(blob),
+  };
+}
 
 function toTurn(response: TriageResponse, languageName: string): Turn {
   return {
+    kind: "patient",
     index: response.graph.turns,
     timestamp: new Date().toISOString(),
     languageName,
@@ -61,6 +90,8 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
       return { ...state, languages: action.languages };
     case "tabChanged":
       return { ...state, tab: action.tab };
+    case "languageChanged":
+      return { ...state, languageCode: action.languageCode };
     case "sessionStarted":
       return { ...state, sessionId: action.sessionId };
     case "analysisStarted":
@@ -73,6 +104,8 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
         graph: action.response.graph,
         turns: [...state.turns, toTurn(action.response, action.languageName)],
       };
+    case "replyAdded":
+      return { ...state, turns: [...state.turns, action.reply] };
     case "analysisFailed":
       return { ...state, analysing: false, error: action.message };
     case "reset":
@@ -80,6 +113,7 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
         ...initialState,
         languages: state.languages,
         tab: state.tab,
+        languageCode: state.languageCode,
       };
   }
 }
@@ -114,5 +148,9 @@ export function useConsultation() {
 }
 
 export function latestTurn(state: ConsultationState): Turn | null {
-  return state.turns.length ? state.turns[state.turns.length - 1] : null;
+  for (let i = state.turns.length - 1; i >= 0; i--) {
+    const item = state.turns[i];
+    if (item.kind === "patient") return item;
+  }
+  return null;
 }

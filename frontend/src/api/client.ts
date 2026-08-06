@@ -1,6 +1,8 @@
 import type {
   BenchmarkResponse,
   Graph,
+  Phrase,
+  RespondResponse,
   TriageResponse,
 } from "./types";
 
@@ -55,6 +57,31 @@ export async function runTriage(
   form.append("session_id", sessionId);
   const res = await fetch("/api/triage", { method: "POST", body: form });
   return parseResponse<TriageResponse>(res);
+}
+
+export async function getPhrases(languageCode: string): Promise<Phrase[]> {
+  const res = await fetch(
+    `/api/phrases?language_code=${encodeURIComponent(languageCode)}`,
+  );
+  const body = await parseResponse<{ phrases: Phrase[] }>(res);
+  return body.phrases;
+}
+
+export async function respond(
+  text: string,
+  languageCode: string,
+  voiceGender: "male" | "female",
+): Promise<RespondResponse> {
+  const res = await fetch("/api/respond", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text,
+      language_code: languageCode,
+      voice_gender: voiceGender,
+    }),
+  });
+  return parseResponse<RespondResponse>(res);
 }
 
 export async function runBenchmark(

@@ -1,7 +1,41 @@
 import { useEffect, useRef } from "react";
-import type { Turn } from "../api/types";
+import type { Turn, WorkerReply } from "../api/types";
 import { useConsultation } from "../state/consultation";
 import UrgencyBadge from "./UrgencyBadge";
+
+function ReplyCard({ reply }: { reply: WorkerReply }) {
+  const time = new Date(reply.timestamp).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+
+  return (
+    <article className="card border-emerald-100 bg-emerald-50/50 p-4">
+      <header className="flex flex-wrap items-center gap-2">
+        <span className="chip bg-emerald-100 text-emerald-800">Health worker</span>
+        <span className="text-xs text-slate-400">{time}</span>
+      </header>
+
+      <p className="mt-2 text-sm text-slate-700">{reply.originalText}</p>
+
+      {reply.translatedText !== reply.originalText && (
+        <p className="mt-1 text-sm italic text-emerald-900">
+          Spoken to patient: {reply.translatedText}
+        </p>
+      )}
+
+      {reply.englishFallback && (
+        <p className="mt-1 text-xs text-slate-500">
+          No native voice for this language yet — audio is spoken in English;
+          the translated text is shown above.
+        </p>
+      )}
+
+      <audio src={reply.audioUrl} controls className="mt-2 w-full" />
+    </article>
+  );
+}
 
 function TurnCard({ turn }: { turn: Turn }) {
   const time = new Date(turn.timestamp).toLocaleTimeString([], {
@@ -107,9 +141,13 @@ export default function ConversationTimeline() {
         </div>
       ) : (
         <div className="space-y-4">
-          {state.turns.map((turn) => (
-            <TurnCard key={`${turn.index}-${turn.timestamp}`} turn={turn} />
-          ))}
+          {state.turns.map((item, i) =>
+            item.kind === "patient" ? (
+              <TurnCard key={`p-${item.index}-${item.timestamp}`} turn={item} />
+            ) : (
+              <ReplyCard key={`w-${i}-${item.timestamp}`} reply={item} />
+            ),
+          )}
           <div ref={endRef} />
         </div>
       )}

@@ -6,7 +6,8 @@ import StageStepper from "./StageStepper";
 export default function CapturePanel() {
   const { state, dispatch } = useConsultation();
 
-  const [languageCode, setLanguageCode] = useState("sw");
+  const languageCode = state.languageCode;
+  const [consented, setConsented] = useState(false);
   const [blob, setBlob] = useState<Blob | null>(null);
   const [filename, setFilename] = useState("recording.webm");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -15,11 +16,6 @@ export default function CapturePanel() {
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-
-  useEffect(() => {
-    // Default once languages arrive, only if the user hasn't chosen one.
-    if (state.languages.sw) setLanguageCode((current) => current || "sw");
-  }, [state.languages]);
 
   useEffect(() => () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -83,12 +79,25 @@ export default function CapturePanel() {
     <section className="card p-5">
       <h2 className="card-title">Patient audio</h2>
 
+      <label className="mt-3 flex items-start gap-2 rounded-lg bg-slate-50 p-3 text-xs text-slate-600 ring-1 ring-slate-200">
+        <input
+          type="checkbox"
+          checked={consented}
+          onChange={(e) => setConsented(e.target.checked)}
+          className="mt-0.5"
+        />
+        The patient consents to this recording. Audio is sent to Intron for
+        processing to assist triage and is not stored by this app.
+      </label>
+
       <label className="mt-4 block text-xs font-medium text-slate-600">
         Patient language
       </label>
       <select
         value={languageCode}
-        onChange={(e) => setLanguageCode(e.target.value)}
+        onChange={(e) =>
+          dispatch({ type: "languageChanged", languageCode: e.target.value })
+        }
         className="input mt-1"
       >
         {Object.entries(state.languages).map(([code, name]) => (
@@ -101,7 +110,8 @@ export default function CapturePanel() {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button
           onClick={toggleRecording}
-          className={recording ? "btn bg-red-50 text-red-700 ring-1 ring-red-300" : "btn-secondary"}
+          disabled={!consented}
+          className={`${recording ? "btn bg-red-50 text-red-700 ring-1 ring-red-300" : "btn-secondary"} disabled:cursor-not-allowed disabled:opacity-50`}
         >
           <span className={`h-2 w-2 rounded-full ${recording ? "animate-pulse bg-red-600" : "bg-slate-400"}`} />
           {recording ? "Stop recording" : "Start recording"}
@@ -110,15 +120,19 @@ export default function CapturePanel() {
         <input
           type="file"
           accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.flac"
+          disabled={!consented}
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) acceptAudio(file, file.name);
           }}
-          className="text-xs text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-slate-700 hover:file:bg-slate-200"
+          className="text-xs text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-slate-700 hover:file:bg-slate-200 disabled:opacity-50"
         />
       </div>
 
-      <p className="mt-2 text-xs text-slate-400">Max 120 seconds per clip (Sahara sync limit).</p>
+      <p className="mt-2 text-xs text-slate-400">
+        Max 120 seconds per clip (Sahara sync limit).
+        {!consented && " Tick the consent box to enable recording."}
+      </p>
 
       {micError && <p className="mt-2 text-xs text-red-700">Microphone error: {micError}</p>}
 
