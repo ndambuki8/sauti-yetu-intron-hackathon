@@ -5,13 +5,16 @@ python-multipart>=0.0.9
 requests>=2.32
 python-dotenv>=1.0
 
-# Benchmark metrics
+# Benchmark metrics + report generation
 jiwer>=3.0
+matplotlib>=3.8
+fpdf2>=2.7
 
-# Local ASR models (benchmark). Heavy; installed lazily-used at runtime.
+# Local ASR + translation models. Heavy; lazy-loaded at runtime.
 # ffmpeg must be installed on the system (sudo apt install ffmpeg).
 openai-whisper>=20240930
 torch>=2.2
 transformers>=4.44
 soundfile>=0.12
 accelerate>=0.30
+sentencepiece>=0.2
