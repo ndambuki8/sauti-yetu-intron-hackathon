@@ -24,6 +24,30 @@
       "Please follow me to the examination room.": "Tafadhali nifuate hadi kwenye chumba cha uchunguzi.",
       "You are safe here, we will take care of you.": "Wewe ni salama hapa, sisi kutunza wewe.",
       "Do you have someone with you who can help translate?": "Je, una mtu yeyote pamoja nawe ambaye anaweza kusaidia kutafsiri?"
+    },
+    "rw": {
+      "Please wait, a doctor will see you shortly.": "Ndakwinginze utegereze, umuganga azakubona vuba.",
+      "Where exactly does it hurt?": "Ni hehe se byababaza?",
+      "How long have you been feeling this way?": "Ese umaze igihe kingana iki wumva umeze utyo?",
+      "Have you taken any medicine for this already?": "Ese waba waramaze gufata imiti yo kubigeraho?",
+      "We need to take a blood sample for testing.": "Tugomba gufata ibipimo by'amaraso kugira ngo tugeragezwe.",
+      "We need to check your temperature and blood pressure.": "Tugomba kugenzura ubushyuhe n'umuvuduko w'amaraso wawe.",
+      "Do you have any allergies or ongoing illnesses?": "Ese ufite allergie cyangwa indwara zikuremereye?",
+      "Please follow me to the examination room.": "Ndakwinginze unkurikire ugere mu cyumba cy'imibonano mpuzabitsina.",
+      "You are safe here, we will take care of you.": "Uzabaho neza hano, tuzakwitaho.",
+      "Do you have someone with you who can help translate?": "Ese ufite umuntu ushobora kugufasha guhindura?"
+    },
+    "zu": {
+      "Please wait, a doctor will see you shortly.": "Sicela ulinde, udokotela uzokubona maduze.",
+      "Where exactly does it hurt?": "Kunini lapho kubuhlungu khona?",
+      "How long have you been feeling this way?": "Sekuphele isikhathi esingakanani uzizwa ngale ndlela?",
+      "Have you taken any medicine for this already?": "Ingabe usuvele uthatha imithi yokwelapha lokhu?",
+      "We need to take a blood sample for testing.": "Sidinga ukuthatha isampula legazi ukuze silinge.",
+      "We need to check your temperature and blood pressure.": "Sidinga ukuhlola izinga lokushisa nengcindezi yegazi yakho.",
+      "Do you have any allergies or ongoing illnesses?": "Ingabe unama-allergies noma izifo eziqhubekayo?",
+      "Please follow me to the examination room.": "Ngicela ningilandele ngiye egumbini lokuhlolwa.",
+      "You are safe here, we will take care of you.": "Uphephile lapha, sizokunakekela.",
+      "Do you have someone with you who can help translate?": "Ingabe ukhona ongasiza ekuhumusheni?"
     }
   }
 }

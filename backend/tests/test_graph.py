@@ -135,10 +135,47 @@ def test_triage_with_unknown_session_starts_fresh(monkeypatch):
 
 def test_session_create_and_delete():
     client = TestClient(app)
-    sid = client.post("/api/session").json()["session_id"]
+    body = client.post("/api/session").json()
+    sid = body["session_id"]
     assert sid
+    assert body["doctor_language"] == "en"
     assert client.delete(f"/api/session/{sid}").status_code == 204
     assert client.delete(f"/api/session/{sid}").status_code == 404
+
+
+def test_triage_returns_doctor_transcript(monkeypatch):
+    monkeypatch.setattr("backend.app.transcribe_telehealth", _fake_transcribe)
+    client = TestClient(app)
+    res = _post_triage(client)
+    assert res.status_code == 200
+    body = res.json()
+    assert body["transcript_patient"]
+    assert body["transcript_doctor"]
+    assert body["detected_language"] == "sw"
+    assert "artifacts" in body
+
+
+def test_command_persists_artifact(monkeypatch):
+    monkeypatch.setattr("backend.app.transcribe_telehealth", _fake_transcribe)
+
+    def _fake_run(command_text, full_session):
+        return {
+            "intent": "flowchart",
+            "title": "Probable conditions",
+            "body": "flowchart TD\n  A[Chest pain] --> B[Angina]",
+            "notes": "Hints only",
+            "kind": "flowchart",
+        }
+
+    monkeypatch.setattr("backend.agent.run_command", _fake_run)
+    client = TestClient(app)
+    sid = _post_triage(client).json()["session_id"]
+    res = client.post("/api/command", data={"session_id": sid, "text": "prepare a flowchart"})
+    assert res.status_code == 200
+    body = res.json()
+    assert body["intent"] == "flowchart"
+    assert body["artifact"]["body"].startswith("flowchart")
+    assert len(body["artifacts"]) == 1
 
 
 def test_benchmark_has_no_graph(monkeypatch):

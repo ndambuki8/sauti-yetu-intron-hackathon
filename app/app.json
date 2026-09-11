@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Sauti Yetu",
+    "slug": "sauti",
+    "scheme": "sauti",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Sauti Yetu records the patient so the triage desk can hear them in your language."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#10241F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["RECORD_AUDIO"],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Sauti Yetu records the patient so the triage desk can hear them in your language."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#10241F"
+        }
+      ]
+    ]
+  }
+}

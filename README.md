@@ -2,60 +2,35 @@
 
 MLC (Africa) x Intron Agentic Voice AI Challenge — Deep Learning Indaba 2026.
 
+**Sauti** is a doctor-first consult app for web, phone, and tablet (Expo).
 A patient who code-switches (Swahili-English, Hausa-English, Yoruba-English, Pidgin, ...)
-arrives at a facility where staff work in English. This app captures their speech,
-uses **Intron Sahara** to transcribe and extract clinical structure, then an
-**agentic layer takes action**: it classifies the triage topic, assigns an urgency
-level, routes to a suggested department, auto-fills an intake card, and proposes
-clarifying questions for the nurse — while a **live clinical reasoning graph**
-shows the clinician how each piece of the picture connects.
+arrives at a facility where staff work in English or French. The doctor starts a
+record session; the system **auto-detects** the patient's language, transcribes
+with **Intron Sahara**, and shows the consult in the **doctor's pre-selected language**.
 
-The loop is **two-way**: the health worker replies with a quick phrase or typed
-English, the reply is translated locally (NLLB-200) into the patient's language,
-and **Intron TTS speaks it aloud with a native voice** — so patient and worker
-hold a conversation with no shared language.
+An **agentic layer takes action**: topic, urgency, department, intake card, and
+clarifying questions — plus a **clinical picture graph**. After the consult, the
+doctor can speak a request (“prepare a flowchart of probable diseases from these
+symptoms”) and a **GPT-4o agent** writes a report or Mermaid flowchart from the
+session. The doctor can also reply by voice so the patient hears Intron TTS in
+their own language.
 
-Voice drives a downstream task (triage + routing + intake + spoken response),
-not just transcription.
+Voice drives triage, routing, and documentation — not just transcription.
 
 ## How it works
 
 ```
-Browser mic / file upload
+Doctor app (Expo: web / phone / tablet)
         |
-        v
-FastAPI  POST /api/triage
+        +-- Record session --> POST /api/triage
+        |       Whisper detect (if Auto) -> Intron Sahara STT + extractions
+        |       -> translate transcript to doctor language (NLLB)
+        |       -> rule triage + session graph
         |
-        v
-Intron Sahara sync upload  (telehealth category, English extraction output)
-  - transcript in patient language
-  - entities, differential diagnosis, suggestions, summary (in English)
+        +-- Speak to patient --> POST /api/respond  (NLLB + Intron TTS)
         |
-        v
-Agentic triage layer (backend/triage.py)
-  - topic classification
-  - urgency: EMERGENCY / URGENT / ROUTINE
-  - suggested department routing
-  - auto-filled intake card
-  - clarifying questions for the nurse
-        |
-        v
-Clinical reasoning graph (backend/graph.py + graph_store.py)
-  - one session per consultation (POST /api/session)
-  - each recording appends nodes/edges: patient -> symptoms/findings ->
-    topic -> possible conditions; red flags escalate; topic routes to department
-        |
-        v
-Practitioner UI: live reasoning graph (Cytoscape.js) + triage cards
-        |
-        v
-Worker reply (quick phrase or typed English)
-        |
-        v
-NLLB-200 local translation -> Intron TTS native voice
-        |
-        v
-Patient hears the reply in their own language -> speaks again (loop)
+        +-- Voice command --> POST /api/command
+                Doctor STT -> GPT-4o -> report / flowchart artifact
 ```
 
 ### Clinical reasoning graph (Sahara-only)
@@ -73,9 +48,8 @@ it says, and how the picture builds over the conversation.
 - `POST /api/session` starts a consultation; `DELETE /api/session/{id}` ends it.
   If `/api/triage` is called without a valid `session_id`, one is created
   implicitly and returned.
-- Rendered with [Cytoscape.js](https://js.cytoscape.org/) inside the React app;
-  clicking a node highlights its 1-hop neighborhood and shows what it is and
-  when it first came up.
+- Rendered on its own **Picture** screen (SVG graph on phone; split pane on
+  tablet/web). Tap a node to inspect kind and first-seen turn.
 - Sessions live in memory only — a server restart clears all consultations.
 - The "analysis stages" indicator while Sahara runs is client-side progress,
   not streamed server events.
@@ -101,46 +75,48 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Frontend dependencies (Node 18+):
+3. Expo app (Node 18+):
 
 ```bash
-cd frontend
+cd app
 npm install
 ```
 
-4. API key — sign up at [voice.intron.io](https://voice.intron.io), open the
-   Developer tab, copy your key, then:
+4. API keys — Sahara from [voice.intron.io](https://voice.intron.io) (Developer
+   tab) and OpenAI for doctor voice commands:
 
 ```bash
 cp .env.example .env
-# edit .env and set INTRON_API_KEY
+# set INTRON_API_KEY and OPENAI_API_KEY
 ```
 
 ## Run
 
-The frontend is a **React + TypeScript + Vite + Tailwind** app. Two ways to run it:
+The UI is an **Expo (React Native)** app for web, iOS, Android, and tablet.
 
-**Development** (hot reload, two terminals):
+**Development** (two terminals):
 
 ```bash
 # terminal 1 — API
 uvicorn backend.app:app --reload --port 8000
 
-# terminal 2 — UI (proxies /api to :8000)
-cd frontend && npm run dev
+# terminal 2 — UI
+cd app && npx expo start
 ```
 
-Open http://localhost:5173.
+- Web: press `w` (Expo web on :8081 talks to the API on :8000).
+- Phone: scan the QR code with Expo Go. Set `EXPO_PUBLIC_API_URL` to your
+  machine's LAN address, e.g. `http://192.168.1.20:8000`, so the device can
+  reach FastAPI.
 
-**Production / single process**:
+**Production / single process** (web):
 
 ```bash
-cd frontend && npm run build   # type-checks, then bundles to frontend/dist
+cd app && npm run export:web   # writes app/dist
 cd .. && uvicorn backend.app:app --port 8000
 ```
 
-Open http://localhost:8000 — FastAPI serves the built SPA. Restart uvicorn
-after rebuilding.
+Open http://localhost:8000 — FastAPI serves the Expo static export.
 
 Notes:
 - The local models (Whisper, MMS, NLLB) are lazy-loaded on first use;
@@ -184,41 +160,36 @@ or via `POST /api/benchmark`.
 
 ```
 backend/
-  app.py            FastAPI app: /, /api/session, /api/triage, /api/respond, /api/phrases, /api/benchmark
-  config.py         .env loading
+  app.py            FastAPI: session, triage, respond, command, phrases, benchmark
+  agent.py          GPT-4o doctor voice-command artifacts (report / flowchart)
+  config.py         .env, doctor + patient language lists
   intron_client.py  Sahara STT sync upload + status-poll fallback
-  tts_client.py     Sahara TTS generate + status-poll fallback, voice mapping
-  translator.py     local NLLB-200 English -> patient-language translation
-  phrases.py/.json  quick-reply bank with cached, vettable translations
-  triage.py         agentic layer: topic, urgency, department, intake, questions
-  graph.py          turns one triage turn into a graph delta (nodes + edges)
-  graph_store.py    in-memory per-consultation session graphs
-  asr_models.py     local Whisper + Meta MMS wrappers
-  benchmark.py      WER/CER (jiwer) + latency across the 3 models
-  tests/            graph + API tests (no Intron key needed)
+  tts_client.py     Sahara TTS
+  translator.py     NLLB-200, including patient ↔ doctor
+  phrases.py/.json  quick-reply bank
+  triage.py         topic, urgency, department, intake, questions
+  graph.py          one-turn graph delta
+  graph_store.py    in-memory session graph + history + artifacts
+  asr_models.py     Whisper / MMS + language detection
+  benchmark.py      3-model WER/CER/latency
+  tests/
+app/                Expo Router app (web + native)
+  src/app/          Home, Record session, Picture, Notes
+  src/api/          typed client (EXPO_PUBLIC_API_URL for devices)
+  src/state/        consultation context
+  src/components/   record control, graph, timeline, reply
+  dist/             web export, served by FastAPI at /
+frontend/           previous Vite UI (kept for reference)
 scripts/
-  generate_benchmark_report.py   batch benchmark -> reports/benchmark_report.pdf
-frontend/
-  index.html          Vite entry
-  vite.config.ts      dev server on :5173, proxies /api to :8000
-  tailwind.config.js  design tokens (clinical semantics shared with the graph)
-  src/
-    api/              typed client + response contracts mirroring the backend
-    state/            consultation context (session, turns, cumulative graph)
-    lib/              palette (node-kind colors) + Sahara extraction splitting
-    components/       TopBar, CapturePanel, StageStepper, ConversationTimeline,
-                      ReasoningGraph (Cytoscape), ClinicalRail, BenchmarkPanel
-  dist/               production build (git-ignored), served by FastAPI at /
-data/
-  samples/          code-switched audio + metadata.csv
-SUBMISSION.md       draft answers to the 8 submission questions
+  generate_benchmark_report.py
+data/samples/
+SUBMISSION.md
 ```
 
 ## Tests
 
 ```bash
 python -m pytest backend/tests/
-cd frontend && npm run build   # also the frontend's type-check gate (tsc)
 ```
 
 The Intron HTTP call is monkeypatched, so the suite runs without an API key.
