@@ -15,6 +15,7 @@ Usage (from the project root, venv active, INTRON_API_KEY in .env):
 
 import csv
 import json
+import re
 import statistics
 import sys
 from datetime import date
@@ -38,6 +39,29 @@ MODELS = ["Intron Sahara", "OpenAI Whisper", "Meta MMS"]
 PAIR_TO_CODE = {name.lower(): code for code, name in SUPPORTED_LANGUAGES.items()}
 
 
+def _json_field(row: dict, name: str, default):
+    value = row.get(name, "").strip()
+    if not value:
+        return default
+    try:
+        return json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid JSON in metadata column {name!r}: {value}") from exc
+
+
+def _language_code(row: dict) -> str:
+    explicit = row.get("language_code", "").strip().lower()
+    if explicit in SUPPORTED_LANGUAGES:
+        return explicit
+    pair = row.get("language_pair", "").strip().lower()
+    if pair in PAIR_TO_CODE:
+        return PAIR_TO_CODE[pair]
+    # Existing sample names carry the language code even when the old CSV
+    # accidentally used "English" for every language_pair value.
+    match = re.search(r"afrispeech_([a-z]+)_", row.get("filename", "").lower())
+    return match.group(1) if match and match.group(1) in SUPPORTED_LANGUAGES else "en"
+
+
 def load_metadata() -> list[dict]:
     path = SAMPLES_DIR / "metadata.csv"
     with open(path, encoding="utf-8") as fh:
@@ -51,10 +75,10 @@ def load_metadata() -> list[dict]:
     return existing
 
 
-def run_all(rows: list[dict]) -> list[dict]:
+def run_all(rows: list[dict], agentic: bool = False) -> list[dict]:
     results = []
     for i, row in enumerate(rows, 1):
-        language_code = PAIR_TO_CODE.get(row["language_pair"].strip().lower(), "en")
+        language_code = _language_code(row)
         print(f"[{i}/{len(rows)}] {row['filename']} ({row['language_pair']}, lang hint: {language_code})")
         audio_bytes = (SAMPLES_DIR / row["filename"]).read_bytes()
         bench = run_benchmark(
@@ -62,11 +86,28 @@ def run_all(rows: list[dict]) -> list[dict]:
             filename=row["filename"],
             reference_transcript=row["reference_transcript"],
             language_code=language_code,
+            switch_points=_json_field(row, "switch_points", []),
+            agent_reference={
+                "expected_topic": row.get("expected_topic", ""),
+                "expected_urgency": row.get("expected_urgency", ""),
+                "expected_department": row.get("expected_department", ""),
+                "expected_slots": _json_field(row, "expected_slots", {}),
+                "expected_entities": _json_field(row, "expected_entities", []),
+            }
+            if any(row.get(key, "").strip() for key in (
+                "expected_topic", "expected_urgency", "expected_department",
+                "expected_slots", "expected_entities",
+            ))
+            else None,
+            agentic=agentic,
         )
         results.append({"metadata": row, "benchmark": bench})
         for r in bench["results"]:
             wer = r["wer"] if r["wer"] is not None else "err"
-            print(f"    {r['model']:16s} WER={wer} ({r['error'] or 'ok'})")
+            print(
+                f"    {r['model']:16s} WER={wer} RTF={r.get('rtf', '-') } "
+                f"({r['error'] or 'ok'})"
+            )
     return results
 
 
@@ -75,25 +116,41 @@ def _mean(values: list[float]) -> float | None:
 
 
 def aggregate(results: list[dict], key_fn) -> dict:
-    """Aggregate WER/CER/latency per model, grouped by key_fn(clip)."""
+    """Aggregate transcript, switch-point, RTF, and agentic metrics."""
     groups: dict[str, dict[str, dict[str, list[float]]]] = {}
     for clip in results:
         group = key_fn(clip)
         for r in clip["benchmark"]["results"]:
-            bucket = groups.setdefault(group, {}).setdefault(
-                r["model"], {"wer": [], "cer": [], "latency": []}
-            )
+            bucket = groups.setdefault(group, {}).setdefault(r["model"], {
+                "wer": [], "cer": [], "latency": [], "rtf": [],
+                "switch_point_wer": [], "intent": [], "slot": [], "entity": [],
+            })
             if r["wer"] is not None:
                 bucket["wer"].append(r["wer"])
                 bucket["cer"].append(r["cer"])
             if r["latency_seconds"] is not None:
                 bucket["latency"].append(r["latency_seconds"])
+            for metric, source in (("rtf", r.get("rtf")),
+                                   ("switch_point_wer", r.get("switch_point", {}).get("wer"))):
+                if source is not None:
+                    bucket[metric].append(source)
+            agent = r.get("agentic") or {}
+            for metric, source in (("intent", agent.get("intent_correct")),
+                                   ("slot", agent.get("slot_accuracy")),
+                                   ("entity", agent.get("entity_error_rate"))):
+                if source is not None:
+                    bucket[metric].append(float(source))
     return {
         group: {
             model: {
                 "mean_wer": _mean(b["wer"]),
                 "mean_cer": _mean(b["cer"]),
                 "mean_latency": _mean(b["latency"]),
+                "mean_rtf": _mean(b["rtf"]),
+                "mean_switch_point_wer": _mean(b["switch_point_wer"]),
+                "intent_accuracy": _mean(b["intent"]),
+                "slot_accuracy": _mean(b["slot"]),
+                "entity_error_rate": _mean(b["entity"]),
                 "n": len(b["wer"]),
             }
             for model, b in models.items()
@@ -282,7 +339,28 @@ def build_pdf(results: list[dict], overall: dict, by_pair: dict, by_noise: dict,
         ]
         pdf.table(headers, rows, widths)
 
-    pdf.h2("5. Per-clip transcripts")
+    pdf.h2("5. Boundary and downstream metrics")
+    pdf.body(
+        "Switch-point WER is the mean WER in a three-word window on each side of an "
+        "annotated language boundary. RTF is wall-clock latency divided by decoded "
+        "audio duration; values below 1.0 are faster than real time. When expected "
+        "agentic labels are present, intent accuracy, slot accuracy, and entity error "
+        "rate are reported in the raw JSON. Sahara agentic mode preserves its "
+        "telehealth extraction fields; local models receive the same transcript-only "
+        "triage function for a comparable baseline."
+    )
+    for model, stats in sorted(overall.get("all", {}).items()):
+        if any(stats.get(key) is not None for key in (
+            "mean_switch_point_wer", "intent_accuracy", "slot_accuracy", "entity_error_rate"
+        )):
+            pdf.body(
+                f"{model}: switch-point WER={fmt(stats.get('mean_switch_point_wer'))}, "
+                f"intent accuracy={fmt(stats.get('intent_accuracy'))}, "
+                f"slot accuracy={fmt(stats.get('slot_accuracy'))}, "
+                f"entity error rate={fmt(stats.get('entity_error_rate'))}."
+            )
+
+    pdf.h2("6. Per-clip transcripts")
     for clip in results:
         meta = clip["metadata"]
         pdf.set_font("Helvetica", "B", 10)
@@ -303,7 +381,7 @@ def build_pdf(results: list[dict], overall: dict, by_pair: dict, by_noise: dict,
             pdf.para(line)
         pdf.ln(3)
 
-    pdf.h2("6. Limitations and bias notes")
+    pdf.h2("7. Limitations and bias notes")
     pdf.body(
         "The sample set is small and self-recorded by the team, so results indicate trends rather "
         "than statistically significant differences. Accent coverage is limited to the speakers "
@@ -350,7 +428,9 @@ def main():
         sys.exit(1)
 
     print(f"Running benchmark on {len(rows)} clip(s) across 3 models...\n")
-    results = run_all(rows)
+    agentic = "--agentic" in sys.argv
+    print("Agentic Sahara extraction: enabled" if agentic else "Agentic Sahara extraction: disabled")
+    results = run_all(rows, agentic=agentic)
 
     overall = aggregate(results, lambda c: "all")
     by_pair = aggregate(results, lambda c: c["metadata"]["language_pair"])
