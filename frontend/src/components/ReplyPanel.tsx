@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getPhrases, respond } from "../api/client";
 import type { Phrase } from "../api/types";
 import { toWorkerReply, useConsultation } from "../state/consultation";
+import Tooltip, { InfoIcon } from "./Tooltip";
 
 /** The worker's side of the loop: pick a quick phrase or type English, and
  * the reply is translated (local NLLB) and spoken to the patient with a
@@ -56,11 +57,14 @@ export default function ReplyPanel() {
 
   return (
     <section className="card p-5">
-      <h2 className="card-title">Reply to patient</h2>
-      <p className="mt-1 text-xs text-slate-400">
-        Pick a quick phrase or type in English — it is translated and spoken
-        aloud in the patient's language.
-      </p>
+      <div className="flex items-center gap-1.5">
+        <h2 className="card-title">Reply to patient</h2>
+        <Tooltip label="Pick a quick phrase or type in English. It is translated and spoken aloud in the patient's language.">
+          <span className="text-slate-300 transition-colors hover:text-slate-500">
+            <InfoIcon className="h-3.5 w-3.5" />
+          </span>
+        </Tooltip>
+      </div>
 
       {phrases.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">

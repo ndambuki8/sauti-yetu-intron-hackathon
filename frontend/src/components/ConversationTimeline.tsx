@@ -27,8 +27,8 @@ function ReplyCard({ reply }: { reply: WorkerReply }) {
 
       {reply.englishFallback && (
         <p className="mt-1 text-xs text-slate-500">
-          No native voice for this language yet — audio is spoken in English;
-          the translated text is shown above.
+          No native voice for this language yet. Audio is spoken in English; the
+          translated text is shown above.
         </p>
       )}
 

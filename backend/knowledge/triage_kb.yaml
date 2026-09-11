@@ -1,0 +1,1039 @@
+# =============================================================================
+# Triage Knowledge Base
+# =============================================================================
+# The clinical knowledge that drives the reasoning layer, expressed as DATA
+# (not code) so it can be reviewed, cited, extended, and audited by clinicians.
+#
+# Loaded and validated on boot by backend/knowledge_base.py. If this file is
+# malformed or violates the schema, the app fails fast with a clear error.
+#
+# ---------------------------------------------------------------------------
+# PROVENANCE POLICY (this is what makes the tool explainable and defensible)
+# ---------------------------------------------------------------------------
+# Every clinical assertion carries a `source` block:
+#   evidence_level : provisional | expert | guideline | dataset
+#   review_status  : unreviewed | clinician-reviewed
+#   mapped_scale   : the validated triage scale it maps to (WHO IITT / SATS).
+#   ref            : human-readable description of where this came from.
+#   url            : citation link, surfaced in the UI.
+#
+# Discriminators marked `guideline` map to the WHO Interagency Integrated
+# Triage Tool (IITT) red/yellow criteria. They remain `unreviewed` until a
+# clinician confirms the keyword mapping against the official chart.
+# =============================================================================
+
+version: 1
+
+meta:
+  name: "Sauti Yetu triage knowledge base"
+  description: >-
+    Symptom/finding -> topic -> department + urgency mappings plus WHO IITT
+    acuity discriminators for front-desk triage decision support. Age- and
+    sex-conditional criteria are gated by patient context.
+  reference_scales:
+    - name: "WHO Interagency Integrated Triage Tool (IITT)"
+      url: "https://www.who.int/tools/triage"
+    - name: "South African Triage Scale (SATS)"
+      url: "https://www.helse-bergen.no/4a95ce/siteassets/seksjon/mottaksklinikken/documents/sats-n-users-manual-version-3.02.pdf"
+    - name: "WHO Integrated Management of Childhood Illness (IMCI)"
+      url: "https://www.who.int/teams/maternal-newborn-child-adolescent-health-and-ageing/child-health/integrated-management-of-childhood-illness"
+  # The IITT charts are © WHO/ICRC/MSF, licensed CC BY-NC-SA 3.0 IGO
+  # (NonCommercial). The underlying clinical criteria are encoded here with
+  # attribution; COMMERCIAL use of the tool's wording/layout may need
+  # permission from the rights holders. Review before any paid deployment.
+  license: "Discriminators adapted from WHO/ICRC/MSF IITT (CC BY-NC-SA 3.0 IGO). Non-commercial; verify licensing before commercial use."
+
+# Ordered by clinical severity (rank 0 = most acute). Mapped to the three-tier
+# WHO Interagency Integrated Triage Tool (IITT) categories, whose red/yellow/
+# green palette clinicians already recognise.
+urgency_levels:
+  - id: EMERGENCY
+    rank: 0
+    label: "Emergency"
+    color: "red"
+    iitt_category: "Emergency (red) — needs immediate care"
+  - id: URGENT
+    rank: 1
+    label: "Urgent"
+    color: "orange"
+    iitt_category: "Priority (yellow) — should be seen soon"
+  - id: ROUTINE
+    rank: 2
+    label: "Routine"
+    color: "green"
+    iitt_category: "Non-urgent (green) — can wait safely"
+
+# What the engine does when NOTHING matches: never guess a topic, hand off to
+# a human for assessment (safety-first: under-triage is the dangerous error).
+fallback:
+  topic: "Undetermined — needs nurse assessment"
+  department: "General Outpatient / Triage desk"
+  urgency: ROUTINE
+
+# Questions asked when no topic-specific questions apply.
+default_questions:
+  - "When did the symptoms start?"
+  - "Has the patient taken any medication for this already?"
+  - "Any known allergies or chronic conditions?"
+
+# -----------------------------------------------------------------------------
+# ACUITY DISCRIMINATORS  (WHO IITT red = EMERGENCY, yellow = URGENT)
+# -----------------------------------------------------------------------------
+# Each discriminator is a clinical sign that implies a minimum triage category.
+# The engine derives urgency as the MOST ACUTE of (topic urgency, matched
+# discriminator categories) and escalates only, never de-escalates.
+#
+# `applies_when` gates age/sex-conditional criteria (e.g. chest/abdominal pain
+# is an IITT red criterion only when age > 50). Semantics are safety-first: a
+# rule is excluded ONLY when patient context is KNOWN to contradict it, so an
+# unknown age or sex biases toward over-triage.
+#
+# NOTE: keep EMERGENCY `label`s comma-free — they also render in the
+# comma-separated intake-card "red flags" field.
+discriminators:
+  # ===== RED CRITERIA (EMERGENCY) ============================================
+  - id: unresponsive
+    label: "Unresponsive or altered consciousness"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Disability"
+      ref: "IITT red criterion: unresponsive / altered mental status."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["unconscious", "unresponsive", "not responding", "collapsed", "not waking"]
+
+  - id: stridor
+    label: "Stridor"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Airway & Breathing"
+      ref: "IITT red criterion: stridor."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["stridor", "noisy breathing", "harsh breathing"]
+
+  - id: severe-respiratory-distress
+    label: "Severe respiratory distress or central cyanosis"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Airway & Breathing"
+      ref: "IITT red criterion: respiratory distress or central cyanosis."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "severe difficulty breathing"
+      - "can't breathe"
+      - "cannot breathe"
+      - "gasping"
+      - "struggling to breathe"
+      - "respiratory distress"
+      - "blue lips"
+      - "lips turning blue"
+      - "central cyanosis"
+
+  - id: shock-signs
+    label: "Signs of shock (weak or fast pulse, cold extremities)"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Circulation"
+      ref: "IITT red criterion: weak/fast pulse, cold extremities, capillary refill >3s."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "weak pulse"
+      - "fast pulse"
+      - "cold extremities"
+      - "cold hands"
+      - "capillary refill"
+      - "no pulse"
+      - "signs of shock"
+      - "in shock"
+
+  - id: heavy-bleeding
+    label: "Heavy or uncontrolled bleeding"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Circulation"
+      ref: "IITT red criterion: heavy bleeding."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["heavy bleeding", "severe bleeding", "bleeding heavily", "lost a lot of blood", "uncontrolled bleeding"]
+
+  - id: active-convulsion
+    label: "Active convulsion or seizure"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Disability"
+      ref: "IITT red criterion: active convulsions."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["convulsion", "convulsing", "seizure", "fitting", "actively seizing"]
+
+  - id: hypoglycaemia
+    label: "Hypoglycaemia (low blood sugar)"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Disability"
+      ref: "IITT red criterion: hypoglycaemia."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["low blood sugar", "hypoglycaemia", "hypoglycemia"]
+
+  - id: high-risk-trauma
+    label: "High-risk trauma"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — high-risk trauma (reference card)"
+      ref: "IITT red criterion: high-risk trauma (fall from height, high-speed crash, polytrauma, crush)."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "high-risk trauma"
+      - "major trauma"
+      - "fall from height"
+      - "high speed crash"
+      - "high-speed crash"
+      - "polytrauma"
+      - "crush injury"
+      - "thrown from vehicle"
+
+  - id: penetrating-trauma
+    label: "Penetrating trauma (gunshot or stab)"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — high-risk trauma (reference card)"
+      ref: "IITT high-risk trauma: penetrating injury."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["gunshot", "stab", "stabbed", "shot"]
+
+  - id: threatened-limb
+    label: "Threatened limb"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Other (reference card)"
+      ref: "IITT red criterion: threatened limb (pulseless, pale, cold, numb)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["pulseless limb", "cold pale limb", "threatened limb", "limb turning blue"]
+
+  - id: poisoning-ingestion
+    label: "Poisoning ingestion or dangerous chemical exposure"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Other"
+      ref: "IITT red criterion: poisoning/ingestion or dangerous chemical exposure (up-triage to red)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["poison", "poisoning", "overdose", "ingested", "swallowed chemical", "dangerous chemical"]
+
+  - id: snake-bite
+    label: "Snake bite"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Other"
+      ref: "IITT red criterion: snake bite."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["snake bite", "snakebite"]
+
+  - id: violent-aggressive
+    label: "Violent or aggressive"
+    category: EMERGENCY
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Other"
+      ref: "IITT red criterion: violent or aggressive."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["violent", "aggressive", "combative"]
+
+  - id: acute-chest-abdo-pain-over-50
+    label: "Acute chest or abdominal pain (over 50)"
+    category: EMERGENCY
+    applies_when:
+      age_min: 50
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Other (age > 50)"
+      ref: "IITT red criterion: acute chest or abdominal pain in patients over 50."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["chest pain", "abdominal pain", "stomach pain"]
+
+  - id: self-harm-intent
+    label: "Self-harm or suicidal intent"
+    category: EMERGENCY
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Mental-health emergency pathway (pending)"
+      ref: "App-policy escalation for self-harm/suicidal intent. Pathway pending."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["suicide", "self harm", "suicidal"]
+
+  # ----- Pregnancy red criteria (IITT: "pregnant with any of") ---------------
+  - id: pregnancy-preeclampsia
+    label: "Pregnancy with severe headache or visual changes"
+    category: EMERGENCY
+    applies_when:
+      pregnant: true
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Pregnancy"
+      ref: "IITT red criterion: pregnant with severe headache or visual changes."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["severe headache", "visual changes", "blurred vision", "seeing spots"]
+
+  - id: pregnancy-labour-bleeding
+    label: "Pregnancy with bleeding, severe pain or active labour"
+    category: EMERGENCY
+    applies_when:
+      pregnant: true
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT red — Pregnancy"
+      ref: "IITT red criterion: pregnant with heavy bleeding, severe abdominal pain, or active labour."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["bleeding", "severe abdominal pain", "active labour", "in labour", "reduced fetal movement", "baby not moving"]
+
+  # ===== YELLOW CRITERIA (URGENT) ============================================
+  - id: airway-swelling
+    label: "Swelling or mass of mouth, throat or neck"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Airway & Breathing"
+      ref: "IITT yellow criterion: swelling/mass of mouth, throat or neck."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["swelling in mouth", "throat swelling", "neck swelling", "mass in throat"]
+
+  - id: wheezing
+    label: "Wheezing"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Airway & Breathing"
+      ref: "IITT yellow criterion: wheezing (no red criteria)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["wheezing", "wheeze"]
+
+  - id: unable-to-feed
+    label: "Unable to feed or drink, or vomiting everything"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Circulation"
+      ref: "IITT yellow criterion: unable to feed/drink, vomits everything, ongoing diarrhoea."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["unable to feed", "not feeding", "can't drink", "refuses to drink", "vomits everything", "ongoing diarrhoea", "ongoing diarrhea"]
+
+  - id: dehydration
+    label: "Dehydration"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Circulation"
+      ref: "IITT yellow criterion: dehydration (sunken eyes, slow skin pinch)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["dehydrated", "dehydration", "sunken eyes", "slow skin pinch"]
+
+  - id: severe-pallor
+    label: "Severe pallor"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Circulation"
+      ref: "IITT yellow criterion: severe pallor (no red criteria)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["very pale", "severe pallor"]
+
+  - id: recent-fainting
+    label: "Recent fainting"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Circulation"
+      ref: "IITT yellow criterion: recent fainting."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["fainted", "fainting", "passed out"]
+
+  - id: altered-mental-agitation
+    label: "Altered mental status or agitation"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Disability"
+      ref: "IITT yellow criterion: altered mental status or agitation (no red criteria)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["confused", "agitated", "agitation", "disoriented", "drowsy", "irritable", "lethargic", "restless"]
+
+  - id: acute-neuro-complaint
+    label: "Acute neurological complaint or weakness"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Disability"
+      ref: "IITT yellow criterion: acute general weakness or acute focal neurologic complaint."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["sudden weakness", "weakness on one side", "numbness", "slurred speech", "facial droop", "acute weakness"]
+
+  - id: acute-visual-disturbance
+    label: "Acute visual disturbance"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Disability"
+      ref: "IITT yellow criterion: acute visual disturbance."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["sudden vision loss", "double vision", "visual disturbance", "cannot see"]
+
+  - id: severe-pain
+    label: "Severe pain"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Disability"
+      ref: "IITT yellow criterion: severe pain (no red criteria)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["severe pain", "extreme pain", "worst pain", "very painful"]
+
+  - id: limb-deformity-fracture
+    label: "Visible limb deformity, open fracture or dislocation"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Other"
+      ref: "IITT yellow criterion: visible acute limb deformity, open fracture, suspected dislocation."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["deformed limb", "open fracture", "broken bone", "fracture", "dislocation", "dislocated"]
+
+  - id: burns
+    label: "Burn (no red criteria)"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Other"
+      ref: "IITT yellow criterion: burns without red criteria. Major burns (>15% BSA, face/neck, inhalation, age <2 or >70) are red and need vitals/exam."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["burn", "burnt", "scald", "scalded"]
+
+  - id: sexual-assault
+    label: "Sexual assault"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Other"
+      ref: "IITT yellow criterion: sexual assault."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["sexual assault", "raped", "defiled"]
+
+  - id: unable-to-pass-urine
+    label: "Unable to pass urine"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Other"
+      ref: "IITT yellow criterion: unable to pass urine."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["cannot pass urine", "unable to pass urine", "not passing urine", "urinary retention"]
+
+  - id: time-sensitive-exposure
+    label: "Exposure needing time-sensitive prophylaxis (bite or needlestick)"
+    category: URGENT
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Other"
+      ref: "IITT yellow criterion: exposure requiring time-sensitive prophylaxis (e.g. animal bite, needlestick)."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["animal bite", "dog bite", "needlestick", "needle stick"]
+
+  - id: testicular-scrotal-pain
+    label: "Acute testicular or scrotal pain"
+    category: URGENT
+    applies_when:
+      sex: male
+    source:
+      evidence_level: guideline
+      review_status: chart-verified
+      mapped_scale: "WHO IITT yellow — Other"
+      ref: "IITT yellow criterion: acute testicular/scrotal pain or priapism."
+      url: "https://www.who.int/tools/triage"
+    keywords: ["testicular pain", "scrotal pain", "priapism"]
+
+# -----------------------------------------------------------------------------
+# TOPICS
+# -----------------------------------------------------------------------------
+# Order matters: on an urgency tie with an equal number of keyword hits, the
+# earlier topic wins (the reasoning engine uses a stable sort). Keep this list
+# ordered most-acute-first, matching the original ruleset.
+topics:
+  - id: chest-pain-cardiac
+    topic: "Chest pain / possible cardiac event"
+    department: "Emergency / Resuscitation"
+    urgency: EMERGENCY
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IITT adult flowchart — cardiovascular"
+      ref: "Ported heuristic; reconcile with IITT chest-pain discriminators."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "chest pain"
+      - "chest tightness"
+      - "heart attack"
+      - "palpitations"
+      - "crushing pain"
+      - "pain radiating"
+      - "left arm pain"
+    questions:
+      - "When did the chest pain start and is it constant?"
+      - "Does the pain spread to the arm, jaw, or back?"
+      - "Any history of heart disease or hypertension?"
+
+  - id: breathing-difficulty
+    topic: "Breathing difficulty"
+    department: "Emergency / Resuscitation"
+    urgency: EMERGENCY
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IITT adult/paediatric flowchart — breathing"
+      ref: "Ported heuristic; reconcile with IITT respiratory discriminators."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "can't breathe"
+      - "cannot breathe"
+      - "difficulty breathing"
+      - "shortness of breath"
+      - "short of breath"
+      - "choking"
+      - "wheezing"
+      - "asthma attack"
+      - "gasping"
+    questions:
+      - "Did the breathing difficulty start suddenly or gradually?"
+      - "Any known asthma, allergies, or recent choking?"
+      - "Are the lips or fingertips turning blue?"
+
+  - id: severe-bleeding-injury
+    topic: "Severe bleeding / major injury"
+    department: "Emergency / Trauma"
+    urgency: EMERGENCY
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "SATS trauma discriminators / WHO IITT"
+      ref: "Ported heuristic; reconcile with SATS red trauma discriminators."
+      url: "https://www.helse-bergen.no/4a95ce/siteassets/seksjon/mottaksklinikken/documents/sats-n-users-manual-version-3.02.pdf"
+    keywords:
+      - "bleeding heavily"
+      - "severe bleeding"
+      - "lost a lot of blood"
+      - "deep cut"
+      - "stab"
+      - "gunshot"
+      - "accident"
+      - "fracture"
+      - "broken bone"
+      - "head injury"
+      - "unconscious"
+      - "fainted"
+      - "collapsed"
+      - "seizure"
+      - "convulsion"
+    questions:
+      - "How did the injury happen and when?"
+      - "Has the patient lost consciousness at any point?"
+      - "Is the bleeding controlled with pressure?"
+
+  - id: pregnancy-labour
+    topic: "Pregnancy / labour concern"
+    department: "Obstetrics & Gynaecology / Maternity"
+    urgency: URGENT
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IITT obstetric discriminators"
+      ref: "Ported heuristic; reconcile with obstetric triage discriminators."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "pregnant"
+      - "pregnancy"
+      - "labour"
+      - "labor"
+      - "contractions"
+      - "water broke"
+      - "waters broke"
+      - "miscarriage"
+      - "baby is coming"
+      - "antenatal"
+    questions:
+      - "How many weeks pregnant is the patient?"
+      - "Any bleeding, fluid loss, or reduced baby movement?"
+      - "How far apart are the contractions?"
+
+  - id: fever-infection
+    topic: "Fever / possible infection (malaria, typhoid, etc.)"
+    department: "General Outpatient / Internal Medicine"
+    urgency: URGENT
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IMCI / IITT fever pathway"
+      ref: "Ported heuristic; reconcile with IMCI/IITT fever discriminators."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "fever"
+      - "high temperature"
+      - "malaria"
+      - "typhoid"
+      - "chills"
+      - "shivering"
+      - "sweating at night"
+      - "body is hot"
+      - "hot body"
+    questions:
+      - "How many days has the fever lasted?"
+      - "Any recent travel or mosquito exposure?"
+      - "Is there vomiting, rash, or neck stiffness with the fever?"
+
+  - id: abdominal-gi
+    topic: "Abdominal pain / gastrointestinal"
+    department: "General Outpatient / Surgery review"
+    urgency: URGENT
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IITT abdominal discriminators"
+      ref: "Ported heuristic; reconcile with abdominal-pain discriminators."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "stomach pain"
+      - "abdominal pain"
+      - "stomach ache"
+      - "belly pain"
+      - "vomiting"
+      - "diarrhea"
+      - "diarrhoea"
+      - "nausea"
+      - "constipation"
+      - "blood in stool"
+    questions:
+      - "Where exactly is the pain and how severe (1-10)?"
+      - "Any vomiting or diarrhoea, and for how long?"
+      - "When did the patient last eat or drink?"
+
+  - id: paediatric-illness
+    topic: "Child illness (paediatric)"
+    department: "Paediatrics"
+    urgency: URGENT
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IMCI"
+      ref: "Ported heuristic; reconcile with IMCI danger signs."
+      url: "https://www.who.int/teams/maternal-newborn-child-adolescent-health-and-ageing/child-health/integrated-management-of-childhood-illness"
+    keywords:
+      - "my baby"
+      - "my child"
+      - "the baby"
+      - "infant"
+      - "toddler"
+      - "child is sick"
+      - "not feeding"
+      - "child has"
+    questions:
+      - "How old is the child?"
+      - "Is the child feeding, drinking, and passing urine normally?"
+      - "Any fever, rash, or fast breathing?"
+
+  - id: headache-neuro
+    topic: "Headache / neurological complaint"
+    department: "General Outpatient / Neurology review"
+    urgency: URGENT
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IITT neurological discriminators"
+      ref: "Ported heuristic; reconcile with neuro discriminators (e.g. sudden worst headache, focal deficit)."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "headache"
+      - "migraine"
+      - "dizzy"
+      - "dizziness"
+      - "blurred vision"
+      - "numbness"
+      - "weakness on one side"
+      - "confusion"
+    questions:
+      - "Is this the worst headache the patient has ever had?"
+      - "Any vision changes, vomiting, or neck stiffness?"
+      - "Did the symptoms come on suddenly?"
+
+  - id: skin-wound
+    topic: "Skin / wound complaint"
+    department: "General Outpatient / Minor procedures"
+    urgency: ROUTINE
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IITT (green) / local wound-care protocol"
+      ref: "Ported heuristic; note animal/snake bites may need escalation."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "rash"
+      - "itching"
+      - "skin"
+      - "wound"
+      - "swelling"
+      - "boil"
+      - "burn"
+      - "insect bite"
+      - "dog bite"
+      - "snake bite"
+    questions:
+      - "How long has the skin problem been present?"
+      - "Is it spreading, painful, or discharging?"
+      - "Any animal or insect bite involved?"
+
+  - id: medication-chronic
+    topic: "Medication refill / chronic condition follow-up"
+    department: "Pharmacy / Chronic care clinic"
+    urgency: ROUTINE
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Local chronic-care / pharmacy protocol"
+      ref: "Ported heuristic; operational routing rather than acuity triage."
+      url: "https://www.who.int/tools/triage"
+    keywords:
+      - "medication"
+      - "medicine finished"
+      - "refill"
+      - "prescription"
+      - "diabetes"
+      - "hypertension"
+      - "blood pressure"
+      - "hiv"
+      - "arv"
+      - "clinic appointment"
+      - "follow up"
+      - "follow-up"
+    questions:
+      - "Which medication does the patient take and at what dose?"
+      - "When was the last clinic review?"
+      - "Any new symptoms since the last visit?"
+
+# -----------------------------------------------------------------------------
+# HIGH-RISK VITAL SIGNS  (WHO IITT, age-banded)
+# -----------------------------------------------------------------------------
+# Evaluated ONLY when a reading is entered (audio cannot supply vitals). Any
+# abnormal reading up-triages to EMERGENCY / immediate clinician review per the
+# IITT ("patients with high-risk vital signs need up-triage or immediate review
+# by a supervising clinician"). Numeric vitals use age-banded normal ranges;
+# a reading below `low` or above `high` is abnormal. AVPU is abnormal when not
+# 'A' (alert). When age is unknown the adult band is used.
+vital_signs:
+  source:
+    evidence_level: guideline
+    review_status: chart-verified
+    mapped_scale: "WHO IITT high-risk vital signs"
+    ref: "IITT high-risk vital signs (age-banded HR/RR, temperature, SpO2, AVPU)."
+    url: "https://www.who.int/tools/triage"
+  age_bands:
+    - id: infant
+      label: "under 1 year"
+      min_age: 0
+      max_age: 1
+    - id: young-child
+      label: "1 to 4 years"
+      min_age: 1
+      max_age: 5
+    - id: child
+      label: "5 to 12 years"
+      min_age: 5
+      max_age: 12
+    - id: adult
+      label: "12 and over"
+      min_age: 12
+  thresholds:
+    - id: heart_rate
+      label: "Heart rate"
+      unit: " bpm"
+      category: EMERGENCY
+      kind: numeric
+      bands:
+        infant: { low: 90, high: 180 }
+        young-child: { low: 80, high: 160 }
+        child: { low: 70, high: 140 }
+        adult: { low: 60, high: 130 }
+    - id: resp_rate
+      label: "Respiratory rate"
+      unit: "/min"
+      category: EMERGENCY
+      kind: numeric
+      bands:
+        infant: { low: 25, high: 50 }
+        young-child: { low: 20, high: 40 }
+        child: { low: 10, high: 30 }
+        adult: { low: 10, high: 30 }
+    - id: temperature
+      label: "Temperature"
+      unit: "°C"
+      category: EMERGENCY
+      kind: numeric
+      bands:
+        all: { low: 36, high: 39 }
+    - id: spo2
+      label: "Oxygen saturation"
+      unit: "%"
+      category: EMERGENCY
+      kind: numeric
+      bands:
+        all: { low: 92, high: null }
+    - id: avpu
+      label: "Responsiveness (AVPU)"
+      category: EMERGENCY
+      kind: avpu
+      bands: {}
+
+# -----------------------------------------------------------------------------
+# CONDITIONS  (probabilistic differential — likelihood-ratio Bayesian layer)
+# -----------------------------------------------------------------------------
+# The engine ranks these by posterior probability: it starts from `prior`
+# (baseline prevalence; tune to LOCAL epidemiology) and multiplies the odds by
+# each present finding's likelihood ratio (`lr`). This is naive-Bayes single-
+# disease scoring for RANKING a differential — it augments the "possible
+# conditions" list and must never override the deterministic acuity path.
+#
+# IMPORTANT: the priors and LRs below are PROVISIONAL starter estimates for the
+# mechanism. Replace them with cited values (e.g. JAMA Rational Clinical
+# Examination for LRs; national/WHO prevalence for priors) during clinical
+# review. `age`/`sex`/`pregnant` conditions are gated by `applies_when`.
+conditions:
+  - id: malaria
+    label: "Malaria"
+    prior: 0.15
+    department: "General Outpatient / Internal Medicine"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs + local prevalence (to be sourced)"
+      ref: "Provisional prior/LRs; endemic prior, tune to local malaria prevalence."
+      url: "https://www.who.int/health-topics/malaria"
+    findings:
+      - { match: "malaria", lr: 18 }
+      - { match: "fever", lr: 3 }
+      - { match: "chills", lr: 4 }
+      - { match: "shivering", lr: 3 }
+      - { match: "sweating at night", lr: 2.5 }
+      - { match: "body is hot", lr: 2 }
+      - { match: "headache", lr: 1.4 }
+
+  - id: typhoid
+    label: "Typhoid fever"
+    prior: 0.06
+    department: "General Outpatient / Internal Medicine"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs + local prevalence (to be sourced)"
+      ref: "Provisional prior/LRs; tune to local enteric-fever prevalence."
+      url: "https://www.who.int/news-room/fact-sheets/detail/typhoid"
+    findings:
+      - { match: "typhoid", lr: 18 }
+      - { match: "fever", lr: 2.5 }
+      - { match: "abdominal pain", lr: 2 }
+      - { match: "constipation", lr: 2 }
+      - { match: "headache", lr: 1.4 }
+
+  - id: gastroenteritis
+    label: "Gastroenteritis"
+    prior: 0.10
+    department: "General Outpatient / Internal Medicine"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs (to be sourced)"
+      ref: "Provisional prior/LRs for acute gastroenteritis."
+      url: "https://www.who.int/health-topics/diarrhoea"
+    findings:
+      - { match: "diarrhea", lr: 4 }
+      - { match: "diarrhoea", lr: 4 }
+      - { match: "vomiting", lr: 3 }
+      - { match: "nausea", lr: 2 }
+      - { match: "stomach pain", lr: 1.5 }
+      - { match: "abdominal pain", lr: 1.5 }
+
+  - id: dehydration
+    label: "Dehydration"
+    prior: 0.08
+    department: "General Outpatient / Internal Medicine"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "WHO IMCI dehydration signs (to be sourced)"
+      ref: "Provisional prior/LRs; secondary to diarrhoea/vomiting."
+      url: "https://www.who.int/health-topics/diarrhoea"
+    findings:
+      - { match: "dehydrated", lr: 15 }
+      - { match: "sunken eyes", lr: 6 }
+      - { match: "diarrhea", lr: 3 }
+      - { match: "diarrhoea", lr: 3 }
+      - { match: "vomiting", lr: 2.5 }
+      - { match: "not feeding", lr: 2 }
+
+  - id: pneumonia
+    label: "Pneumonia / lower respiratory infection"
+    prior: 0.05
+    department: "General Outpatient / Internal Medicine"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs (to be sourced)"
+      ref: "Provisional prior/LRs for community-acquired pneumonia."
+      url: "https://www.who.int/news-room/fact-sheets/detail/pneumonia"
+    findings:
+      - { match: "cough", lr: 3 }
+      - { match: "fever", lr: 2 }
+      - { match: "difficulty breathing", lr: 3 }
+      - { match: "shortness of breath", lr: 2.5 }
+      - { match: "chest pain", lr: 1.8 }
+
+  - id: asthma-exacerbation
+    label: "Asthma exacerbation"
+    prior: 0.05
+    department: "Emergency / Resuscitation"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs (to be sourced)"
+      ref: "Provisional prior/LRs for acute asthma."
+      url: "https://www.who.int/news-room/fact-sheets/detail/asthma"
+    findings:
+      - { match: "asthma", lr: 15 }
+      - { match: "wheezing", lr: 8 }
+      - { match: "difficulty breathing", lr: 3 }
+      - { match: "can't breathe", lr: 3 }
+
+  - id: acute-coronary-syndrome
+    label: "Acute coronary syndrome"
+    prior: 0.02
+    department: "Emergency / Resuscitation"
+    applies_when:
+      age_min: 35
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "JAMA Rational Clinical Examination (to be sourced)"
+      ref: "Provisional prior/LRs; radiation and character carry most weight."
+      url: "https://www.who.int/tools/triage"
+    findings:
+      - { match: "pain radiating", lr: 8 }
+      - { match: "left arm pain", lr: 6 }
+      - { match: "crushing pain", lr: 6 }
+      - { match: "chest tightness", lr: 3 }
+      - { match: "chest pain", lr: 3 }
+      - { match: "palpitations", lr: 2 }
+
+  - id: stroke
+    label: "Stroke / TIA"
+    prior: 0.01
+    department: "Emergency / Resuscitation"
+    applies_when:
+      age_min: 40
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs (to be sourced)"
+      ref: "Provisional prior/LRs; focal deficit carries most weight."
+      url: "https://www.who.int/tools/triage"
+    findings:
+      - { match: "weakness on one side", lr: 10 }
+      - { match: "facial droop", lr: 10 }
+      - { match: "slurred speech", lr: 8 }
+      - { match: "numbness", lr: 3 }
+      - { match: "confusion", lr: 2 }
+
+  - id: meningitis
+    label: "Meningitis"
+    prior: 0.006
+    department: "Emergency / Resuscitation"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs (to be sourced)"
+      ref: "Provisional prior/LRs; neck stiffness carries most weight."
+      url: "https://www.who.int/tools/triage"
+    findings:
+      - { match: "neck stiffness", lr: 8 }
+      - { match: "headache", lr: 2 }
+      - { match: "fever", lr: 2 }
+      - { match: "confusion", lr: 4 }
+      - { match: "convulsion", lr: 3 }
+
+  - id: pre-eclampsia
+    label: "Pre-eclampsia"
+    prior: 0.03
+    department: "Obstetrics & Gynaecology / Maternity"
+    applies_when:
+      pregnant: true
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Obstetric guideline (to be sourced)"
+      ref: "Provisional prior/LRs; applies in pregnancy only."
+      url: "https://www.who.int/tools/triage"
+    findings:
+      - { match: "visual changes", lr: 5 }
+      - { match: "severe headache", lr: 4 }
+      - { match: "blurred vision", lr: 4 }
+      - { match: "swelling", lr: 2 }
+
+  - id: urinary-tract-infection
+    label: "Urinary tract infection"
+    prior: 0.05
+    department: "General Outpatient / Internal Medicine"
+    source:
+      evidence_level: provisional
+      review_status: unreviewed
+      mapped_scale: "Literature LRs (to be sourced)"
+      ref: "Provisional prior/LRs for UTI."
+      url: "https://www.who.int/tools/triage"
+    findings:
+      - { match: "burning urine", lr: 8 }
+      - { match: "unable to pass urine", lr: 3 }
+      - { match: "cannot pass urine", lr: 3 }
+      - { match: "fever", lr: 1.4 }
+      - { match: "abdominal pain", lr: 1.5 }

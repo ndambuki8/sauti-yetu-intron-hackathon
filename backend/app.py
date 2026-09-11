@@ -31,9 +31,10 @@ from . import phrases as phrases_module
 from . import translator, tts_client
 from .config import FRONTEND_DIR, SUPPORTED_LANGUAGES
 from .graph import build_graph_delta
+from .extract import extract_patient_hints
 from .graph_store import SESSION_STORE
 from .intron_client import IntronError, transcribe_telehealth
-from .triage import run_triage
+from .triage import PatientContext, run_triage
 
 app = FastAPI(title="Voice Triage Hint")
 
@@ -89,6 +90,14 @@ def triage(
     audio: UploadFile = File(...),
     language_code: str = Form("en"),
     session_id: str | None = Form(None),
+    age: float | None = Form(None),
+    sex: str | None = Form(None),
+    pregnant: bool | None = Form(None),
+    hr: float | None = Form(None),
+    rr: float | None = Form(None),
+    temp: float | None = Form(None),
+    spo2: float | None = Form(None),
+    avpu: str | None = Form(None),
 ):
     if language_code not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=400, detail=f"Unsupported language: {language_code}")
@@ -104,7 +113,40 @@ def triage(
     except IntronError as exc:
         raise HTTPException(status_code=502, detail=str(exc))
 
-    triage_result = run_triage(intron_result, SUPPORTED_LANGUAGES[language_code])
+    # Explicit clinician input wins; anything left blank is filled from what the
+    # patient said in the conversation, and flagged as auto-detected for review.
+    explicit_age = age if age is not None and age >= 0 else None
+    explicit_sex = sex if sex in ("male", "female") else None
+    hints = extract_patient_hints(
+        intron_result.get("transcript", ""),
+        intron_result.get("summary", ""),
+        intron_result.get("entities", ""),
+    )
+    eff_age = explicit_age if explicit_age is not None else hints["age"]
+    eff_sex = explicit_sex if explicit_sex is not None else hints["sex"]
+    eff_pregnant = pregnant if pregnant is not None else hints["pregnant"]
+    auto_detected = []
+    if explicit_age is None and hints["age"] is not None:
+        auto_detected.append("age")
+    if explicit_sex is None and hints["sex"] is not None:
+        auto_detected.append("sex")
+    if pregnant is None and hints["pregnant"] is not None:
+        auto_detected.append("pregnancy")
+
+    # Age/sex gate age-conditional IITT discriminators; unknown never excludes.
+    # Vitals (optional) drive the age-banded high-risk vital-sign checks.
+    patient = PatientContext(
+        age=eff_age,
+        sex=eff_sex,
+        pregnant=eff_pregnant,
+        hr=hr,
+        rr=rr,
+        temp=temp,
+        spo2=spo2,
+        avpu=avpu if avpu else None,
+    )
+    triage_result = run_triage(intron_result, SUPPORTED_LANGUAGES[language_code], patient)
+    triage_result["auto_detected"] = auto_detected
 
     # Unknown or missing session ids start a fresh consultation implicitly,
     # so direct API callers don't need the session endpoints.
