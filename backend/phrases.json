@@ -48,6 +48,78 @@
       "Please follow me to the examination room.": "Ngicela ningilandele ngiye egumbini lokuhlolwa.",
       "You are safe here, we will take care of you.": "Uphephile lapha, sizokunakekela.",
       "Do you have someone with you who can help translate?": "Ingabe ukhona ongasiza ekuhumusheni?"
+    },
+    "wo": {
+      "Please wait, a doctor will see you shortly.": "Yal na xeex, doktoor dina la gis ci lu yàgg.",
+      "Where exactly does it hurt?": "Foofa tax tax tax tax tax tax tax tax tax tax tax tax tax tax tax tax tax tax tax?",
+      "How long have you been feeling this way?": "Lu yàgg nga ngi feel nii?",
+      "Have you taken any medicine for this already?": "Ndax nga jël dara ci wii xëtu?",
+      "We need to take a blood sample for testing.": "Nu war na jël ay xarab yu deret ngir seet.",
+      "We need to check your temperature and blood pressure.": "Nu war na seet sa temperatura ak sa xeex.",
+      "Do you have any allergies or ongoing illnesses?": "Ndax am na la ay xarit mbaa ay jàngoro yu tollu?",
+      "Please follow me to the examination room.": "Yal na ma topp ci biir kër gi.",
+      "You are safe here, we will take care of you.": "Dinaa am njariñ, nu leen di sàmm.",
+      "Do you have someone with you who can help translate?": "Ndax am na kenn ci yaw, mi man a koy wallu?"
+    },
+    "ig": {
+      "Please wait, a doctor will see you shortly.": "Biko chere, dọkịta ga-ahụ gị n'oge na-adịghị anya.",
+      "Where exactly does it hurt?": "Olee ebe ọ na-egbu mgbu?",
+      "How long have you been feeling this way?": "Kemgbe ole mgbe ka obi na-adị gị otú a?",
+      "Have you taken any medicine for this already?": "Ị̀ ṅụrụ ọgwụ ọ bụla maka nke a?",
+      "We need to take a blood sample for testing.": "Anyị kwesịrị iwere ọbara ka a nwalee ya.",
+      "We need to check your temperature and blood pressure.": "Anyị kwesịrị inyocha ọnọdụ okpomọkụ na ọbara mgbali gị.",
+      "Do you have any allergies or ongoing illnesses?": "Ì nwere allergies ma ọ bụ ọrịa ọ bụla na-aga n'ihu?",
+      "Please follow me to the examination room.": "Biko soro m gaa n'ọnụ ụlọ nyocha.",
+      "You are safe here, we will take care of you.": "Ị ga-adị mma ebe a, anyị ga-elekọta gị.",
+      "Do you have someone with you who can help translate?": "Ì nwere onye ga-enyere gị aka ịsụgharị?"
+    },
+    "af": {
+      "Please wait, a doctor will see you shortly.": "Wag asseblief, 'n dokter sal jou binnekort sien.",
+      "Where exactly does it hurt?": "Waar maak dit presies seer?",
+      "How long have you been feeling this way?": "Hoe lank voel jy al so?",
+      "Have you taken any medicine for this already?": "Het jy al medikasie vir hierdie behandeling geneem?",
+      "We need to take a blood sample for testing.": "Ons moet 'n bloedmonster neem vir toetsing.",
+      "We need to check your temperature and blood pressure.": "Ons moet jou temperatuur en bloeddruk ondersoek.",
+      "Do you have any allergies or ongoing illnesses?": "Het jy allergieë of aanhoudende siektes?",
+      "Please follow me to the examination room.": "Volg my asseblief na die eksamenkamer.",
+      "You are safe here, we will take care of you.": "Jy is veilig hier, ons sal sorg vir jou.",
+      "Do you have someone with you who can help translate?": "Het jy iemand by jou wat kan help vertaal?"
+    },
+    "ha": {
+      "Please wait, a doctor will see you shortly.": "Don Allah jira, likita zai gan ka nan da nan.",
+      "Where exactly does it hurt?": "A ina ne yake ciwo?",
+      "How long have you been feeling this way?": "Tun yaushe kake jin haka?",
+      "Have you taken any medicine for this already?": "Ka riga ka sha magani don wannan?",
+      "We need to take a blood sample for testing.": "Muna bukatar mu dauki samfurin jini don gwaji.",
+      "We need to check your temperature and blood pressure.": "Muna bukatar mu duba zafin jikinka da kuma karfin jini.",
+      "Do you have any allergies or ongoing illnesses?": "Kana fama da allergies ko kuma rashin lafiya?",
+      "Please follow me to the examination room.": "Don Allah ku bi ni zuwa dakin binciken.",
+      "You are safe here, we will take care of you.": "Za ka kasance lafiya a nan, za mu kula da ku.",
+      "Do you have someone with you who can help translate?": "Shin kana da wani da zai taimake ka ka fassara?"
+    },
+    "am": {
+      "Please wait, a doctor will see you shortly.": "እባክዎን ይጠብቁ፣ ዶክተር በቅርቡ ያያችኋል።",
+      "Where exactly does it hurt?": "የት በትክክል ይጎዳል?",
+      "How long have you been feeling this way?": "ይህን ስሜት ከሰማህ ምን ያህል ጊዜ ኖረህ ነው?",
+      "Have you taken any medicine for this already?": "ለዚህ መድሃኒት ወስደህ ታውቃለህ?",
+      "We need to take a blood sample for testing.": "ለምርመራ የደም ናሙና መውሰድ አለብን ።",
+      "We need to check your temperature and blood pressure.": "የሙቀት መጠንና የደም ግፊትዎን መመርመር አለብን.",
+      "Do you have any allergies or ongoing illnesses?": "አለርጂ ወይም ቀጣይነት ያለው በሽታ አለዎት?",
+      "Please follow me to the examination room.": "እባክህ ወደ ምርመራ ክፍል ተከተለኝ።",
+      "You are safe here, we will take care of you.": "እዚህ ደህና ነህ፤ እንከባከብሃለን።",
+      "Do you have someone with you who can help translate?": "የትርጉም ሥራውን የሚያከናውን ሰው አለህ?"
+    },
+    "yo": {
+      "Please wait, a doctor will see you shortly.": "Jọ̀wọ́ dúró, dókítà yóò rí ọ láìpẹ́.",
+      "Where exactly does it hurt?": "Ibo gan-an ni ó ti ń ṣe é?",
+      "How long have you been feeling this way?": "Ìgbà wo ni nǹkan yìí ti ń ṣẹlẹ̀ sí ẹ?",
+      "Have you taken any medicine for this already?": "Ṣé o ti lo oògùn kankan fún èyí rí?",
+      "We need to take a blood sample for testing.": "A ní láti gba ẹ̀jẹ̀ fún ìwádìí.",
+      "We need to check your temperature and blood pressure.": "A ní láti ṣàyẹ̀wò òtútù àti ìsoríkọ́ ẹ̀jẹ̀ rẹ.",
+      "Do you have any allergies or ongoing illnesses?": "Ṣé o ní àìlera tàbí àìlera kan tó ń bá ẹ fínra?",
+      "Please follow me to the examination room.": "Jọwọ tẹ̀ lé mi lọ sí yàrá ìwádìí.",
+      "You are safe here, we will take care of you.": "O ní ààbò níbí, a ó bójú tó ọ.",
+      "Do you have someone with you who can help translate?": "Ǹjẹ́ o ní ẹnì kan tó lè ràn ẹ́ lọ́wọ́ láti túmọ̀?"
     }
   }
 }

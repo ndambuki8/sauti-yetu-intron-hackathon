@@ -21,7 +21,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import phrases as phrases_module
+from . import lid, phrases as phrases_module
 from . import translator, tts_client
 from .config import (
     APP_DIR,
@@ -80,25 +80,29 @@ def _read_audio(audio: UploadFile) -> bytes:
 
 
 def _resolve_patient_language(
-    language_code: str, audio_bytes: bytes, filename: str
+    language_code: str,
+    audio_bytes: bytes,
+    filename: str,
+    prior_language: str | None = None,
 ) -> tuple[str, dict | None]:
-    """Return (intron_language_code, detection_meta_or_None)."""
+    """Return (intron_language_code, audio_detection_or_None)."""
     if language_code != "auto":
         return language_code, None
+    fallback = prior_language if prior_language in SUPPORTED_LANGUAGES else "en"
     try:
         from .asr_models import detect_language
 
         detected = detect_language(audio_bytes, filename)
     except Exception as exc:
-        return "en", {
-            "language_code": "en",
-            "whisper_code": "en",
+        return fallback, {
+            "language_code": fallback,
+            "mms_code": None,
             "confidence": 0,
             "error": str(exc)[:200],
         }
     code = detected["language_code"]
     if code not in SUPPORTED_LANGUAGES:
-        code = "en"
+        code = fallback
     return code, detected
 
 
@@ -164,7 +168,14 @@ def triage(
         audio_bytes, filename = prepare_for_intron(audio_bytes, filename)
     except Exception:
         pass
-    asr_language, detection = _resolve_patient_language(language_code, audio_bytes, filename)
+
+    prior_language = None
+    if session_id and SESSION_STORE.exists(session_id):
+        prior_language = SESSION_STORE.last_patient_language(session_id)
+
+    asr_language, audio_detection = _resolve_patient_language(
+        language_code, audio_bytes, filename, prior_language
+    )
     output_language = doctor_language if doctor_language in SAHARA_OUTPUT_LANGUAGES else "en"
 
     try:
@@ -177,10 +188,24 @@ def triage(
     except IntronError as exc:
         raise HTTPException(status_code=502, detail=str(exc))
 
+    transcript_patient = intron_result["transcript"] or ""
+    text_detection = None
+    if language_code == "auto":
+        text_detection = lid.identify(transcript_patient)
+        if text_detection and text_detection["language_code"] in SUPPORTED_LANGUAGES:
+            asr_language = text_detection["language_code"]
+
+    detection = None
+    if language_code == "auto":
+        detection = {
+            "audio": audio_detection,
+            "text": text_detection,
+            "final": asr_language,
+        }
+
     language_name = SUPPORTED_LANGUAGES.get(asr_language, asr_language)
     triage_result = run_triage(intron_result, language_name)
 
-    transcript_patient = intron_result["transcript"] or ""
     transcript_doctor = translator.translate_to_doctor(
         transcript_patient, asr_language, doctor_language
     )

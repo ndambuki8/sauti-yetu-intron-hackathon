@@ -10,6 +10,7 @@ INTRON_API_KEY = os.getenv("INTRON_API_KEY", "")
 INTRON_BASE_URL = os.getenv("INTRON_BASE_URL", "https://infer.voice.intron.io")
 WHISPER_MODEL_SIZE = os.getenv("WHISPER_MODEL_SIZE", "base")
 MMS_MODEL_ID = os.getenv("MMS_MODEL_ID", "facebook/mms-1b-all")
+MMS_LID_MODEL_ID = os.getenv("MMS_LID_MODEL_ID", "facebook/mms-lid-126")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 

@@ -9,7 +9,9 @@ import types
 
 from fastapi.testclient import TestClient
 
+from backend import lid
 from backend.app import app
+from backend.asr_models import closed_set_lid
 from backend.graph import _split_extraction, build_graph_delta
 from backend.graph_store import SessionStore
 from backend.triage import run_triage
@@ -191,3 +193,118 @@ def test_benchmark_has_no_graph(monkeypatch):
     )
     assert res.status_code == 200
     assert "graph" not in res.json()
+
+
+# ---------- text LID + Auto language triage ----------
+
+SWAHILI_TRANSCRIPT = (
+    "Ninaumwa kichwa sana tangu asubuhi na siwezi kulala vizuri."
+)
+
+
+def test_lid_identifies_swahili():
+    result = lid.identify(SWAHILI_TRANSCRIPT)
+    assert result is not None
+    assert result["language_code"] == "sw"
+    assert result["confidence"] >= 0.55
+
+
+def test_lid_identifies_english():
+    result = lid.identify(
+        "I have had a headache since this morning and I cannot sleep well."
+    )
+    assert result is not None
+    assert result["language_code"] == "en"
+
+
+def test_lid_identifies_amharic_from_fidel():
+    result = lid.identify("ራስ ምታት አለብኝ ከጠዋት ጀምሮ መተኛት አልችልም።")
+    assert result is not None
+    assert result["language_code"] == "am"
+    assert result["source"] == "script"
+
+
+def test_lid_rejects_short_text():
+    assert lid.identify("hi") is None
+
+
+def test_store_last_patient_language():
+    store = SessionStore()
+    sid = store.create()
+    assert store.last_patient_language(sid) is None
+    store.append(sid, build_graph_delta(FAKE_INTRON_RESULT, _triage_result(), turn=1))
+    store.record_turn(
+        sid,
+        detected_language="sw",
+        transcript_patient=SWAHILI_TRANSCRIPT,
+        transcript_doctor=SWAHILI_TRANSCRIPT,
+        triage=_triage_result(),
+        summary="headache",
+    )
+    assert store.last_patient_language(sid) == "sw"
+
+
+def test_closed_set_lid_maps_ibo_and_ignores_unknown():
+    picked = closed_set_lid({"ibo": 4.0, "som": 9.0, "eng": 1.0})
+    assert picked is not None
+    assert picked["language_code"] == "ig"
+    assert picked["mms_code"] == "ibo"
+    assert closed_set_lid({"som": 5.0, "ful": 3.0}) is None
+
+
+def _audio_english(*_args, **_kwargs):
+    return {"language_code": "en", "mms_code": "eng", "confidence": 0.91}
+
+
+def test_auto_triage_trusts_text_lid_over_audio_english(monkeypatch):
+    swahili_result = {**FAKE_INTRON_RESULT, "transcript": SWAHILI_TRANSCRIPT}
+    monkeypatch.setattr(
+        "backend.app.transcribe_telehealth",
+        lambda *args, **kwargs: dict(swahili_result),
+    )
+    monkeypatch.setattr("backend.asr_models.detect_language", _audio_english)
+    client = TestClient(app)
+    res = client.post(
+        "/api/triage",
+        files={"audio": ("clip.webm", io.BytesIO(b"fake audio"), "audio/webm")},
+        data={"language_code": "auto"},
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["detected_language"] == "sw"
+    assert body["detection"]["audio"]["language_code"] == "en"
+    assert body["detection"]["text"]["language_code"] == "sw"
+    assert body["detection"]["final"] == "sw"
+
+
+def test_auto_audio_lid_failure_uses_session_prior(monkeypatch):
+    sahara_languages: list[str] = []
+
+    def _capture_transcribe(audio_bytes, filename, language_code, output_language):
+        sahara_languages.append(language_code)
+        return {**FAKE_INTRON_RESULT, "transcript": SWAHILI_TRANSCRIPT}
+
+    monkeypatch.setattr("backend.app.transcribe_telehealth", _capture_transcribe)
+    monkeypatch.setattr("backend.asr_models.detect_language", _audio_english)
+    client = TestClient(app)
+    first = client.post(
+        "/api/triage",
+        files={"audio": ("clip.webm", io.BytesIO(b"fake audio"), "audio/webm")},
+        data={"language_code": "auto"},
+    )
+    assert first.status_code == 200
+    assert first.json()["detected_language"] == "sw"
+    sid = first.json()["session_id"]
+
+    def _audio_fails(*_args, **_kwargs):
+        raise RuntimeError("mms-lid unavailable")
+
+    monkeypatch.setattr("backend.asr_models.detect_language", _audio_fails)
+    second = client.post(
+        "/api/triage",
+        files={"audio": ("clip.webm", io.BytesIO(b"fake audio"), "audio/webm")},
+        data={"language_code": "auto", "session_id": sid},
+    )
+    assert second.status_code == 200
+    assert sahara_languages[-1] == "sw"
+    assert second.json()["detected_language"] == "sw"

@@ -3,6 +3,7 @@
 Two models, both key-free:
 - OpenAI Whisper (multilingual, via the openai-whisper package)
 - Meta MMS (facebook/mms-1b-all, via transformers)
+Auto language uses MMS-LID (facebook/mms-lid-126), not Whisper detect.
 
 Models are lazy-loaded on first use so the triage flow works even when these
 heavy dependencies are not installed. Audio is normalized to 16 kHz mono WAV
@@ -14,7 +15,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from .config import MMS_MODEL_ID, WHISPER_MODEL_SIZE
+from .config import MMS_LID_MODEL_ID, MMS_MODEL_ID, WHISPER_MODEL_SIZE
 
 # Intron/ISO-639-1 code -> Whisper language name (None = auto-detect).
 WHISPER_LANG = {
@@ -52,6 +53,8 @@ MMS_LANG = {
 _whisper_model = None
 _mms_model = None
 _mms_processor = None
+_mms_lid_model = None
+_mms_lid_extractor = None
 
 
 def convert_to_wav_16k(audio_bytes: bytes, suffix: str = ".webm") -> Path:
@@ -145,49 +148,88 @@ def transcribe_mms(wav_path: Path, language_code: str = "en") -> dict:
     }
 
 
-# Whisper detect_language ISO codes we can map back to an Intron/app code.
-WHISPER_DETECT_TO_APP = {
-    "en": "en",
-    "sw": "sw",
-    "ha": "ha",
-    "yo": "yo",
-    "ig": "ig",
-    "zu": "zu",
-    "am": "am",
-    "af": "af",
-    "fr": "fr",
-    "rw": "rw",
-    "lg": "lg",
-    "wo": "wo",
+# MMS-LID ISO-639-3 -> Intron / app codes. kin and pcm are included if
+# a larger checkpoint exposes them; mms-lid-126 typically does not.
+MMS_LID_TO_APP = {
+    "eng": "en",
+    "swh": "sw",
+    "hau": "ha",
+    "yor": "yo",
+    "ibo": "ig",
+    "zul": "zu",
+    "amh": "am",
+    "afr": "af",
+    "lug": "lg",
+    "wol": "wo",
+    "kin": "rw",
+    "pcm": "pcm",
 }
 
 
-def detect_language(audio_bytes: bytes, filename: str = "recording.webm") -> dict:
-    """Detect spoken language with Whisper. Returns app language code.
+def closed_set_lid(label_scores: dict[str, float]) -> dict | None:
+    """Pick the best Intron language from ISO-639-3 label scores.
 
-    {"language_code": str, "whisper_code": str, "confidence": float}
-    Falls back to English if detection fails or the language is unknown.
+    Softmax is over the mapped subset only so Somali/Fulani/etc. cannot win.
+    Returns {language_code, mms_code, confidence} or None if nothing maps.
     """
-    global _whisper_model
-    import whisper  # lazy import
+    import math
 
-    if _whisper_model is None:
-        _whisper_model = whisper.load_model(WHISPER_MODEL_SIZE)
+    mapped = [
+        (iso3, MMS_LID_TO_APP[iso3], score)
+        for iso3, score in label_scores.items()
+        if iso3 in MMS_LID_TO_APP
+    ]
+    if not mapped:
+        return None
+
+    scores = [item[2] for item in mapped]
+    peak = max(scores)
+    weights = [math.exp(score - peak) for score in scores]
+    total = sum(weights) or 1.0
+    probs = [weight / total for weight in weights]
+    best = max(range(len(mapped)), key=lambda i: probs[i])
+    iso3, app_code, _ = mapped[best]
+    return {
+        "language_code": app_code,
+        "mms_code": iso3,
+        "confidence": round(probs[best], 3),
+    }
+
+
+def detect_language(audio_bytes: bytes, filename: str = "recording.webm") -> dict:
+    """Detect spoken language with closed-set MMS-LID. Returns app language code.
+
+    {"language_code": str, "mms_code": str, "confidence": float}
+    """
+    global _mms_lid_model, _mms_lid_extractor
+    import soundfile as sf
+    import torch
+    from transformers import AutoFeatureExtractor, Wav2Vec2ForSequenceClassification
+
+    if _mms_lid_model is None:
+        _mms_lid_extractor = AutoFeatureExtractor.from_pretrained(MMS_LID_MODEL_ID)
+        _mms_lid_model = Wav2Vec2ForSequenceClassification.from_pretrained(
+            MMS_LID_MODEL_ID
+        )
 
     suffix = Path(filename).suffix or ".webm"
     wav_path = convert_to_wav_16k(audio_bytes, suffix=suffix)
     try:
-        audio = whisper.load_audio(str(wav_path))
-        audio = whisper.pad_or_trim(audio)
-        mel = whisper.log_mel_spectrogram(audio).to(_whisper_model.device)
-        _, probs = _whisper_model.detect_language(mel)
-        whisper_code = max(probs, key=probs.get)
-        confidence = float(probs[whisper_code])
-        app_code = WHISPER_DETECT_TO_APP.get(whisper_code, "en")
-        return {
-            "language_code": app_code,
-            "whisper_code": whisper_code,
-            "confidence": round(confidence, 3),
+        audio, sample_rate = sf.read(wav_path, dtype="float32")
+        if getattr(audio, "ndim", 1) > 1:
+            audio = audio.mean(axis=1)
+        inputs = _mms_lid_extractor(
+            audio, sampling_rate=sample_rate, return_tensors="pt"
+        )
+        with torch.no_grad():
+            logits = _mms_lid_model(**inputs).logits[0]
+        scores = {
+            str(iso3): float(logits[int(idx)])
+            for idx, iso3 in _mms_lid_model.config.id2label.items()
         }
+        picked = closed_set_lid(scores)
+        if picked is None:
+            return {"language_code": "en", "mms_code": None, "confidence": 0}
+        return picked
     finally:
         wav_path.unlink(missing_ok=True)

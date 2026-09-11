@@ -50,11 +50,23 @@ export interface Artifact {
   kind: "report" | "flowchart";
 }
 
-export interface DetectionMeta {
+export interface AudioDetection {
   language_code: string;
-  whisper_code?: string;
+  mms_code?: string | null;
   confidence?: number;
   error?: string;
+}
+
+export interface TextDetection {
+  language_code: string;
+  confidence?: number;
+  source?: string;
+}
+
+export interface DetectionMeta {
+  audio: AudioDetection | null;
+  text: TextDetection | null;
+  final: string;
 }
 
 export interface TriageResponse {

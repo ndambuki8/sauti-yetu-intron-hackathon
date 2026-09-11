@@ -109,6 +109,14 @@ class SessionStore:
             session["artifacts"].append(stored)
             return stored
 
+    def last_patient_language(self, session_id: str) -> str | None:
+        with self._lock:
+            session = self._sessions.get(session_id)
+            if session is None:
+                return None
+            langs = session.get("detected_languages") or []
+            return langs[-1] if langs else None
+
     def get(self, session_id: str) -> dict:
         with self._lock:
             session = self._sessions.get(session_id)

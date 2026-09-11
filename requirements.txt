@@ -5,6 +5,7 @@ python-multipart>=0.0.9
 requests>=2.32
 python-dotenv>=1.0
 openai>=1.40
+langdetect>=1.0.9
 
 # Benchmark metrics + report generation
 jiwer>=3.0
