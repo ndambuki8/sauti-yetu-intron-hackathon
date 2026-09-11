@@ -3,14 +3,34 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
   body {
-    @apply bg-slate-100 text-slate-800 antialiased;
+    @apply text-slate-800 antialiased;
+    min-height: 100vh;
+    background-color: #f4f7fc;
+    /* Soft gradient mesh — the 2026 SaaS look, pure CSS (no image assets). */
+    background-image:
+      radial-gradient(48rem 48rem at 8% -8%, rgba(56, 189, 248, 0.20), transparent 60%),
+      radial-gradient(42rem 42rem at 102% 4%, rgba(99, 102, 241, 0.18), transparent 55%),
+      radial-gradient(38rem 38rem at 52% 118%, rgba(45, 212, 191, 0.16), transparent 60%);
+    background-attachment: fixed;
   }
 }
 
 @layer components {
+  /* Glassmorphism surface — translucent, blurred, hairline ring + soft shadow.
+   * Custom shadows/colours are written as raw CSS (not @apply of theme tokens)
+   * so this stylesheet compiles regardless of the Tailwind config cache. */
   .card {
-    @apply rounded-xl bg-white ring-1 ring-slate-200 shadow-sm;
+    @apply rounded-2xl bg-white/80 ring-1 ring-slate-900/5 backdrop-blur-xl;
+    box-shadow: 0 8px 30px rgba(2, 20, 60, 0.06);
+  }
+  .glass {
+    @apply rounded-2xl bg-white/60 ring-1 ring-white/70 backdrop-blur-xl;
+    box-shadow: 0 8px 30px rgba(2, 20, 60, 0.06);
   }
   .card-title {
     @apply text-[11px] font-semibold uppercase tracking-wider text-slate-500;
@@ -19,30 +39,73 @@
     @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
-      transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold
+      transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
       focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-blue-600 text-white hover:bg-blue-700;
+    @apply btn text-white;
+    background-image: linear-gradient(135deg, #31a1f2 0%, #1b82e0 55%, #4f46e5 100%);
+    box-shadow:
+      0 0 0 1px rgba(49, 161, 242, 0.15),
+      0 12px 40px -8px rgba(27, 130, 224, 0.45);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.05);
   }
   .btn-secondary {
-    @apply btn bg-white text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50;
+    @apply btn bg-white/70 text-slate-700 ring-1 ring-slate-300/70 backdrop-blur hover:bg-white;
   }
   .input {
-    @apply w-full rounded-lg border-0 bg-white px-3 py-2 text-sm text-slate-800 ring-1 ring-slate-300
-      focus:ring-2 focus:ring-blue-600 focus:outline-none;
+    @apply w-full rounded-xl border-0 bg-white/80 px-3 py-2 text-sm text-slate-800 ring-1 ring-slate-300/70
+      backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600;
+  }
+  /* Segmented control (tabs). */
+  .seg {
+    @apply flex items-center gap-1 rounded-xl bg-slate-100/80 p-1 ring-1 ring-slate-200/70;
+  }
+  .seg-btn {
+    @apply rounded-lg px-3 py-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-slate-800;
+  }
+  .seg-btn-active {
+    @apply bg-white text-slate-900 shadow-sm ring-1 ring-slate-200;
+  }
+  /* Hairline section divider inside a cohesive panel. */
+  .divider {
+    @apply border-t border-slate-200/70;
+  }
+  .section-label {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-slate-400;
   }
 }
 
 /* Cytoscape container needs an explicit height. */
 .graph-canvas {
   height: 100%;
-  min-height: 480px;
+  min-height: 320px;
 }
 
-/* Pulse animation for newly added graph nodes (applied via class toggle). */
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.35); }
-  100% { box-shadow: 0 0 0 12px rgba(29, 78, 216, 0); }
+/* Miro-style infinite dotted board background. */
+.miro-grid {
+  background-color: #fbfcfe;
+  background-image: radial-gradient(circle, rgba(15, 23, 42, 0.12) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: -11px -11px;
+}
+
+/* Live audio waveform canvas fills its host. */
+.waveform-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Respect reduced-motion for the animated hero. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

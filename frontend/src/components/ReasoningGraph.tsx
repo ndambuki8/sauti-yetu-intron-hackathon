@@ -1,6 +1,24 @@
-import cytoscape from "cytoscape";
-import { useEffect, useRef, useState } from "react";
-import type { Graph, GraphNode } from "../api/types";
+import {
+  Background,
+  BackgroundVariant,
+  Controls,
+  Handle,
+  MarkerType,
+  MiniMap,
+  Position,
+  ReactFlow,
+  type Edge,
+  type Node,
+  type NodeProps,
+  type ReactFlowInstance,
+  useEdgesState,
+  useNodesState,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import dagre from "dagre";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import type { Graph, Provenance } from "../api/types";
 import {
   NODE_COLORS,
   NODE_KIND_LABELS,
@@ -9,6 +27,8 @@ import {
   type NodeKind,
 } from "../lib/palette";
 import { useConsultation } from "../state/consultation";
+import { SourceCitation } from "./Provenance";
+import Tooltip, { InfoIcon } from "./Tooltip";
 
 const KIND_ORDER: NodeKind[] = [
   "symptom",
@@ -19,258 +39,271 @@ const KIND_ORDER: NodeKind[] = [
   "department",
 ];
 
-/**
- * Miro-style compact pills: the label lives inside a tinted round-rectangle,
- * sized to the text. Keeps information density high without giant circles.
- */
-function buildStylesheet(): cytoscape.StylesheetStyle[] {
-  const kindStyles = (Object.keys(NODE_COLORS) as NodeKind[]).map((kind) => ({
-    selector: `node[kind="${kind}"]`,
-    style: {
-      "background-color": NODE_TINTS[kind],
-      "border-color": NODE_COLORS[kind],
-      color: NODE_TEXT_COLORS[kind],
-      ...(kind === "patient" ? { "font-weight": 700, "font-size": 12 } : {}),
-      ...(kind === "red_flag" ? { "border-width": 2, "font-weight": 600 } : {}),
-      ...(kind === "topic" ? { "font-weight": 600 } : {}),
+const PATIENT_ID = "patient:patient";
+
+interface NodeData extends Record<string, unknown> {
+  label: string;
+  kind: NodeKind;
+  turn: number;
+  source?: Provenance;
+  isNew?: boolean;
+  probability?: number;
+}
+
+/** A Miro-style card node: rounded, tinted by clinical kind, soft shadow.
+ * Condition nodes carry a probability: a % badge, a fill bar, and a font/border
+ * that grows with confidence, so likelier diagnoses read as larger. */
+function TriageNode({ data, selected }: NodeProps<Node<NodeData>>) {
+  const kind = data.kind;
+  const hasProb = kind === "condition" && typeof data.probability === "number";
+  const prob = hasProb ? (data.probability as number) : 0;
+  const pct = Math.round(prob * 100);
+  const fontSize = hasProb ? 11 + prob * 3 : kind === "patient" ? 13 : 12;
+  const borderWidth = hasProb ? 1.5 + prob * 2.5 : 2;
+
+  return (
+    <div
+      className={`rounded-xl px-3 py-2 text-xs shadow-sm transition-shadow ${
+        selected ? "shadow-lg ring-2 ring-blue-500 ring-offset-1" : ""
+      } ${data.isNew ? "ring-2 ring-blue-400" : ""}`}
+      style={{
+        background: NODE_TINTS[kind],
+        borderColor: NODE_COLORS[kind],
+        borderStyle: "solid",
+        borderWidth,
+        color: NODE_TEXT_COLORS[kind],
+        maxWidth: 240,
+        fontSize,
+        fontWeight: kind === "patient" || kind === "topic" ? 700 : 500,
+      }}
+    >
+      <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
+      <div className="flex items-center gap-2">
+        <span>{data.label}</span>
+        {hasProb && (
+          <span
+            className="ml-auto shrink-0 rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-bold tabular-nums"
+            style={{ color: NODE_COLORS[kind] }}
+          >
+            {pct}%
+          </span>
+        )}
+      </div>
+      {hasProb && (
+        <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-white/60">
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${Math.max(3, pct)}%`, background: NODE_COLORS[kind] }}
+          />
+        </div>
+      )}
+      <Handle type="source" position={Position.Right} style={{ opacity: 0 }} />
+    </div>
+  );
+}
+
+const nodeTypes = { triage: TriageNode };
+
+function nodeWidth(data: NodeData): number {
+  const base = Math.max(120, Math.min(230, data.label.length * 6.6 + 40));
+  if (data.kind === "condition" && typeof data.probability === "number") {
+    return Math.min(252, base + Math.round(data.probability * 44));
+  }
+  return base;
+}
+
+function nodeHeight(data: NodeData): number {
+  return data.kind === "condition" && typeof data.probability === "number" ? 58 : 46;
+}
+
+/** Left-to-right dagre layout, producing React Flow node positions. */
+function layout(nodes: Node<NodeData>[], edges: Edge[]): Node<NodeData>[] {
+  const g = new dagre.graphlib.Graph();
+  g.setDefaultEdgeLabel(() => ({}));
+  g.setGraph({ rankdir: "LR", nodesep: 28, ranksep: 72, marginx: 24, marginy: 24 });
+  nodes.forEach((n) => {
+    g.setNode(n.id, { width: nodeWidth(n.data), height: nodeHeight(n.data) });
+  });
+  edges.forEach((e) => g.setEdge(e.source, e.target));
+  dagre.layout(g);
+  return nodes.map((n) => {
+    const p = g.node(n.id);
+    return {
+      ...n,
+      position: { x: p.x - nodeWidth(n.data) / 2, y: p.y - nodeHeight(n.data) / 2 },
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left,
+    };
+  });
+}
+
+function toReactFlow(graph: Graph | null): { nodes: Node<NodeData>[]; edges: Edge[] } {
+  if (!graph) {
+    // Seed a Patient node so the board is interactive before any analysis.
+    return {
+      nodes: layout(
+        [
+          {
+            id: PATIENT_ID,
+            type: "triage",
+            position: { x: 0, y: 0 },
+            data: { label: "Patient", kind: "patient", turn: 1 },
+          },
+        ],
+        [],
+      ),
+      edges: [],
+    };
+  }
+
+  const nodes: Node<NodeData>[] = graph.nodes.map((n) => ({
+    id: n.data.id,
+    type: "triage",
+    position: { x: 0, y: 0 },
+    data: {
+      label: n.data.label,
+      kind: n.data.kind,
+      turn: n.data.turn,
+      source: n.data.source,
+      probability: n.data.probability,
+      isNew: n.data.turn === graph.turns,
     },
   }));
 
-  return [
-    {
-      selector: "node",
-      style: {
-        label: "data(label)",
-        shape: "round-rectangle",
-        width: "label",
-        height: "label",
-        padding: "10px",
-        "font-size": 11,
-        "font-family": "Inter, sans-serif",
-        "text-valign": "center",
-        "text-halign": "center",
-        "text-wrap": "wrap",
-        "text-max-width": "150px",
-        "border-width": 1.5,
-      },
-    },
-    ...kindStyles,
-    {
-      selector: "edge",
-      style: {
-        width: 1.25,
-        "line-color": "#c3ccd6",
-        "target-arrow-color": "#c3ccd6",
-        "target-arrow-shape": "triangle",
-        "arrow-scale": 0.8,
-        // Right-angle connectors, horizontal flow — the Miro/fishbone look.
-        "curve-style": "taxi",
-        "taxi-direction": "horizontal",
-        "taxi-turn": 24,
-      },
-    },
-    {
-      selector: 'edge[relation="escalates"]',
-      style: {
-        "line-color": "#b3271e",
-        "target-arrow-color": "#b3271e",
-        width: 2,
-        "line-style": "dashed",
-      },
-    },
-    {
-      selector: "node.new",
-      style: { "border-color": "#1d4ed8", "border-width": 2.5 },
-    },
-    {
-      selector: ".faded",
-      style: { opacity: 0.15 },
-    },
-    {
-      selector: "node.selected",
-      style: { "border-color": "#1d4ed8", "border-width": 2.5 },
-    },
-  ];
-}
+  const edges: Edge[] = graph.edges.map((e) => {
+    const escalates = e.data.relation === "escalates";
+    return {
+      id: e.data.id,
+      source: e.data.source,
+      target: e.data.target,
+      label: e.data.relation,
+      animated: escalates,
+      markerEnd: { type: MarkerType.ArrowClosed, color: escalates ? "#ef4444" : "#94a3b8" },
+      style: { stroke: escalates ? "#ef4444" : "#cbd5e1", strokeWidth: escalates ? 2 : 1.5 },
+      labelStyle: { fontSize: 9, fill: "#94a3b8", fontWeight: 500 },
+      labelBgStyle: { fill: "#ffffff", fillOpacity: 0.85 },
+      labelBgPadding: [3, 1] as [number, number],
+    };
+  });
 
-/** Deterministic layered flow: patient on the left, then symptoms/findings,
- * topic, conditions/department — levels spread left-to-right, so the graph
- * reads like a clinical reasoning chain instead of a force-directed cloud. */
-function runLayout(cy: cytoscape.Core) {
-  cy.layout({
-    name: "breadthfirst",
-    directed: true,
-    padding: 32,
-    spacingFactor: 1.05,
-    animate: true,
-    animationDuration: 450,
-    fit: true,
-    // breadthfirst lays out top-down; swap axes for a left-to-right flow.
-    transform: (_node, pos) => ({ x: pos.y, y: pos.x }),
-  } as cytoscape.LayoutOptions).run();
+  return { nodes: layout(nodes, edges), edges };
 }
 
 interface SelectedNode {
   label: string;
   kind: NodeKind;
   turn: number;
-  relations: string[];
+  source: Provenance | null;
+  probability?: number;
 }
+
+const FIT_OPTS = { padding: 0.25, maxZoom: 1.3, duration: 300 };
 
 export default function ReasoningGraph() {
   const { state } = useConsultation();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cyRef = useRef<cytoscape.Core | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<NodeData>>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selected, setSelected] = useState<SelectedNode | null>(null);
-  const [initFailed, setInitFailed] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const rf = useRef<ReactFlowInstance<Node<NodeData>, Edge> | null>(null);
 
-  // Initialise Cytoscape once.
+  // Rebuild + re-layout whenever the cumulative graph changes, then re-fit the
+  // viewport so newly added nodes are always in view (fitView alone only fits
+  // the initial render).
   useEffect(() => {
-    if (!containerRef.current) return;
-    try {
-      const cy = cytoscape({
-        container: containerRef.current,
-        elements: [],
-        style: buildStylesheet(),
-        wheelSensitivity: 0.2,
-        minZoom: 0.25,
-        maxZoom: 2.5,
-      });
+    const { nodes: n, edges: e } = toReactFlow(state.graph);
+    setNodes(n);
+    setEdges(e);
+    const fitTimer = setTimeout(() => rf.current?.fitView(FIT_OPTS), 80);
+    const newTimer = setTimeout(() => {
+      setNodes((cur) =>
+        cur.map((node) =>
+          node.data.isNew ? { ...node, data: { ...node.data, isNew: false } } : node,
+        ),
+      );
+    }, 4000);
+    return () => {
+      clearTimeout(fitTimer);
+      clearTimeout(newTimer);
+    };
+  }, [state.graph, setNodes, setEdges]);
 
-      cy.on("tap", "node", (event) => {
-        const node = event.target as cytoscape.NodeSingular;
-        const data = node.data() as GraphNode["data"];
-        cy.elements().addClass("faded");
-        node.closedNeighborhood().removeClass("faded");
-        cy.nodes().removeClass("selected");
-        node.addClass("selected");
-        setSelected({
-          label: data.label,
-          kind: data.kind,
-          turn: data.turn,
-          relations: [
-            ...new Set(node.connectedEdges().map((e) => e.data("relation") as string)),
-          ],
-        });
-      });
+  // Re-fit when entering/leaving fullscreen (the canvas resizes).
+  useEffect(() => {
+    const t = setTimeout(() => rf.current?.fitView(FIT_OPTS), 140);
+    return () => clearTimeout(t);
+  }, [expanded]);
 
-      cy.on("tap", (event) => {
-        if (event.target === cy) {
-          cy.elements().removeClass("faded");
-          cy.nodes().removeClass("selected");
-          setSelected(null);
-        }
-      });
-
-      cyRef.current = cy;
-      return () => {
-        cy.destroy();
-        cyRef.current = null;
-      };
-    } catch (err) {
-      console.error("Cytoscape failed to initialise", err);
-      setInitFailed(true);
-    }
+  const onNodeClick = useCallback((_: unknown, node: Node<NodeData>) => {
+    setSelected({
+      label: node.data.label,
+      kind: node.data.kind,
+      turn: node.data.turn,
+      source: node.data.source ?? null,
+      probability: node.data.probability,
+    });
   }, []);
 
-  // Merge the cumulative graph whenever it changes.
-  useEffect(() => {
-    const cy = cyRef.current;
-    const graph: Graph | null = state.graph;
-    if (!cy || !graph) return;
+  // React Flow needs a DEFINITE height on the canvas container; min-h + flex
+  // does not resolve, so we set an explicit height that also works fullscreen.
+  const boardHeight = expanded ? "calc(100vh - 6rem)" : "min(68vh, 640px)";
 
-    cy.nodes().removeClass("new");
-    for (const el of [...graph.nodes, ...graph.edges]) {
-      if (cy.getElementById(el.data.id).empty()) {
-        const added = cy.add(el as cytoscape.ElementDefinition);
-        if (el.data.turn === graph.turns) added.addClass("new");
-      }
-    }
+  const board = (
+    <div className={expanded ? "fixed inset-0 z-50 flex flex-col bg-white p-4" : "flex flex-col p-4 sm:p-5"}>
+      <div
+        className="relative w-full overflow-hidden rounded-xl ring-1 ring-slate-200"
+        style={{ height: boardHeight }}
+      >
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onNodeClick={onNodeClick}
+          onPaneClick={() => setSelected(null)}
+          onInit={(inst) => {
+            rf.current = inst;
+            setTimeout(() => inst.fitView(FIT_OPTS), 60);
+          }}
+          nodeTypes={nodeTypes}
+          fitView
+          fitViewOptions={FIT_OPTS}
+          minZoom={0.2}
+          maxZoom={2.5}
+          proOptions={{ hideAttribution: false }}
+        >
+          <Background variant={BackgroundVariant.Dots} gap={22} size={1.4} color="#cbd5e1" />
+          <Controls showInteractive={false} />
+          <MiniMap
+            pannable
+            zoomable
+            nodeColor={(n) => NODE_COLORS[(n.data as NodeData).kind] ?? "#94a3b8"}
+            nodeStrokeWidth={2}
+            className="!bg-white/80"
+          />
+        </ReactFlow>
 
-    runLayout(cy);
-
-    const timer = setTimeout(() => cy.nodes().removeClass("new"), 4000);
-    return () => clearTimeout(timer);
-  }, [state.graph]);
-
-  // Clear on consultation reset.
-  useEffect(() => {
-    if (!state.sessionId && cyRef.current) {
-      cyRef.current.elements().remove();
-      setSelected(null);
-    }
-  }, [state.sessionId]);
-
-  const zoomBy = (factor: number) => {
-    const cy = cyRef.current;
-    if (!cy) return;
-    cy.zoom({
-      level: cy.zoom() * factor,
-      renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 },
-    });
-  };
-
-  return (
-    <section className="card flex min-h-[560px] flex-col p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="card-title">Clinical reasoning graph</h2>
-          <p className="mt-1 text-xs text-slate-400">
-            Built from Intron Sahara extractions · grows left to right with each
-            recording · newest additions outlined in blue · click a node to inspect it
-          </p>
+        {/* Info + fullscreen, floating over the board. */}
+        <div className="absolute left-3 top-3 z-10">
+          <Tooltip
+            side="bottom"
+            label="Drag nodes to rearrange. Scroll or pinch to zoom. Tap any node to see its source."
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/85 text-slate-400 shadow-sm ring-1 ring-slate-200 backdrop-blur hover:text-slate-600">
+              <InfoIcon />
+            </span>
+          </Tooltip>
         </div>
-        <div className="flex shrink-0 gap-1 rounded-lg bg-slate-100 p-1">
-          <button
-            onClick={() => zoomBy(0.8)}
-            className="rounded-md px-2.5 py-1 text-sm font-semibold text-slate-600 hover:bg-white hover:shadow-sm"
-            title="Zoom out"
-          >
-            −
-          </button>
-          <button
-            onClick={() => cyRef.current?.fit(undefined, 32)}
-            className="rounded-md px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-white hover:shadow-sm"
-            title="Fit view"
-          >
-            Fit
-          </button>
-          <button
-            onClick={() => zoomBy(1.25)}
-            className="rounded-md px-2.5 py-1 text-sm font-semibold text-slate-600 hover:bg-white hover:shadow-sm"
-            title="Zoom in"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="relative mt-4 flex-1 rounded-lg bg-slate-50 ring-1 ring-slate-200">
-        {initFailed ? (
-          <p className="p-6 text-sm text-slate-500">
-            The graph renderer failed to load. The triage cards and timeline
-            still carry the full clinical picture.
-          </p>
-        ) : (
-          <div ref={containerRef} className="graph-canvas rounded-lg" />
-        )}
-
-        {!state.graph && !initFailed && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="max-w-sm text-center">
-              <p className="text-sm font-medium text-slate-500">
-                The patient's clinical picture will map out here
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                Patient → symptoms and findings → triage topic → possible
-                conditions and routing, building up as the conversation is analysed.
-              </p>
-            </div>
-          </div>
-        )}
+        <button
+          onClick={() => setExpanded((v) => !v)}
+          title={expanded ? "Close fullscreen" : "Fullscreen"}
+          className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/85 text-sm font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200 backdrop-blur hover:text-slate-900"
+        >
+          {expanded ? "✕" : "⤢"}
+        </button>
 
         {selected && (
-          <aside className="absolute right-3 top-3 w-60 rounded-lg bg-white p-3 text-xs shadow-lg ring-1 ring-slate-200">
+          <aside className="absolute bottom-3 right-3 z-10 w-60 rounded-xl bg-white/95 p-3 text-xs shadow-lg ring-1 ring-slate-200 backdrop-blur">
             <p
               className="text-[10px] font-semibold uppercase tracking-wide"
               style={{ color: NODE_COLORS[selected.kind] }}
@@ -278,14 +311,22 @@ export default function ReasoningGraph() {
               {NODE_KIND_LABELS[selected.kind]}
             </p>
             <p className="mt-0.5 text-sm font-semibold text-slate-800">{selected.label}</p>
-            <p className="mt-1 text-slate-500">
-              First mentioned in recording #{selected.turn}
-            </p>
-            {selected.relations.length > 0 && (
-              <p className="mt-1 text-slate-500">
-                Relationships: {selected.relations.join(", ")}
+            {typeof selected.probability === "number" && (
+              <p className="mt-1 font-semibold text-slate-600">
+                Estimated likelihood: {Math.round(selected.probability * 100)}%
               </p>
             )}
+            <p className="mt-1 text-slate-500">First seen in recording #{selected.turn}</p>
+            {selected.source ? (
+              <div className="mt-2 border-t border-slate-100 pt-2">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                  Source
+                </p>
+                <div className="mt-1">
+                  <SourceCitation source={selected.source} />
+                </div>
+              </div>
+            ) : null}
           </aside>
         )}
       </div>
@@ -295,15 +336,16 @@ export default function ReasoningGraph() {
           <span key={kind} className="inline-flex items-center gap-1.5 text-xs text-slate-500">
             <span
               className="h-2.5 w-2.5 rounded-sm ring-1"
-              style={{
-                backgroundColor: NODE_TINTS[kind],
-                borderColor: NODE_COLORS[kind],
-              }}
+              style={{ backgroundColor: NODE_TINTS[kind], borderColor: NODE_COLORS[kind] }}
             />
             {NODE_KIND_LABELS[kind]}
           </span>
         ))}
       </div>
-    </section>
+    </div>
   );
+
+  // Fullscreen renders through a portal to document.body so it escapes any
+  // transformed ancestor (which would otherwise trap position: fixed).
+  return expanded ? createPortal(board, document.body) : board;
 }

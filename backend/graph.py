@@ -50,8 +50,12 @@ def _node_id(kind: str, label: str) -> str:
     return f"{kind}:{normalized}"
 
 
-def _node(kind: str, label: str, turn: int) -> dict:
-    return {"data": {"id": _node_id(kind, label), "label": label, "kind": kind, "turn": turn}}
+def _node(kind: str, label: str, turn: int, source: dict | None = None) -> dict:
+    data = {"id": _node_id(kind, label), "label": label, "kind": kind, "turn": turn}
+    # Provenance travels on the node so the UI can cite the source behind it.
+    if source:
+        data["source"] = source
+    return {"data": data}
 
 
 def _edge(source_id: str, target_id: str, relation: str, turn: int) -> dict:
@@ -66,11 +70,14 @@ def _edge(source_id: str, target_id: str, relation: str, turn: int) -> dict:
     }
 
 
-def _red_flag_labels(triage_result: dict) -> list[str]:
-    raw = triage_result.get("intake_card", {}).get("red_flags", "") or ""
-    if not raw or raw == "None detected":
-        return []
-    return [flag.strip() for flag in raw.split(",") if flag.strip()]
+def _red_flag_discriminators(triage_result: dict) -> list[dict]:
+    """Emergency-category discriminators (the clinical red flags), each carrying
+    its own citation so the escalation can be traced to a specific sign."""
+    return [
+        disc
+        for disc in triage_result.get("matched_discriminators", []) or []
+        if disc.get("is_red_flag")
+    ]
 
 
 def build_graph_delta(intron_result: dict, triage_result: dict, turn: int) -> dict:
@@ -86,13 +93,16 @@ def build_graph_delta(intron_result: dict, triage_result: dict, turn: int) -> di
     nodes.append(patient)
     patient_id = patient["data"]["id"]
 
+    topic_source = triage_result.get("topic_source")
     topic_labels = [triage_result.get("topic", "")]
     topic_labels += triage_result.get("other_possible_topics", []) or []
     topic_ids = []
-    for label in topic_labels:
+    for index, label in enumerate(topic_labels):
         if not label:
             continue
-        node = _node(KIND_TOPIC, label, turn)
+        # Only the primary topic (index 0) carries the matched provenance;
+        # the "other possible" topics are alternatives we didn't act on.
+        node = _node(KIND_TOPIC, label, turn, source=topic_source if index == 0 else None)
         nodes.append(node)
         topic_ids.append(node["data"]["id"])
 
@@ -112,16 +122,28 @@ def build_graph_delta(intron_result: dict, triage_result: dict, turn: int) -> di
         if topic_ids:
             edges.append(_edge(node["data"]["id"], topic_ids[0], "suggests", turn))
 
-    # Possible conditions: Sahara differential diagnosis.
-    for item in _split_extraction(intron_result.get("differential_diagnosis", "")):
-        node = _node(KIND_CONDITION, item, turn)
-        nodes.append(node)
-        if topic_ids:
-            edges.append(_edge(topic_ids[0], node["data"]["id"], "consider", turn))
+    # Possible conditions: the probabilistic differential (ranked + cited), so
+    # condition nodes carry a probability the UI can size/label by. Falls back
+    # to Sahara's differential text when no KB condition matched.
+    differential = triage_result.get("differential") or []
+    if differential:
+        for item in differential:
+            node = _node(KIND_CONDITION, item["label"], turn, source=item.get("source"))
+            node["data"]["probability"] = item["probability"]
+            nodes.append(node)
+            if topic_ids:
+                edges.append(_edge(topic_ids[0], node["data"]["id"], "consider", turn))
+    else:
+        for item in _split_extraction(intron_result.get("differential_diagnosis", "")):
+            node = _node(KIND_CONDITION, item, turn)
+            nodes.append(node)
+            if topic_ids:
+                edges.append(_edge(topic_ids[0], node["data"]["id"], "consider", turn))
 
-    # Red flags: escalate the primary topic.
-    for flag in _red_flag_labels(triage_result):
-        node = _node(KIND_RED_FLAG, flag, turn)
+    # Red flags: emergency discriminators that escalate the primary topic.
+    # Each node cites the specific discriminator responsible for the escalation.
+    for disc in _red_flag_discriminators(triage_result):
+        node = _node(KIND_RED_FLAG, disc["label"], turn, source=disc.get("source"))
         nodes.append(node)
         edges.append(_edge(patient_id, node["data"]["id"], "presents", turn))
         if topic_ids:

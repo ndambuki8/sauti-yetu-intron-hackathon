@@ -3,7 +3,7 @@ import { runBenchmark } from "../api/client";
 import type { BenchmarkResponse } from "../api/types";
 import { useConsultation } from "../state/consultation";
 
-const fmt = (v: number | null) => (v === null || v === undefined ? "—" : v);
+const fmt = (v: number | null) => (v === null || v === undefined ? "n/a" : v);
 
 export default function BenchmarkPanel() {
   const { state } = useConsultation();

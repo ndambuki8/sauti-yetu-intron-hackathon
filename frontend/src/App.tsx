@@ -1,48 +1,56 @@
 import BenchmarkPanel from "./components/BenchmarkPanel";
-import CapturePanel from "./components/CapturePanel";
 import ClinicalRail from "./components/ClinicalRail";
 import ConversationTimeline from "./components/ConversationTimeline";
-import ReasoningGraph from "./components/ReasoningGraph";
+import ReasoningView from "./components/ReasoningView";
 import ReplyPanel from "./components/ReplyPanel";
 import TopBar from "./components/TopBar";
-import { ConsultationProvider, useConsultation } from "./state/consultation";
+import VoiceCapture from "./components/VoiceCapture";
+import { ConsultationProvider, latestTurn, useConsultation } from "./state/consultation";
 
 function TriageWorkspace() {
+  const { state } = useConsultation();
+  const hasResults = latestTurn(state) !== null;
+
   return (
-    <main className="mx-auto grid max-w-[1600px] grid-cols-1 gap-5 px-5 py-5 lg:grid-cols-[360px_minmax(0,1fr)_340px]">
-      <div className="space-y-5">
-        <CapturePanel />
-        <ReplyPanel />
-        <ConversationTimeline />
-      </div>
-      <ReasoningGraph />
-      <ClinicalRail />
-    </main>
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:py-8">
+      <VoiceCapture />
+
+      {hasResults ? (
+        <>
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="animate-fade-in-up lg:col-span-2">
+              <ReasoningView />
+            </div>
+            <div className="animate-fade-in-up space-y-6">
+              <ClinicalRail />
+              <ReplyPanel />
+            </div>
+          </div>
+          <div className="animate-fade-in-up">
+            <ConversationTimeline />
+          </div>
+        </>
+      ) : (
+        // Pre-analysis: the interactive reasoning board sits full width so the
+        // clinician can explore it before recording.
+        <ReasoningView />
+      )}
+    </div>
   );
 }
 
 function Shell() {
   const { state } = useConsultation();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-12">
       <TopBar />
       {state.tab === "triage" ? (
         <TriageWorkspace />
       ) : (
-        <main className="px-5 py-5">
+        <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <BenchmarkPanel />
         </main>
       )}
-      <footer className="mx-auto max-w-[1600px] px-5 pb-8 pt-2 text-xs text-slate-400">
-        <p className="font-semibold text-slate-500">
-          Decision support only — not a medical device.
-        </p>
-        <p>
-          Outputs are hints to aid, never replace, clinical judgement. Verify
-          against the patient before acting. · MLC (Africa) × Intron Agentic
-          Voice AI Challenge
-        </p>
-      </footer>
     </div>
   );
 }

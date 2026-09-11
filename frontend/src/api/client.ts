@@ -1,6 +1,7 @@
 import type {
   BenchmarkResponse,
   Graph,
+  PatientInput,
   Phrase,
   RespondResponse,
   TriageResponse,
@@ -50,11 +51,28 @@ export async function runTriage(
   filename: string,
   languageCode: string,
   sessionId: string,
+  patient?: PatientInput,
 ): Promise<TriageResponse> {
   const form = new FormData();
   form.append("audio", audio, filename);
   form.append("language_code", languageCode);
   form.append("session_id", sessionId);
+  if (patient) {
+    const appendNum = (key: string, raw: string) => {
+      const n = Number.parseFloat(raw);
+      if (Number.isFinite(n)) form.append(key, String(n));
+    };
+    const age = Number.parseFloat(patient.age);
+    if (Number.isFinite(age) && age >= 0) form.append("age", String(age));
+    if (patient.sex === "male" || patient.sex === "female")
+      form.append("sex", patient.sex);
+    if (patient.sex === "female") form.append("pregnant", String(patient.pregnant));
+    appendNum("hr", patient.hr);
+    appendNum("rr", patient.rr);
+    appendNum("temp", patient.temp);
+    appendNum("spo2", patient.spo2);
+    if (patient.avpu) form.append("avpu", patient.avpu);
+  }
   const res = await fetch("/api/triage", { method: "POST", body: form });
   return parseResponse<TriageResponse>(res);
 }

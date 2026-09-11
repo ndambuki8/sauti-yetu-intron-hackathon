@@ -8,6 +8,7 @@ import {
 import { getLanguages } from "../api/client";
 import type {
   Graph,
+  PatientInput,
   RespondResponse,
   TimelineItem,
   TriageResponse,
@@ -27,12 +28,14 @@ interface ConsultationState {
   tab: Tab;
   languages: Record<string, string>;
   languageCode: string;
+  patient: PatientInput;
 }
 
 type Action =
   | { type: "languagesLoaded"; languages: Record<string, string> }
   | { type: "tabChanged"; tab: Tab }
   | { type: "languageChanged"; languageCode: string }
+  | { type: "patientChanged"; patient: Partial<PatientInput> }
   | { type: "sessionStarted"; sessionId: string }
   | { type: "analysisStarted" }
   | { type: "turnAdded"; response: TriageResponse; languageName: string }
@@ -49,6 +52,16 @@ const initialState: ConsultationState = {
   tab: "triage",
   languages: {},
   languageCode: "sw",
+  patient: {
+    age: "",
+    sex: "",
+    pregnant: false,
+    hr: "",
+    rr: "",
+    temp: "",
+    spo2: "",
+    avpu: "",
+  },
 };
 
 /** Build a timeline item from a spoken worker reply, decoding the audio
@@ -92,6 +105,8 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
       return { ...state, tab: action.tab };
     case "languageChanged":
       return { ...state, languageCode: action.languageCode };
+    case "patientChanged":
+      return { ...state, patient: { ...state.patient, ...action.patient } };
     case "sessionStarted":
       return { ...state, sessionId: action.sessionId };
     case "analysisStarted":

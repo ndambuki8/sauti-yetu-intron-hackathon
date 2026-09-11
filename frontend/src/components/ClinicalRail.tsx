@@ -1,35 +1,35 @@
 import { latestTurn, useConsultation } from "../state/consultation";
 import UrgencyBadge from "./UrgencyBadge";
 
-/** Right-hand rail: the latest turn's triage decision and intake details. */
+/** Right-hand decision panel: one cohesive card with the triage decision, the
+ * auto-filled intake, and the nurse's clarifying questions as stacked sections
+ * separated by hairline dividers (rather than several floating cards). */
 export default function ClinicalRail() {
   const { state } = useConsultation();
   const turn = latestTurn(state);
-
-  if (!turn) {
-    return (
-      <aside className="card border-dashed p-5 text-center">
-        <p className="text-sm font-medium text-slate-600">Triage decision</p>
-        <p className="mt-1 text-xs text-slate-400">
-          Urgency, routing, the intake card, and the nurse's clarifying
-          questions appear here after the first analysis.
-        </p>
-      </aside>
-    );
-  }
+  if (!turn) return null;
 
   const t = turn.triage;
   const intakeRows: Array<[string, string]> = [
-    ["Patient language", t.intake_card.patient_language],
+    ["Patient", t.intake_card.patient_summary ?? ""],
+    ["Language", t.intake_card.patient_language],
+    ["Vitals", t.intake_card.vitals ?? ""],
     ["Presenting complaint", t.intake_card.presenting_complaint],
-    ["Key findings / entities", t.intake_card.key_findings],
+    ["Key findings", t.intake_card.key_findings],
     ["Possible conditions", t.intake_card.possible_conditions],
   ];
 
   return (
-    <aside className="space-y-4">
-      <section className="card p-5">
-        <h2 className="card-title">Triage decision</h2>
+    <aside className="card flex flex-col overflow-hidden">
+      {(t.auto_detected?.length ?? 0) > 0 && (
+        <p className="bg-amber-50 px-5 py-2 text-[11px] text-amber-700">
+          Auto-detected from the conversation: {t.auto_detected!.join(", ")}. Confirm before acting.
+        </p>
+      )}
+
+      {/* Decision */}
+      <div className="p-5">
+        <h2 className="section-label">Triage decision</h2>
         <div className="mt-3 flex items-start gap-3">
           <UrgencyBadge urgency={t.urgency} />
           <div>
@@ -49,35 +49,41 @@ export default function ClinicalRail() {
             ⚑ {turn.redFlags.join(", ")}
           </p>
         )}
-      </section>
+      </div>
 
-      <section className="card p-5">
-        <h2 className="card-title">Intake card</h2>
+      {/* Intake */}
+      <div className="divider" />
+      <div className="p-5">
+        <h2 className="section-label">Intake card</h2>
         <dl className="mt-3 space-y-3">
           {intakeRows.map(([label, value]) =>
             value ? (
               <div key={label}>
-                <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                  {label}
-                </dt>
+                <dt className="text-[11px] font-medium text-slate-400">{label}</dt>
                 <dd className="mt-0.5 text-sm text-slate-700">{value}</dd>
               </div>
             ) : null,
           )}
         </dl>
-      </section>
+      </div>
 
-      <section className="card p-5">
-        <h2 className="card-title">Clarifying questions for the nurse</h2>
-        <ul className="mt-3 space-y-2">
-          {t.clarifying_questions.map((q) => (
-            <li key={q} className="flex gap-2 text-sm text-slate-700">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
-              {q}
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* Clarifying questions */}
+      {t.clarifying_questions.length > 0 && (
+        <>
+          <div className="divider" />
+          <div className="p-5">
+            <h2 className="section-label">Clarifying questions</h2>
+            <ul className="mt-3 space-y-2">
+              {t.clarifying_questions.map((q) => (
+                <li key={q} className="flex gap-2 text-sm text-slate-700">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
+                  {q}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
     </aside>
   );
 }
