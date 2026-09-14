@@ -1,0 +1,3635 @@
+{
+  "manifest": {
+    "schema_version": "3.0",
+    "generated_at_utc": "2026-09-14T06:31:52.066873+00:00",
+    "command": "/home/coder/Desktop/sauti-yetu-intron-hackathon/scripts/generate_benchmark_report.py",
+    "git_commit": "71e561d7d7674e1848bdff0d37ba1cfdf2b1f757",
+    "python_version": "3.12.3",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+    "intron_api_key_present": true,
+    "flags": {
+      "agentic": false,
+      "noise": false,
+      "offline": false
+    },
+    "models": [
+      "Intron Sahara",
+      "OpenAI Whisper",
+      "Meta MMS"
+    ],
+    "clip_count": 27,
+    "switch_point_annotated_clips": 0,
+    "downstream_annotated_clips": 27,
+    "normalization": [
+      "lowercase",
+      "remove punctuation",
+      "collapse whitespace",
+      "strip"
+    ],
+    "metrics": {
+      "wer": "jiwer word error rate (normalized)",
+      "cer": "jiwer character error rate (normalized)",
+      "switch_point_wer": "mean WER in ±3-token window around each annotated language boundary",
+      "rtf": "wall-clock latency / audio duration; <1.0 means faster than real-time",
+      "intent_accuracy": "exact normalized match for expected_topic",
+      "slot_accuracy": "mean exact normalized match over expected_slots",
+      "entity_error_rate": "(missing gold entities + spurious predicted) / (gold + spurious)",
+      "silence_ratio": "fraction of 20ms frames below -40 dBFS",
+      "noise_wer_degradation": "WER(noisy) - WER(clean) at each SNR level"
+    }
+  },
+  "overall": {
+    "all": {
+      "Intron Sahara": {
+        "mean_wer": 0.4177,
+        "mean_cer": 0.2243,
+        "mean_latency": 9.5333,
+        "mean_rtf": 1.3621,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 27
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.6578,
+        "mean_cer": 0.3982,
+        "mean_latency": 4.0426,
+        "mean_rtf": 0.5902,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 27
+      },
+      "Meta MMS": {
+        "mean_wer": 0.5761,
+        "mean_cer": 0.2708,
+        "mean_latency": 6.7826,
+        "mean_rtf": 0.7909,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 27
+      }
+    }
+  },
+  "by_language_pair": {
+    "Swahili-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.225,
+        "mean_cer": 0.1423,
+        "mean_latency": 7.52,
+        "mean_rtf": 1.5849,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.8667,
+        "mean_cer": 0.6399,
+        "mean_latency": 12.56,
+        "mean_rtf": 2.2837,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.4505,
+        "mean_cer": 0.1695,
+        "mean_latency": 7.1833,
+        "mean_rtf": 1.0642,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    },
+    "Hausa-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.334,
+        "mean_cer": 0.1346,
+        "mean_latency": 9.15,
+        "mean_rtf": 0.9749,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.5605,
+        "mean_cer": 0.3944,
+        "mean_latency": 3.2167,
+        "mean_rtf": 0.4439,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.7839,
+        "mean_cer": 0.4509,
+        "mean_latency": 8.4333,
+        "mean_rtf": 0.7477,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    },
+    "Yoruba-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.5938,
+        "mean_cer": 0.1423,
+        "mean_latency": 6.3067,
+        "mean_rtf": 0.954,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.4286,
+        "mean_cer": 0.2607,
+        "mean_latency": 1.6433,
+        "mean_rtf": 0.3055,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.3816,
+        "mean_cer": 0.188,
+        "mean_latency": 5.3433,
+        "mean_rtf": 0.7976,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    },
+    "Igbo-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.1742,
+        "mean_cer": 0.1052,
+        "mean_latency": 5.9567,
+        "mean_rtf": 0.5157,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": null,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.7057,
+        "mean_cer": 0.3642,
+        "mean_latency": 4.23,
+        "mean_rtf": 0.4371,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": null,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.3716,
+        "mean_cer": 0.2545,
+        "mean_latency": 8.1933,
+        "mean_rtf": 0.7197,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": null,
+        "n": 3
+      }
+    },
+    "Zulu-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.6175,
+        "mean_cer": 0.341,
+        "mean_latency": 22.0967,
+        "mean_rtf": 3.6745,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.4892,
+        "mean_cer": 0.2106,
+        "mean_latency": 1.8733,
+        "mean_rtf": 0.3154,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.4862,
+        "mean_cer": 0.1933,
+        "mean_latency": 5.06,
+        "mean_rtf": 0.8094,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    },
+    "Afrikaans-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.2558,
+        "mean_cer": 0.1251,
+        "mean_latency": 9.5467,
+        "mean_rtf": 1.369,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": null,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 1.048,
+        "mean_cer": 0.7578,
+        "mean_latency": 6.89,
+        "mean_rtf": 0.7747,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": null,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.5285,
+        "mean_cer": 0.2355,
+        "mean_latency": 8.1967,
+        "mean_rtf": 0.7399,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": null,
+        "n": 3
+      }
+    },
+    "Luganda-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.6971,
+        "mean_cer": 0.4581,
+        "mean_latency": 11.01,
+        "mean_rtf": 1.4399,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.5662,
+        "mean_cer": 0.2967,
+        "mean_latency": 1.8767,
+        "mean_rtf": 0.2447,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.8122,
+        "mean_cer": 0.3447,
+        "mean_latency": 6.3633,
+        "mean_rtf": 0.7659,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    },
+    "Kinyarwanda-English-French": {
+      "Intron Sahara": {
+        "mean_wer": 0.6931,
+        "mean_cer": 0.4398,
+        "mean_latency": 8.91,
+        "mean_rtf": 0.9872,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.4679,
+        "mean_cer": 0.3286,
+        "mean_latency": 1.9133,
+        "mean_rtf": 0.2126,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.5215,
+        "mean_cer": 0.2794,
+        "mean_latency": 6.55,
+        "mean_rtf": 0.7277,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    },
+    "Pidgin-English": {
+      "Intron Sahara": {
+        "mean_wer": 0.1688,
+        "mean_cer": 0.1307,
+        "mean_latency": 5.3033,
+        "mean_rtf": 0.7585,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.7874,
+        "mean_cer": 0.3304,
+        "mean_latency": 2.18,
+        "mean_rtf": 0.2939,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      },
+      "Meta MMS": {
+        "mean_wer": 0.8489,
+        "mean_cer": 0.3211,
+        "mean_latency": 5.72,
+        "mean_rtf": 0.746,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 3
+      }
+    }
+  },
+  "by_noise_condition": {
+    "corpus recording": {
+      "Intron Sahara": {
+        "mean_wer": 0.4177,
+        "mean_cer": 0.2243,
+        "mean_latency": 9.5333,
+        "mean_rtf": 1.3621,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 27
+      },
+      "OpenAI Whisper": {
+        "mean_wer": 0.6578,
+        "mean_cer": 0.3982,
+        "mean_latency": 4.0426,
+        "mean_rtf": 0.5902,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 27
+      },
+      "Meta MMS": {
+        "mean_wer": 0.5761,
+        "mean_cer": 0.2708,
+        "mean_latency": 6.7826,
+        "mean_rtf": 0.7909,
+        "mean_switch_point_wer": null,
+        "intent_accuracy": null,
+        "slot_accuracy": null,
+        "entity_error_rate": 1.0,
+        "n": 27
+      }
+    }
+  },
+  "clips": [
+    {
+      "metadata": {
+        "filename": "afrispeech_sw_0.wav",
+        "language_pair": "Swahili-English",
+        "domain": "clinical",
+        "accent_country": "swahili (KE)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Usually, the patient should be identified using two methods.",
+        "language_code": "sw",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Usually, the patient should be identified using two methods.",
+        "language_code": "sw",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Usually, the patient should be identified using.",
+            "latency_seconds": 15.83,
+            "audio_duration_seconds": 3.866,
+            "rtf": 4.0947,
+            "wer": 0.2222,
+            "cer": 0.2069,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Aditi telefonika hic拜auaktore dun hodii kerde.",
+            "latency_seconds": 19.81,
+            "audio_duration_seconds": 3.866,
+            "rtf": 5.1242,
+            "wer": 1.0,
+            "cer": 0.8103,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "usually comma the patient should be identified using  two method",
+            "latency_seconds": 6.71,
+            "audio_duration_seconds": 3.866,
+            "rtf": 1.7356,
+            "wer": 0.2222,
+            "cer": 0.1207,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_sw_1.wav",
+        "language_pair": "Swahili-English",
+        "domain": "clinical",
+        "accent_country": "swahili (KE)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Adverse effects First-dose hypotension and postural hypotension are adverse effects.",
+        "language_code": "sw",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"first-dose hypotension\",\"postural hypotension\",\"adverse effects\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "Adverse effects First-dose hypotension and postural hypotension are adverse effects.",
+        "language_code": "sw",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Adverse effects 1st-dose hypotension and postural hypotension are adverse effects.",
+            "latency_seconds": 3.17,
+            "audio_duration_seconds": 10.004,
+            "rtf": 0.3169,
+            "wer": 0.1,
+            "cer": 0.0366,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "first-dose hypotension",
+                "postural hypotension",
+                "adverse effects"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Advers effects fast, hyphen, dose, hypertension, and postural hypertension are adverse effects.",
+            "latency_seconds": 1.13,
+            "audio_duration_seconds": 10.004,
+            "rtf": 0.113,
+            "wer": 0.6,
+            "cer": 0.1829,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Medication refill / chronic condition follow-up",
+              "urgency": "ROUTINE",
+              "suggested_department": "Pharmacy / Chronic care clinic",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "first-dose hypotension",
+                "postural hypotension",
+                "adverse effects"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "adverse affects first hiphen dos hipotentian and postural hipotentian are adverse effects",
+            "latency_seconds": 7.37,
+            "audio_duration_seconds": 10.004,
+            "rtf": 0.7367,
+            "wer": 0.6,
+            "cer": 0.1951,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "first-dose hypotension",
+                "postural hypotension",
+                "adverse effects"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_sw_2.wav",
+        "language_pair": "Swahili-English",
+        "domain": "general",
+        "accent_country": "swahili (KE)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "A footpath and National Cycle Network cycleway run alongside the Portishead Railway and along the old towpath .",
+        "language_code": "sw",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "A footpath and National Cycle Network cycleway run alongside the Portishead Railway and along the old towpath .",
+        "language_code": "sw",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "A foot and national cycle network cycleway run along the poad railway and also the old tour path.",
+            "latency_seconds": 3.56,
+            "audio_duration_seconds": 10.372,
+            "rtf": 0.3432,
+            "wer": 0.3529,
+            "cer": 0.1835,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Kog sa ͖ ж",
+            "latency_seconds": 16.74,
+            "audio_duration_seconds": 10.372,
+            "rtf": 1.614,
+            "wer": 1.0,
+            "cer": 0.9266,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "a footpath and national cycle network cycle way run along the potes head railway and also the old tor path fulstop",
+            "latency_seconds": 7.47,
+            "audio_duration_seconds": 10.372,
+            "rtf": 0.7202,
+            "wer": 0.5294,
+            "cer": 0.1927,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_ha_0.wav",
+        "language_pair": "Hausa-English",
+        "domain": "clinical",
+        "accent_country": "hausa (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "However, data are not sufficient to draw conclusions about the vitamins effects on human cancers.",
+        "language_code": "ha",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"vitamins\",\"cancer\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "However, data are not sufficient to draw conclusions about the vitamins effects on human cancers.",
+        "language_code": "ha",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "However, data are not sufficient to draw conclusions about the vitamins effect on human cancers",
+            "latency_seconds": 11.47,
+            "audio_duration_seconds": 7.667,
+            "rtf": 1.496,
+            "wer": 0.0667,
+            "cer": 0.0105,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "vitamins",
+                "cancer"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "however coma, data are not sufficient to draw conclusions about the vitamins effects on human cancers full stock.",
+            "latency_seconds": 1.34,
+            "audio_duration_seconds": 7.667,
+            "rtf": 0.1748,
+            "wer": 0.2,
+            "cer": 0.1684,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "vitamins",
+                "cancer"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "however comar data are not sufficient to draw conclusions about the vitar means effects on human cancers full stop",
+            "latency_seconds": 5.97,
+            "audio_duration_seconds": 7.667,
+            "rtf": 0.7787,
+            "wer": 0.3333,
+            "cer": 0.2105,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "vitamins",
+                "cancer"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_ha_1.wav",
+        "language_pair": "Hausa-English",
+        "domain": "clinical",
+        "accent_country": "hausa (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Unspecified superficial injury of unspecified elbow, initial encounter. TABLET, ORAL CIPROFLOXACIN HYDROCHLORIDE, CIPROFLOXACIN HYDROCHLORIDE, EQ 750MG BASE. Pedestrian with other conveyance injured in collision with pedal cycle",
+        "language_code": "ha",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"superficial injury\",\"elbow\",\"ciprofloxacin\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "Unspecified superficial injury of unspecified elbow, initial encounter. TABLET, ORAL CIPROFLOXACIN HYDROCHLORIDE, CIPROFLOXACIN HYDROCHLORIDE, EQ 750MG BASE. Pedestrian with other conveyance injured in collision with pedal cycle",
+        "language_code": "ha",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Unspecified superficial injury of unspecified elbow, initial encounter. TABLET, ORAL CIPROFLOXACIN HYDROCHLORIDE, CYPROFLOXACIN HYDROCHLORIDE, EQ 750MG BASE PDS WITH Other conviance injured in collision with pain",
+            "latency_seconds": 10.42,
+            "audio_duration_seconds": 20.989,
+            "rtf": 0.4965,
+            "wer": 0.1852,
+            "cer": 0.0856,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "superficial injury",
+                "elbow",
+                "ciprofloxacin"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "On-space fight, superficial injury of on-space fight elbow, initial encounter. Tablet oral, Cypchro, Plagzacin, Hydrochloride, Cypchro, Plagzacin, Hydrochloride, E-2755 mgb. Fidescrian, with other conveyance injured in collision with pedal psychop.",
+            "latency_seconds": 1.97,
+            "audio_duration_seconds": 20.989,
+            "rtf": 0.0939,
+            "wer": 0.4815,
+            "cer": 0.2072,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "superficial injury",
+                "elbow",
+                "ciprofloxacin"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "unspacified superficial injury of unspacified elbow inicial encounter tablet oral cyprofluxacin hydrochlorite cyprofluxacin hydrokhlorite eac 750 mgbs pedestrian with other convenience injured in collecion with padal cyclo",
+            "latency_seconds": 14.8,
+            "audio_duration_seconds": 20.989,
+            "rtf": 0.7051,
+            "wer": 0.5185,
+            "cer": 0.1036,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "superficial injury",
+                "elbow",
+                "ciprofloxacin"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_ha_2.wav",
+        "language_pair": "Hausa-English",
+        "domain": "clinical",
+        "accent_country": "hausa (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "PULMONARY WEDGE { a/v/m } 21/22/20",
+        "language_code": "ha",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"pulmonary wedge pressure\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "PULMONARY WEDGE { a/v/m } 21/22/20",
+        "language_code": "ha",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Pulmonary which a 21-22",
+            "latency_seconds": 5.56,
+            "audio_duration_seconds": 5.965,
+            "rtf": 0.9321,
+            "wer": 0.75,
+            "cer": 0.3077,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "pulmonary wedge pressure"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "passekemiT team",
+            "latency_seconds": 6.34,
+            "audio_duration_seconds": 5.965,
+            "rtf": 1.0629,
+            "wer": 1.0,
+            "cer": 0.8077,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "pulmonary wedge pressure"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "mena wac am 2tf 2tsecnd canccn",
+            "latency_seconds": 4.53,
+            "audio_duration_seconds": 5.965,
+            "rtf": 0.7594,
+            "wer": 1.5,
+            "cer": 1.0385,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "pulmonary wedge pressure"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_yo_0.wav",
+        "language_pair": "Yoruba-English",
+        "domain": "general",
+        "accent_country": "yoruba (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "A second impact tore open the second of the two watertight compartments flooding it.",
+        "language_code": "yo",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "A second impact tore open the second of the two watertight compartments flooding it.",
+        "language_code": "yo",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "A 2nd impact to open the second of the 2 water tight compartments flooding it",
+            "latency_seconds": 12.63,
+            "audio_duration_seconds": 8.174,
+            "rtf": 1.5451,
+            "wer": 0.3571,
+            "cer": 0.1205,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "2ª impact, so open the 2ª watertight compartments, floating needs full stop.",
+            "latency_seconds": 1.38,
+            "audio_duration_seconds": 8.174,
+            "rtf": 0.1688,
+            "wer": 0.7857,
+            "cer": 0.5301,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "a second impact tall open the second of the two water tight compartments flodinneads foolstop",
+            "latency_seconds": 6.06,
+            "audio_duration_seconds": 8.174,
+            "rtf": 0.7414,
+            "wer": 0.3571,
+            "cer": 0.2048,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_yo_1.wav",
+        "language_pair": "Yoruba-English",
+        "domain": "clinical",
+        "accent_country": "yoruba (US)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "X-ray examination of the mastoids is of little value though it may show areas of bone destruction and enlargement of jugular foramen.",
+        "language_code": "yo",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"mastoid\",\"bone destruction\",\"jugular foramen\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "X-ray examination of the mastoids is of little value though it may show areas of bone destruction and enlargement of jugular foramen.",
+        "language_code": "yo",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "X-ray examination of the mastoid is of little value, though it may show areas of bone destruction and enlargement of jugular form.",
+            "latency_seconds": 3.12,
+            "audio_duration_seconds": 9.762,
+            "rtf": 0.3196,
+            "wer": 0.0909,
+            "cer": 0.0305,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "mastoid",
+                "bone destruction",
+                "jugular foramen"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "X, iPhone 3, examination of the Master 8 is of little value, though it may show areas of bone destruction and enlightenment of juggler for army. Full stop.",
+            "latency_seconds": 1.74,
+            "audio_duration_seconds": 9.762,
+            "rtf": 0.1782,
+            "wer": 0.5,
+            "cer": 0.2519,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "mastoid",
+                "bone destruction",
+                "jugular foramen"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "ex iphonra examination of themasted is of latale value though it mey sow areas of bone destruction and enlargement of jugala faramin foodstop",
+            "latency_seconds": 7.0,
+            "audio_duration_seconds": 9.762,
+            "rtf": 0.7171,
+            "wer": 0.4545,
+            "cer": 0.2214,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "mastoid",
+                "bone destruction",
+                "jugular foramen"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_yo_2.wav",
+        "language_pair": "Yoruba-English",
+        "domain": "general",
+        "accent_country": "yoruba (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Confederate infantry assaults",
+        "language_code": "yo",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Confederate infantry assaults",
+        "language_code": "yo",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Confiderate in fountry asorts",
+            "latency_seconds": 3.17,
+            "audio_duration_seconds": 3.179,
+            "rtf": 0.9972,
+            "wer": 1.3333,
+            "cer": 0.2759,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "confederate infantry assaults.",
+            "latency_seconds": 1.81,
+            "audio_duration_seconds": 3.179,
+            "rtf": 0.5694,
+            "wer": 0.0,
+            "cer": 0.0,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Child illness (paediatric)",
+              "urgency": "URGENT",
+              "suggested_department": "Paediatrics",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "confederate infantry azats",
+            "latency_seconds": 2.97,
+            "audio_duration_seconds": 3.179,
+            "rtf": 0.9343,
+            "wer": 0.3333,
+            "cer": 0.1379,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Child illness (paediatric)",
+              "urgency": "URGENT",
+              "suggested_department": "Paediatrics",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "OpenAI Whisper",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_ig_0.wav",
+        "language_pair": "Igbo-English",
+        "domain": "general",
+        "accent_country": "igbo (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party.",
+        "language_code": "ig",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party.",
+        "language_code": "ig",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party",
+            "latency_seconds": 11.17,
+            "audio_duration_seconds": 12.39,
+            "rtf": 0.9015,
+            "wer": 0.0,
+            "cer": 0.0,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party full stop.",
+            "latency_seconds": 2.23,
+            "audio_duration_seconds": 12.39,
+            "rtf": 0.18,
+            "wer": 0.08,
+            "cer": 0.0775,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "to grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against e party full stop",
+            "latency_seconds": 8.69,
+            "audio_duration_seconds": 12.39,
+            "rtf": 0.7014,
+            "wer": 0.12,
+            "cer": 0.093,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_ig_1.wav",
+        "language_pair": "Igbo-English",
+        "domain": "general",
+        "accent_country": "igbo (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "He stated, Some were discriminated against while others were completely disenfranchised and their teeming supporters, who were amongst the delegates, could not cast their votes while the exercise lasted.",
+        "language_code": "ig",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "He stated, Some were discriminated against while others were completely disenfranchised and their teeming supporters, who were amongst the delegates, could not cast their votes while the exercise lasted.",
+        "language_code": "ig",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "He stated, some were discriminated against while others were completely disenfronches and their teaming supporters, who were amongst the delegates, could not cast their votes while the exercise last night.",
+            "latency_seconds": 3.34,
+            "audio_duration_seconds": 13.687,
+            "rtf": 0.244,
+            "wer": 0.1379,
+            "cer": 0.0553,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Koma, some were discriminated against while others were completely disenfranchised and their teaming supporters Koma, where amongst the delegates Koma could not cast their votes while the SSI's last two steps.",
+            "latency_seconds": 2.56,
+            "audio_duration_seconds": 13.687,
+            "rtf": 0.187,
+            "wer": 0.3448,
+            "cer": 0.1658,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "he stated commer some were discriminated against wille others were completely disenfranchized and their teeming supporters comme we were amongs the delegates commer could not cas their votes world exercise lastfoso",
+            "latency_seconds": 9.5,
+            "audio_duration_seconds": 13.687,
+            "rtf": 0.6941,
+            "wer": 0.3793,
+            "cer": 0.191,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_ig_2.wav",
+        "language_pair": "Igbo-English",
+        "domain": "general",
+        "accent_country": "igbo (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Tuesday 28 April, 1998 next line. Neuro: Pt Daramola Achike 08 February, 2003",
+        "language_code": "ig",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Tuesday 28 April, 1998 next line. Neuro: Pt Daramola Achike 08 February, 2003",
+        "language_code": "ig",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Tuesdaysday 28 April, 1998 Neuro: Patient Daramola Achike 08 February, 200",
+            "latency_seconds": 3.36,
+            "audio_duration_seconds": 8.367,
+            "rtf": 0.4016,
+            "wer": 0.3846,
+            "cer": 0.2603,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Sa Trust 2018 Epr u Komah 1998 NEXT LIFE FoolsStop Nü e Wr O Coulons Pi ten ce L Pon 0 8 Fab Robe, 2003",
+            "latency_seconds": 7.9,
+            "audio_duration_seconds": 8.367,
+            "rtf": 0.9442,
+            "wer": 1.6923,
+            "cer": 0.8493,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "tuzday 28 april cọma 1998 next line fullstop neuro colon peshendara amola achike 08 february kọma 203",
+            "latency_seconds": 6.39,
+            "audio_duration_seconds": 8.367,
+            "rtf": 0.7637,
+            "wer": 0.6154,
+            "cer": 0.4795,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_zu_0.wav",
+        "language_pair": "Zulu-English",
+        "domain": "clinical",
+        "accent_country": "zulu (ZA)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Check the product labeling for correct amount of productneeded Figure 1.",
+        "language_code": "zu",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Check the product labeling for correct amount of productneeded Figure 1.",
+        "language_code": "zu",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "check the product lab for correct amount of product needed figure one",
+            "latency_seconds": 29.59,
+            "audio_duration_seconds": 4.483,
+            "rtf": 6.6005,
+            "wer": 0.3636,
+            "cer": 0.1268,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Check the product labeling for correct amount of product needed to figure one full stop.",
+            "latency_seconds": 1.78,
+            "audio_duration_seconds": 4.483,
+            "rtf": 0.3971,
+            "wer": 0.5455,
+            "cer": 0.2394,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "check the product labelling for correct amount of product needed t figure one full stop",
+            "latency_seconds": 3.82,
+            "audio_duration_seconds": 4.483,
+            "rtf": 0.8521,
+            "wer": 0.6364,
+            "cer": 0.2394,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_zu_1.wav",
+        "language_pair": "Zulu-English",
+        "domain": "general",
+        "accent_country": "zulu (LS)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "The military should not alienate them by further high-handedness.",
+        "language_code": "zu",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "The military should not alienate them by further high-handedness.",
+        "language_code": "zu",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "shown by further high handness",
+            "latency_seconds": 2.68,
+            "audio_duration_seconds": 5.823,
+            "rtf": 0.4602,
+            "wer": 0.8889,
+            "cer": 0.5714,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "The military should not alienate them by further high-handedness. Full stop.",
+            "latency_seconds": 1.84,
+            "audio_duration_seconds": 5.823,
+            "rtf": 0.316,
+            "wer": 0.2222,
+            "cer": 0.1587,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "the military should not alienate them by farther highhandedness foolstop",
+            "latency_seconds": 4.58,
+            "audio_duration_seconds": 5.823,
+            "rtf": 0.7865,
+            "wer": 0.2222,
+            "cer": 0.1587,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "OpenAI Whisper",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_zu_2.wav",
+        "language_pair": "Zulu-English",
+        "domain": "clinical",
+        "accent_country": "zulu (ZA)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Dense old scars may undergo hyaline degeneration and subsequent calcification.",
+        "language_code": "zu",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"scar\",\"hyaline degeneration\",\"calcification\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "Dense old scars may undergo hyaline degeneration and subsequent calcification.",
+        "language_code": "zu",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "s may under good generation and subsequent calcification",
+            "latency_seconds": 34.02,
+            "audio_duration_seconds": 8.585,
+            "rtf": 3.9627,
+            "wer": 0.6,
+            "cer": 0.3247,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "scar",
+                "hyaline degeneration",
+                "calcification"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Benzodes calls me under boi-line generation and subsequent calcification.",
+            "latency_seconds": 2.0,
+            "audio_duration_seconds": 8.585,
+            "rtf": 0.233,
+            "wer": 0.7,
+            "cer": 0.2338,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "scar",
+                "hyaline degeneration",
+                "calcification"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "bens old scars meyi andago highlinet generation and subsequent calsification",
+            "latency_seconds": 6.78,
+            "audio_duration_seconds": 8.585,
+            "rtf": 0.7897,
+            "wer": 0.6,
+            "cer": 0.1818,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "scar",
+                "hyaline degeneration",
+                "calcification"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_af_0.wav",
+        "language_pair": "Afrikaans-English",
+        "domain": "general",
+        "accent_country": "afrikaans (ZA)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "The forum said it still awaits the actual cause of his death.",
+        "language_code": "af",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "The forum said it still awaits the actual cause of his death.",
+        "language_code": "af",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "The forum said it still awaits The actual cause of his death.",
+            "latency_seconds": 18.1,
+            "audio_duration_seconds": 5.409,
+            "rtf": 3.3463,
+            "wer": 0.0,
+            "cer": 0.0,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Het leuke vraag journa luw geitde collect gehot ik de kredend op sprintovers...'",
+            "latency_seconds": 6.57,
+            "audio_duration_seconds": 5.409,
+            "rtf": 1.2146,
+            "wer": 1.0833,
+            "cer": 0.9667,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "the forum said it still awaits the actual couse of his debts for ste",
+            "latency_seconds": 4.28,
+            "audio_duration_seconds": 5.409,
+            "rtf": 0.7913,
+            "wer": 0.3333,
+            "cer": 0.1833,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_af_1.wav",
+        "language_pair": "Afrikaans-English",
+        "domain": "general",
+        "accent_country": "afrikaans (ZA)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Its completely improbable that each of the 12 women who testified misunderstood their night with Mr. McKnight, Crown prosecutor Katherine Fraser told the jury Monday during closing arguments.",
+        "language_code": "af",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Its completely improbable that each of the 12 women who testified misunderstood their night with Mr. McKnight, Crown prosecutor Katherine Fraser told the jury Monday during closing arguments.",
+        "language_code": "af",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Its completely improbable that each of the 12 womenste misunderstood the night with Mic, Clue Gather frazole during Monday during closing arguments",
+            "latency_seconds": 5.4,
+            "audio_duration_seconds": 12.012,
+            "rtf": 0.4496,
+            "wer": 0.4643,
+            "cer": 0.2819,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "K穝st believingpoel sjwa het jeyYour w figuren 거는 eith ster, kae waaringen de tهاen in oorop een integraam en de hoek incidents en eithe reportedly de hoek berekers",
+            "latency_seconds": 11.26,
+            "audio_duration_seconds": 12.012,
+            "rtf": 0.9374,
+            "wer": 1.0,
+            "cer": 0.7553,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "itis completely improbable that each of the twelve women o testified misunderstood thee night with mr mag nike kommer crown prosecutor getther and phrase the tolte jury manday during closing argumentsoste",
+            "latency_seconds": 8.75,
+            "audio_duration_seconds": 12.012,
+            "rtf": 0.7284,
+            "wer": 0.4643,
+            "cer": 0.2287,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_af_2.wav",
+        "language_pair": "Afrikaans-English",
+        "domain": "general",
+        "accent_country": "afrikaans (ZA)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Earlier speaking, on behalf of state Governor Dr Abdullahi Umar Ganduje, the Secretary to the State Government, Alhaji Usman Alhaji, stated the Kano State Governments readiness toward curtailing the menace in the state.",
+        "language_code": "af",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Earlier speaking, on behalf of state Governor Dr Abdullahi Umar Ganduje, the Secretary to the State Government, Alhaji Usman Alhaji, stated the Kano State Governments readiness toward curtailing the menace in the state.",
+        "language_code": "af",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Earlier speaking, on behalf of state governor Dr. Abdullahi Umar Gandanduje, the Secretary of the State Government, Alh Usman Alh, stated the kind of state government readness towards curtailing the menars in the state",
+            "latency_seconds": 5.14,
+            "audio_duration_seconds": 16.515,
+            "rtf": 0.3112,
+            "wer": 0.303,
+            "cer": 0.0935,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Elie is speak in coma en behaaf stijkgavena doktor Abdullah i Umergandu J. Coma, de secretie, de stijkgavenen, koma, ahadji, usman, ahadji, koma, stijkgavenen, stijkgavenen, sreden is de wotskurtailing de menis in de stijk. Full stop.",
+            "latency_seconds": 2.84,
+            "audio_duration_seconds": 16.515,
+            "rtf": 0.172,
+            "wer": 1.0606,
+            "cer": 0.5514,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "earlies speaking komme aan behalf of e state gowernor dtr abdulla e u margantuge khomme se sekretarie to the state gowernment komme hahji usman hahagi komme stated ha kannor state gowernment's rediness towards curtaling the mennace in the state volstare",
+            "latency_seconds": 11.56,
+            "audio_duration_seconds": 16.515,
+            "rtf": 0.7,
+            "wer": 0.7879,
+            "cer": 0.2944,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_lg_0.wav",
+        "language_pair": "Luganda-English",
+        "domain": "clinical",
+        "accent_country": "luganda (UG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Since the degree of effect produced by a drug is generally a function of the amount administered, we can express this relationship in terms of a dose-response curve.",
+        "language_code": "lg",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"drug\",\"dose-response curve\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "Since the degree of effect produced by a drug is generally a function of the amount administered, we can express this relationship in terms of a dose-response curve.",
+        "language_code": "lg",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Since the degree of effect produced by the drug is genally a funtion of the amount adm",
+            "latency_seconds": 14.14,
+            "audio_duration_seconds": 12.986,
+            "rtf": 1.0889,
+            "wer": 0.5357,
+            "cer": 0.5,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "drug",
+                "dose-response curve"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Since the degree of effect produced by the drug is generally a function of the amount administered, we can express this relationship in terms of those responsive...",
+            "latency_seconds": 2.05,
+            "audio_duration_seconds": 12.986,
+            "rtf": 0.1579,
+            "wer": 0.1429,
+            "cer": 0.0741,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "drug",
+                "dose-response curve"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "since the degree of effect produced by the drug is generally a function of the amount administred we can express tis relationship in terms of tose responsive c",
+            "latency_seconds": 9.2,
+            "audio_duration_seconds": 12.986,
+            "rtf": 0.7085,
+            "wer": 0.2143,
+            "cer": 0.0926,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "drug",
+                "dose-response curve"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "OpenAI Whisper",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_lg_1.wav",
+        "language_pair": "Luganda-English",
+        "domain": "clinical",
+        "accent_country": "luganda (UG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Theapplication of cold therapy reduces bleeding and hematoma formation.",
+        "language_code": "lg",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"cold therapy\",\"bleeding\",\"hematoma\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "Theapplication of cold therapy reduces bleeding and hematoma formation.",
+        "language_code": "lg",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "The application of cool thy reduce bleeding and hom formation.",
+            "latency_seconds": 2.99,
+            "audio_duration_seconds": 6.819,
+            "rtf": 0.4385,
+            "wer": 0.6667,
+            "cer": 0.1857,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "cold therapy",
+                "bleeding",
+                "hematoma"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "The application of code therapy which is just bleeding and hematoma formation will stop.",
+            "latency_seconds": 1.81,
+            "audio_duration_seconds": 6.819,
+            "rtf": 0.2654,
+            "wer": 0.8889,
+            "cer": 0.3571,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "cold therapy",
+                "bleeding",
+                "hematoma"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "baealikation og ko therapy reguses bleeding and ematoma bormation bolsto",
+            "latency_seconds": 5.1,
+            "audio_duration_seconds": 6.819,
+            "rtf": 0.7479,
+            "wer": 0.7778,
+            "cer": 0.2857,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "cold therapy",
+                "bleeding",
+                "hematoma"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_lg_2.wav",
+        "language_pair": "Luganda-English",
+        "domain": "clinical",
+        "accent_country": "luganda (UG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "In addition, the cappedvenous access device will remain patent.",
+        "language_code": "lg",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"venous access device\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "In addition, the cappedvenous access device will remain patent.",
+        "language_code": "lg",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Indition, the Cacent",
+            "latency_seconds": 15.9,
+            "audio_duration_seconds": 5.694,
+            "rtf": 2.7924,
+            "wer": 0.8889,
+            "cer": 0.6885,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "venous access device"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "In addition, comma, the captivatenius access device remains patent for stove.",
+            "latency_seconds": 1.77,
+            "audio_duration_seconds": 5.694,
+            "rtf": 0.3109,
+            "wer": 0.6667,
+            "cer": 0.459,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "venous access device"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "bin babbibion kome bbe kabuba veniub babbesb de bibe be maine babenb bu",
+            "latency_seconds": 4.79,
+            "audio_duration_seconds": 5.694,
+            "rtf": 0.8412,
+            "wer": 1.4444,
+            "cer": 0.6557,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "venous access device"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "OpenAI Whisper",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_rw_0.wav",
+        "language_pair": "Kinyarwanda-English-French",
+        "domain": "general",
+        "accent_country": "kinyarwanda (RW)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Apart from the paucity of funding and insecurity in parts of the country, successive governments fail to perform.",
+        "language_code": "rw",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Apart from the paucity of funding and insecurity in parts of the country, successive governments fail to perform.",
+        "language_code": "rw",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "A part from the fost of secret pas the time second gavement virus to perform",
+            "latency_seconds": 19.71,
+            "audio_duration_seconds": 9.072,
+            "rtf": 2.1726,
+            "wer": 0.7222,
+            "cer": 0.5045,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Apart from the cost of funding and security, the success of the government varies to the company.",
+            "latency_seconds": 1.91,
+            "audio_duration_seconds": 9.072,
+            "rtf": 0.2105,
+            "wer": 0.5556,
+            "cer": 0.4324,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "apart from the poust of funding and securiturya passof the tak with success government fires to perform",
+            "latency_seconds": 6.52,
+            "audio_duration_seconds": 9.072,
+            "rtf": 0.7187,
+            "wer": 0.5556,
+            "cer": 0.2613,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "OpenAI Whisper",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_rw_1.wav",
+        "language_pair": "Kinyarwanda-English-French",
+        "domain": "general",
+        "accent_country": "kinyarwanda (RW)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Im not the first person to think he should run for higher office, by the way.",
+        "language_code": "rw",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "Im not the first person to think he should run for higher office, by the way.",
+        "language_code": "rw",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "I am not the first personal to think he show for higher of his way",
+            "latency_seconds": 4.1,
+            "audio_duration_seconds": 8.619,
+            "rtf": 0.4757,
+            "wer": 0.5,
+            "cer": 0.28,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "I'm not the first person to think he should learn for higher office by the way.",
+            "latency_seconds": 1.87,
+            "audio_duration_seconds": 8.619,
+            "rtf": 0.217,
+            "wer": 0.0625,
+            "cer": 0.0533,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "imno the first personer to think he should learn for higher office byteway",
+            "latency_seconds": 6.36,
+            "audio_duration_seconds": 8.619,
+            "rtf": 0.7379,
+            "wer": 0.4375,
+            "cer": 0.1467,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "OpenAI Whisper",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_rw_2.wav",
+        "language_pair": "Kinyarwanda-English-French",
+        "domain": "clinical",
+        "accent_country": "kinyarwanda (RW)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "All of them, especially the phalanges, are slightly concave on the inferior plantar side.",
+        "language_code": "rw",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"phalanges\",\"plantar\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "All of them, especially the phalanges, are slightly concave on the inferior plantar side.",
+        "language_code": "rw",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Album, especially follanges, as like the confer planter side period",
+            "latency_seconds": 2.92,
+            "audio_duration_seconds": 9.317,
+            "rtf": 0.3134,
+            "wer": 0.8571,
+            "cer": 0.5349,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "phalanges",
+                "plantar"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "All of them come, especially for land-ease, I slightly conquer one day in the area, plant-as-like period.",
+            "latency_seconds": 1.96,
+            "audio_duration_seconds": 9.317,
+            "rtf": 0.2104,
+            "wer": 0.7857,
+            "cer": 0.5,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "phalanges",
+                "plantar"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "all of them commer especialy forlandges comer are slightly conkuerve on the imperior planterside period",
+            "latency_seconds": 6.77,
+            "audio_duration_seconds": 9.317,
+            "rtf": 0.7266,
+            "wer": 0.5714,
+            "cer": 0.4302,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "phalanges",
+                "plantar"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Meta MMS",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_pcm_0.wav",
+        "language_pair": "Pidgin-English",
+        "domain": "general",
+        "accent_country": "pidgin (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "She was selected Best Young Player awards in 2000 season.",
+        "language_code": "pcm",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[]"
+      },
+      "benchmark": {
+        "reference_transcript": "She was selected Best Young Player awards in 2000 season.",
+        "language_code": "pcm",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "She was selected best young player awards in 2000 season",
+            "latency_seconds": 10.15,
+            "audio_duration_seconds": 6.476,
+            "rtf": 1.5673,
+            "wer": 0.0,
+            "cer": 0.0,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "She was selected Best Young Player Awards in 2000 season. Full stop.",
+            "latency_seconds": 2.52,
+            "audio_duration_seconds": 6.476,
+            "rtf": 0.3891,
+            "wer": 0.2,
+            "cer": 0.1786,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "she was selected best yong player award en t 000 sizon for stop",
+            "latency_seconds": 4.97,
+            "audio_duration_seconds": 6.476,
+            "rtf": 0.7674,
+            "wer": 0.8,
+            "cer": 0.2857,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": null,
+              "missing_entities": [],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_pcm_1.wav",
+        "language_pair": "Pidgin-English",
+        "domain": "clinical",
+        "accent_country": "pidgin (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "ManagementI n primary hyperparathyroidism ,  surgical removal of the parathyroids is curative.",
+        "language_code": "pcm",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"hyperparathyroidism\",\"parathyroids\",\"surgical removal\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "ManagementI n primary hyperparathyroidism ,  surgical removal of the parathyroids is curative.",
+        "language_code": "pcm",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Management and primary hyperpyxin surgical removal of the parathyroids is created.",
+            "latency_seconds": 2.89,
+            "audio_duration_seconds": 7.103,
+            "rtf": 0.4069,
+            "wer": 0.3636,
+            "cer": 0.2111,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "hyperparathyroidism",
+                "parathyroids",
+                "surgical removal"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "On it meant I'm primary hyperpilot deraising, so the car removal of the pirate words is great.",
+            "latency_seconds": 1.97,
+            "audio_duration_seconds": 7.103,
+            "rtf": 0.2773,
+            "wer": 1.0909,
+            "cer": 0.4222,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "hyperparathyroidism",
+                "parathyroids",
+                "surgical removal"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "management and primary hyperparoderizin togical remover of di paratorit iskree",
+            "latency_seconds": 5.33,
+            "audio_duration_seconds": 7.103,
+            "rtf": 0.7504,
+            "wer": 0.8182,
+            "cer": 0.3444,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "hyperparathyroidism",
+                "parathyroids",
+                "surgical removal"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    },
+    {
+      "metadata": {
+        "filename": "afrispeech_pcm_2.wav",
+        "language_pair": "Pidgin-English",
+        "domain": "clinical",
+        "accent_country": "pidgin (NG)",
+        "device_type": "afrispeech-200 corpus",
+        "noise_condition": "corpus recording",
+        "reference_transcript": "Minor anaphylactic reactions such as urticaria can be treated with oral or intramuscular chlorpheniramine.",
+        "language_code": "pcm",
+        "switch_points": "[]",
+        "expected_topic": "",
+        "expected_urgency": "",
+        "expected_department": "",
+        "expected_slots": "{}",
+        "expected_entities": "[\"anaphylactic reaction\",\"urticaria\",\"chlorpheniramine\"]"
+      },
+      "benchmark": {
+        "reference_transcript": "Minor anaphylactic reactions such as urticaria can be treated with oral or intramuscular chlorpheniramine.",
+        "language_code": "pcm",
+        "results": [
+          {
+            "model": "Intron Sahara",
+            "kind": "commercial API (African-accent optimized)",
+            "transcript": "Minor anaphylactic reactions, such as tachycaria can be treated with oral or intramuscular flav.",
+            "latency_seconds": 2.87,
+            "audio_duration_seconds": 9.524,
+            "rtf": 0.3013,
+            "wer": 0.1429,
+            "cer": 0.181,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "anaphylactic reaction",
+                "urticaria",
+                "chlorpheniramine"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "OpenAI Whisper",
+            "kind": "open-source, local",
+            "transcript": "Mino and a Philactic Russian such as Itish Korea can be treated with ORAO in Jamo School of Prokhe, Nira 9.",
+            "latency_seconds": 2.05,
+            "audio_duration_seconds": 9.524,
+            "rtf": 0.2152,
+            "wer": 1.0714,
+            "cer": 0.3905,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "anaphylactic reaction",
+                "urticaria",
+                "chlorpheniramine"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          },
+          {
+            "model": "Meta MMS",
+            "kind": "open-source, local (mms-1b-all)",
+            "transcript": "minor andafilatic ration sush as e tish karrie kan bi trited with ora or intramoskula profil neramaye",
+            "latency_seconds": 6.86,
+            "audio_duration_seconds": 9.524,
+            "rtf": 0.7203,
+            "wer": 0.9286,
+            "cer": 0.3333,
+            "switch_point": {
+              "wer": null,
+              "count": 0,
+              "windows": []
+            },
+            "agentic": {
+              "topic": "Undetermined — needs nurse assessment",
+              "urgency": "ROUTINE",
+              "suggested_department": "General Outpatient / Triage desk",
+              "field_checks": {},
+              "slot_checks": {},
+              "intent_correct": null,
+              "slot_accuracy": null,
+              "entity_error_rate": 1.0,
+              "missing_entities": [
+                "anaphylactic reaction",
+                "urticaria",
+                "chlorpheniramine"
+              ],
+              "spurious_entities": []
+            },
+            "error": null,
+            "warning": null
+          }
+        ],
+        "best_model": "Intron Sahara",
+        "switch_points": [],
+        "agentic": true
+      }
+    }
+  ]
+}

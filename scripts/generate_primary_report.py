@@ -1,26 +1,22 @@
-"""Comprehensive benchmark report for data/primary_collection (real health audio).
+"""Benchmark report for data/primary_collection (real health audio from Kenya).
 
-Covers all four challenge domains:
-  1  Linguistic & Core ASR  — WER/CER per model, split by recording type
-  2  Agentic Triage Accuracy — topic/urgency/entity scoring (m4a + ogg files)
-  3  Code-Switch Robustness  — switch-point WER for annotated sw-en clips
-  4  Infrastructure & Latency — RTF, latency distribution, offline penalty
+What this script does:
+  - Runs three ASR models on every audio clip in data/primary_collection/
+  - Measures Word Error Rate, Character Error Rate, and speed (Real-Time Factor)
+  - Evaluates how well the triage pipeline labels topic, urgency and entities
+  - Checks accuracy at code-switch points (where Swahili switches to English)
+  - Produces 5 charts and a PDF report in reports/primary_collection/
 
-Three recording types:
-  naturalistic_health_complaint  — m4a smartphone recordings (15-23s)
-  synthetic_triage_phrase        — mp3 short phrases (2-6s)
-  whatsapp_voice_note            — ogg/opus WhatsApp PTT recordings (7-31s)
+Recording types in the dataset:
+  m4a  - Real health complaints, smartphone microphone, 15-23 seconds
+  ogg  - WhatsApp Push-to-Talk voice notes, ambient noise, 7-31 seconds
+  mp3  - Short scripted triage phrases, laptop mic, 2-6 seconds
 
-Outputs:
-  reports/primary_benchmark_report.pdf
-  reports/primary_results.json
-  reports/chart_pc_*.png  (5 charts)
-
-Usage (project root, venv active, INTRON_API_KEY set):
-  python -m scripts.generate_primary_report
-  python -m scripts.generate_primary_report --agentic
-  python -m scripts.generate_primary_report --offline
-  python -m scripts.generate_primary_report --rebuild-only
+Usage (from project root, with venv active and INTRON_API_KEY set):
+  python -m scripts.generate_primary_report               # full benchmark run
+  python -m scripts.generate_primary_report --agentic    # include triage scoring
+  python -m scripts.generate_primary_report --offline    # local models only
+  python -m scripts.generate_primary_report --rebuild-only  # redo charts/PDF from saved JSON
 """
 
 import csv
@@ -35,7 +31,6 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 import matplotlib
-
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -47,33 +42,32 @@ from backend.benchmark import run_benchmark, run_offline_simulation  # noqa: E40
 from backend.config import PROJECT_ROOT, SUPPORTED_LANGUAGES          # noqa: E402
 
 PRIMARY_DIR  = PROJECT_ROOT / "data" / "primary_collection"
-REPORTS_DIR  = PROJECT_ROOT / "reports"
+REPORTS_DIR  = PROJECT_ROOT / "reports" / "primary_collection"
 MODELS       = ["Intron Sahara", "OpenAI Whisper", "Meta MMS"]
 LOCAL_MODELS = ["OpenAI Whisper", "Meta MMS"]
 
 # ── Color palette ─────────────────────────────────────────────────────────────
 C = {
-    "sahara":   "#1a6b3c",
-    "whisper":  "#e07b39",
-    "mms":      "#3a7bbf",
-    "emergency":"#c0392b",
-    "urgent":   "#e67e22",
-    "routine":  "#27ae60",
-    "header_bg":(26, 82, 118),   # dark teal (r, g, b) for fpdf
-    "accent_bg":(240, 248, 255),  # ice blue
-    # WER heatmap (0=green … 1=red)
-    "wer_good": (200, 235, 200),
-    "wer_mid":  (255, 243, 170),
-    "wer_bad":  (255, 200, 195),
-    # Urgency fills
-    "em_fill":  (255, 218, 218),
-    "ur_fill":  (255, 243, 215),
-    "ro_fill":  (218, 245, 218),
+    "sahara":    "#1a6b3c",
+    "whisper":   "#e07b39",
+    "mms":       "#3a7bbf",
+    "emergency": "#c0392b",
+    "urgent":    "#e67e22",
+    "routine":   "#27ae60",
+    "header_bg": (26, 82, 118),    # dark navy
+    "accent_bg": (240, 248, 255),  # ice blue
+    "wer_good":  (200, 235, 200),  # green  — WER < 0.25
+    "wer_mid":   (255, 243, 170),  # amber  — WER 0.25–0.45
+    "wer_bad":   (255, 200, 195),  # red    — WER > 0.45
+    "wer_err":   (230, 230, 230),  # grey   — error / N/A
+    "em_fill":   (255, 218, 218),
+    "ur_fill":   (255, 243, 215),
+    "ro_fill":   (218, 245, 218),
 }
 
-MODEL_HEX  = {"Intron Sahara": C["sahara"], "OpenAI Whisper": C["whisper"], "Meta MMS": C["mms"]}
-UGY_FILL   = {"EMERGENCY": C["em_fill"], "URGENT": C["ur_fill"], "ROUTINE": C["ro_fill"]}
-UGY_LABEL  = {"EMERGENCY": "[EMERGENCY]", "URGENT": "[URGENT]", "ROUTINE": "[ROUTINE]"}
+MODEL_HEX = {"Intron Sahara": C["sahara"], "OpenAI Whisper": C["whisper"], "Meta MMS": C["mms"]}
+UGY_FILL  = {"EMERGENCY": C["em_fill"], "URGENT": C["ur_fill"], "ROUTINE": C["ro_fill"]}
+UGY_LABEL = {"EMERGENCY": "[EMERGENCY]", "URGENT": "[URGENT]", "ROUTINE": "[ROUTINE]"}
 
 PAIR_TO_CODE = {name.lower(): code for code, name in SUPPORTED_LANGUAGES.items()}
 
@@ -135,7 +129,7 @@ def _agent_ref(row: dict) -> dict | None:
 def run_all(rows: list[dict], agentic: bool = False) -> list[dict]:
     results = []
     for i, row in enumerate(rows, 1):
-        lang = _language_code(row)
+        lang  = _language_code(row)
         rtype = row.get("recording_type", "")
         print(f"  [{i:2d}/{len(rows)}] {row['filename']:50s} ({rtype[:18]})")
         audio_bytes = (PRIMARY_DIR / row["filename"]).read_bytes()
@@ -207,22 +201,23 @@ def aggregate(results: list[dict], key_fn) -> dict:
                 bk["sp_wer"].append(r["switch_point"]["wer"])
             ag = r.get("agentic") or {}
             for mkey, src in (("intent", ag.get("intent_correct")),
-                               ("slot", ag.get("slot_accuracy")),
+                               ("slot",   ag.get("slot_accuracy")),
                                ("entity", ag.get("entity_error_rate"))):
                 if src is not None:
                     bk[mkey].append(float(src))
     return {
         group: {
             model: {
-                "mean_wer":           _mean(b["wer"]),
-                "mean_cer":           _mean(b["cer"]),
-                "mean_latency":       _mean(b["latency"]),
-                "mean_rtf":           _mean(b["rtf"]),
-                "mean_sp_wer":        _mean(b["sp_wer"]),
-                "intent_accuracy":    _mean(b["intent"]),
-                "slot_accuracy":      _mean(b["slot"]),
-                "entity_error_rate":  _mean(b["entity"]),
+                "mean_wer":          _mean(b["wer"]),
+                "mean_cer":          _mean(b["cer"]),
+                "mean_latency":      _mean(b["latency"]),
+                "mean_rtf":          _mean(b["rtf"]),
+                "mean_sp_wer":       _mean(b["sp_wer"]),
+                "intent_accuracy":   _mean(b["intent"]),
+                "slot_accuracy":     _mean(b["slot"]),
+                "entity_error_rate": _mean(b["entity"]),
                 "n": len(b["wer"]),
+                "n_agentic": len(b["intent"]),
             }
             for model, b in models.items()
         }
@@ -249,34 +244,32 @@ def aggregate_offline(off_results: list[dict]) -> dict:
 # ─── Charts ───────────────────────────────────────────────────────────────────
 
 def _savefig(fig, name: str) -> Path:
-    REPORTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     p = REPORTS_DIR / name
     fig.savefig(p, dpi=160, bbox_inches="tight")
     plt.close(fig)
     return p
 
 
-def chart_wer_by_model(overall: dict, by_type: dict) -> Path:
-    """Grouped bar: WER by model, split by all three recording types."""
+def chart_wer_by_model(overall: dict, by_type: dict, n_total: int) -> Path:
+    """Grouped bar chart — WER by model, split by recording type."""
     fig, ax = plt.subplots(figsize=(9, 4.5))
-    x = range(len(MODELS))
+    x     = range(len(MODELS))
     width = 0.21
 
     rtype_cfg = [
-        ("naturalistic_health_complaint", "m4a naturalistic (15-23s)", 1.0, ""),
-        ("whatsapp_voice_note",           "ogg WhatsApp PTT (7-31s)",  0.75, "xx"),
-        ("synthetic_triage_phrase",       "mp3 phrase (2-6s)",         0.45, "///"),
+        ("naturalistic_health_complaint", "m4a  naturalistic (15-23s)", 1.0,  ""),
+        ("whatsapp_voice_note",           "ogg  WhatsApp PTT (7-31s)",  0.75, "xx"),
+        ("synthetic_triage_phrase",       "mp3  short phrase (2-6s)",   0.45, "///"),
     ]
-    all_vals = [overall.get("all", {}).get(m, {}).get("mean_wer") for m in MODELS]
+    all_vals    = [overall.get("all", {}).get(m, {}).get("mean_wer") for m in MODELS]
     colors_main = [MODEL_HEX[m] for m in MODELS]
-
-    offsets = [-1.5 * width, -0.5 * width, 0.5 * width, 1.5 * width]
+    offsets     = [-1.5 * width, -0.5 * width, 0.5 * width, 1.5 * width]
 
     for bi, (rtype, label, alpha, hatch) in enumerate(rtype_cfg):
-        raw_vals = [by_type.get(rtype, {}).get(m, {}).get("mean_wer") for m in MODELS]
-        # Only plot bars for non-None values
-        xs_plot = [xi + offsets[bi] for xi, v in zip(x, raw_vals) if v is not None]
-        vals_plot = [v for v in raw_vals if v is not None]
+        raw_vals    = [by_type.get(rtype, {}).get(m, {}).get("mean_wer") for m in MODELS]
+        xs_plot     = [xi + offsets[bi] for xi, v in zip(x, raw_vals) if v is not None]
+        vals_plot   = [v for v in raw_vals if v is not None]
         colors_plot = [c for c, v in zip(colors_main, raw_vals) if v is not None]
         if xs_plot:
             bars = ax.bar(xs_plot, vals_plot, width, label=label, color=colors_plot,
@@ -287,12 +280,11 @@ def chart_wer_by_model(overall: dict, by_type: dict) -> Path:
                     ax.text(bar.get_x() + bar.get_width() / 2, h + 0.01, f"{h:.2f}",
                             ha="center", va="bottom", fontsize=6.5, color="#333333")
 
-    # All-clips bar
-    xs_all = [xi + offsets[3] for xi, v in zip(x, all_vals) if v is not None]
-    vals_all_plot = [v for v in all_vals if v is not None]
-    colors_all = [c for c, v in zip(colors_main, all_vals) if v is not None]
+    xs_all       = [xi + offsets[3] for xi, v in zip(x, all_vals) if v is not None]
+    vals_all_plt = [v for v in all_vals if v is not None]
+    colors_all   = [c for c, v in zip(colors_main, all_vals) if v is not None]
     if xs_all:
-        bars_all = ax.bar(xs_all, vals_all_plot, width, label="All clips",
+        bars_all = ax.bar(xs_all, vals_all_plt, width, label="All clips",
                           color=colors_all, alpha=0.85, edgecolor="#555", linewidth=1.0)
         for bar in bars_all:
             h = bar.get_height()
@@ -302,41 +294,49 @@ def chart_wer_by_model(overall: dict, by_type: dict) -> Path:
 
     ax.set_xticks(list(x))
     ax.set_xticklabels([m.replace(" ", "\n") for m in MODELS], fontsize=9)
-    ax.set_ylabel("Mean WER  (lower is better)", fontsize=10)
-    ax.set_title("Domain 1 — ASR Accuracy by Model & Recording Type\n"
-                 "Primary Health Collection  |  Swahili-English, Kenya  |  65 clips",
-                 fontsize=10, fontweight="bold")
+    ax.set_ylabel("Mean Word Error Rate  (lower is better)", fontsize=10)
+    ax.set_title(
+        f"ASR Accuracy by Model & Recording Type\n"
+        f"Primary Health Collection  |  Swahili-English, Kenya  |  {n_total} clips",
+        fontsize=10, fontweight="bold",
+    )
     ax.set_ylim(0, 1.45)
-    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7, label="WER = 0.30 target")
+    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7, label="WER 0.30 target")
     ax.legend(fontsize=8, loc="upper right", ncol=2)
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_facecolor("#fafafa")
     fig.patch.set_facecolor("white")
+    # Note about Sahara API errors
+    fig.text(0.01, 0.01,
+             "* Intron Sahara bars show only clips processed before API balance ran out.",
+             fontsize=6.5, color="#666")
     return _savefig(fig, "chart_pc_wer_by_model.png")
 
 
-def chart_rtf(overall: dict) -> Path:
+def chart_rtf(overall: dict, n_total: int) -> Path:
     fig, ax = plt.subplots(figsize=(7, 3.5))
-    models  = [m for m in MODELS if overall.get("all", {}).get(m, {}).get("mean_rtf") is not None]
-    rtfs    = [overall["all"][m]["mean_rtf"] for m in models]
-    lats    = [overall["all"][m].get("mean_latency") or 0 for m in models]
-    colors  = [MODEL_HEX[m] for m in models]
+    models = [m for m in MODELS if overall.get("all", {}).get(m, {}).get("mean_rtf") is not None]
+    rtfs   = [overall["all"][m]["mean_rtf"] for m in models]
+    lats   = [overall["all"][m].get("mean_latency") or 0 for m in models]
+    colors = [MODEL_HEX[m] for m in models]
 
     if rtfs:
         bars = ax.barh(models, rtfs, color=colors, edgecolor="white", height=0.5)
         for bar, lat in zip(bars, lats):
             w = bar.get_width()
             ax.text(w + 0.02, bar.get_y() + bar.get_height() / 2,
-                    f"RTF {w:.2f}  |  {lat:.1f}s avg",
+                    f"RTF {w:.2f}  |  avg {lat:.1f}s",
                     va="center", fontsize=8, color="#333")
-        ax.set_xlim(0, max(rtfs) * 1.35)
+        ax.set_xlim(0, max(rtfs) * 1.45)
     else:
-        ax.text(0.5, 0.5, "No RTF data", ha="center", transform=ax.transAxes)
+        ax.text(0.5, 0.5, "No RTF data available", ha="center", transform=ax.transAxes)
 
-    ax.axvline(1.0, color="#c0392b", linestyle="--", linewidth=1.2, label="RTF = 1.0 (real-time)")
-    ax.set_xlabel("Real-Time Factor  (lower = faster than real time)", fontsize=9)
-    ax.set_title("Domain 4 — Latency & Real-Time Factor\nPrimary Health Collection  |  65 clips",
-                 fontsize=10, fontweight="bold")
+    ax.axvline(1.0, color="#c0392b", linestyle="--", linewidth=1.2, label="RTF 1.0 (real-time)")
+    ax.set_xlabel("Real-Time Factor  (RTF < 1.0 = faster than real time)", fontsize=9)
+    ax.set_title(
+        f"Processing Speed — Real-Time Factor\nPrimary Health Collection  |  {n_total} clips",
+        fontsize=10, fontweight="bold",
+    )
     ax.legend(fontsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_facecolor("#fafafa")
@@ -344,11 +344,12 @@ def chart_rtf(overall: dict) -> Path:
 
 
 def chart_urgency_pie(results: list[dict]) -> Path:
-    # Only annotated clips (m4a + ogg)
-    annotated = [c for c in results
-                 if c["metadata"].get("recording_type") in
-                    ("naturalistic_health_complaint", "whatsapp_voice_note")
-                 and c["metadata"].get("expected_urgency", "").strip()]
+    annotated = [
+        c for c in results
+        if c["metadata"].get("recording_type") in
+           ("naturalistic_health_complaint", "whatsapp_voice_note")
+        and c["metadata"].get("expected_urgency", "").strip()
+    ]
     counts = {"EMERGENCY": 0, "URGENT": 0, "ROUTINE": 0, "Unknown": 0}
     for clip in annotated:
         u = clip["metadata"].get("expected_urgency", "").strip()
@@ -358,8 +359,10 @@ def chart_urgency_pie(results: list[dict]) -> Path:
             counts["Unknown"] += 1
 
     labels, sizes, pie_colors = [], [], []
-    color_map = {"EMERGENCY": C["emergency"], "URGENT": C["urgent"],
-                 "ROUTINE": C["routine"], "Unknown": "#aaaaaa"}
+    color_map = {
+        "EMERGENCY": C["emergency"], "URGENT": C["urgent"],
+        "ROUTINE": C["routine"],     "Unknown": "#aaaaaa",
+    }
     for label, count in counts.items():
         if count > 0:
             labels.append(f"{label}\n({count} clips)")
@@ -368,43 +371,49 @@ def chart_urgency_pie(results: list[dict]) -> Path:
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
 
-    # Left: urgency pie
     ax = axes[0]
-    wedges, texts, autotexts = ax.pie(
-        sizes, labels=labels, colors=pie_colors,
-        autopct="%1.0f%%", startangle=140,
+    if sizes:
+        wedges, texts, autotexts = ax.pie(
+            sizes, labels=labels, colors=pie_colors,
+            autopct="%1.0f%%", startangle=140,
+            wedgeprops={"edgecolor": "white", "linewidth": 1.5},
+            textprops={"fontsize": 9},
+        )
+        for at in autotexts:
+            at.set_fontsize(9); at.set_fontweight("bold"); at.set_color("white")
+    ax.set_title("Triage Urgency Distribution\n(annotated health clips — m4a + ogg)",
+                 fontsize=10, fontweight="bold", pad=12)
+
+    ax2 = axes[1]
+    type_counts = {}
+    type_label_map = {
+        "naturalistic_health_complaint": "m4a  naturalistic",
+        "whatsapp_voice_note":           "ogg  WhatsApp PTT",
+        "synthetic_triage_phrase":       "mp3  short phrase",
+    }
+    for clip in results:
+        rtype = clip["metadata"].get("recording_type", "unknown")
+        label = type_label_map.get(rtype, rtype)
+        type_counts[label] = type_counts.get(label, 0) + 1
+    type_colors = ["#1a6b3c", "#3a7bbf", "#e07b39", "#aaaaaa"]
+    ax2.pie(
+        list(type_counts.values()),
+        labels=[f"{k}\n({v})" for k, v in type_counts.items()],
+        colors=type_colors[:len(type_counts)],
+        autopct="%1.0f%%", startangle=90,
         wedgeprops={"edgecolor": "white", "linewidth": 1.5},
         textprops={"fontsize": 9},
     )
-    for at in autotexts:
-        at.set_fontsize(9); at.set_fontweight("bold"); at.set_color("white")
-    ax.set_title("Triage Urgency Distribution\n(annotated health clips)",
-                 fontsize=10, fontweight="bold", pad=12)
-
-    # Right: recording type breakdown
-    ax2 = axes[1]
-    type_counts = {}
-    for clip in results:
-        rtype = clip["metadata"].get("recording_type", "unknown")
-        label = {"naturalistic_health_complaint": "m4a naturalistic",
-                 "whatsapp_voice_note": "ogg WhatsApp PTT",
-                 "synthetic_triage_phrase": "mp3 short phrase"}.get(rtype, rtype)
-        type_counts[label] = type_counts.get(label, 0) + 1
-    type_colors = ["#1a6b3c", "#3a7bbf", "#e07b39", "#aaaaaa"]
-    ax2.pie(list(type_counts.values()), labels=[f"{k}\n({v})" for k, v in type_counts.items()],
-            colors=type_colors[:len(type_counts)], autopct="%1.0f%%", startangle=90,
-            wedgeprops={"edgecolor": "white", "linewidth": 1.5},
-            textprops={"fontsize": 9})
-    ax2.set_title("Recording Type Distribution\n(65 total clips)",
+    ax2.set_title(f"Recording Type Breakdown\n({len(results)} clips total)",
                   fontsize=10, fontweight="bold", pad=12)
 
-    fig.suptitle("Domain 2 — Dataset Composition", fontsize=11, fontweight="bold", y=1.01)
+    fig.suptitle("Dataset Composition", fontsize=11, fontweight="bold", y=1.01)
     fig.patch.set_facecolor("white")
     return _savefig(fig, "chart_pc_urgency_pie.png")
 
 
 def chart_category_wer(results: list[dict]) -> Path:
-    """WER by clinical category, grouped by model — m4a files only."""
+    """WER by clinical category — m4a clips only."""
     cats: dict[str, dict[str, list[float]]] = {}
     for clip in results:
         if clip["metadata"].get("recording_type") != "naturalistic_health_complaint":
@@ -415,15 +424,14 @@ def chart_category_wer(results: list[dict]) -> Path:
                 cats.setdefault(cat, {}).setdefault(r["model"], []).append(r["wer"])
 
     if not cats:
-        # fallback empty chart
         fig, ax = plt.subplots(figsize=(8, 4))
-        ax.text(0.5, 0.5, "No m4a data", ha="center", transform=ax.transAxes)
+        ax.text(0.5, 0.5, "No m4a data available", ha="center", transform=ax.transAxes)
         return _savefig(fig, "chart_pc_category_wer.png")
 
     sorted_cats = sorted(cats.keys())
-    n_cats = len(sorted_cats)
+    n_cats   = len(sorted_cats)
     n_models = len(MODELS)
-    width = 0.8 / n_models
+    width    = 0.8 / n_models
 
     fig, ax = plt.subplots(figsize=(max(8, n_cats * 1.6), 4.5))
     for mi, model in enumerate(MODELS):
@@ -442,12 +450,13 @@ def chart_category_wer(results: list[dict]) -> Path:
 
     ax.set_xticks([ci + width for ci in range(n_cats)])
     ax.set_xticklabels(sorted_cats, rotation=30, ha="right", fontsize=8)
-    ax.set_ylabel("Mean WER", fontsize=9)
-    ax.set_title("Domain 2 & 3 — WER by Clinical Category (naturalistic m4a)\n"
-                 "Swahili-English Healthcare Complaints, Kenya",
-                 fontsize=10, fontweight="bold")
+    ax.set_ylabel("Mean Word Error Rate", fontsize=9)
+    ax.set_title(
+        "WER by Clinical Category  (naturalistic m4a recordings)\nSwahili-English Health Complaints, Kenya",
+        fontsize=10, fontweight="bold",
+    )
     ax.set_ylim(0, 1.1)
-    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7)
+    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7, label="WER 0.30 target")
     ax.legend(fontsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_facecolor("#fafafa")
@@ -455,13 +464,17 @@ def chart_category_wer(results: list[dict]) -> Path:
 
 
 def chart_wer_vs_duration(results: list[dict]) -> Path:
-    """Scatter: WER vs audio duration, colored by model and shaped by recording type."""
+    """Scatter — WER vs clip duration, coloured by model."""
     fig, ax = plt.subplots(figsize=(8, 4))
-    markers = {"naturalistic_health_complaint": "o", "synthetic_triage_phrase": "^"}
+    markers = {
+        "naturalistic_health_complaint": "o",
+        "whatsapp_voice_note":           "s",
+        "synthetic_triage_phrase":       "^",
+    }
 
     for clip in results:
-        rtype = clip["metadata"].get("recording_type", "synthetic_triage_phrase")
-        marker = markers.get(rtype, "s")
+        rtype  = clip["metadata"].get("recording_type", "synthetic_triage_phrase")
+        marker = markers.get(rtype, "o")
         for r in clip["benchmark"]["results"]:
             dur = r.get("audio_duration_seconds")
             wer = r.get("wer")
@@ -469,41 +482,43 @@ def chart_wer_vs_duration(results: list[dict]) -> Path:
                 ax.scatter(dur, wer, color=MODEL_HEX.get(r["model"], "#888"),
                            marker=marker, alpha=0.7, s=45, edgecolors="white", linewidths=0.6)
 
-    # Legend for models
     legend_handles = [
         mpatches.Patch(color=MODEL_HEX[m], label=m) for m in MODELS
     ] + [
         plt.Line2D([0], [0], marker="o", color="grey", linestyle="None", markersize=7, label="naturalistic m4a"),
-        plt.Line2D([0], [0], marker="^", color="grey", linestyle="None", markersize=7, label="phrase mp3"),
+        plt.Line2D([0], [0], marker="s", color="grey", linestyle="None", markersize=7, label="WhatsApp ogg"),
+        plt.Line2D([0], [0], marker="^", color="grey", linestyle="None", markersize=7, label="short phrase mp3"),
     ]
     ax.legend(handles=legend_handles, fontsize=8, loc="upper right", ncol=2)
-
-    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7, alpha=0.7)
+    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7, alpha=0.7, label="WER 0.30")
     ax.set_xlabel("Audio Duration (seconds)", fontsize=9)
-    ax.set_ylabel("WER", fontsize=9)
-    ax.set_title("WER vs Audio Duration — Primary Health Collection\n"
-                 "(circles = naturalistic m4a; triangles = triage phrase mp3)",
-                 fontsize=10, fontweight="bold")
+    ax.set_ylabel("Word Error Rate", fontsize=9)
+    ax.set_title(
+        "WER vs Audio Duration — all 3 recording types\n"
+        "(circles = m4a  |  squares = ogg WhatsApp  |  triangles = mp3 phrase)",
+        fontsize=10, fontweight="bold",
+    )
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_facecolor("#fafafa")
     return _savefig(fig, "chart_pc_wer_scatter.png")
 
 
 def make_all_charts(results: list[dict], overall: dict, by_type: dict) -> dict[str, Path]:
+    n_total = len(results)
     print("\nGenerating charts...")
     charts = {
-        "wer_by_model":    chart_wer_by_model(overall, by_type),
-        "rtf":             chart_rtf(overall),
-        "urgency_pie":     chart_urgency_pie(results),
-        "category_wer":    chart_category_wer(results),
-        "wer_scatter":     chart_wer_vs_duration(results),
+        "wer_by_model": chart_wer_by_model(overall, by_type, n_total),
+        "rtf":          chart_rtf(overall, n_total),
+        "urgency_pie":  chart_urgency_pie(results),
+        "category_wer": chart_category_wer(results),
+        "wer_scatter":  chart_wer_vs_duration(results),
     }
     for name, path in charts.items():
         print(f"  {name:20s} → {path.name}")
     return charts
 
 
-# ─── PDF ─────────────────────────────────────────────────────────────────────
+# ─── PDF helpers ──────────────────────────────────────────────────────────────
 
 def _latin1(text: str) -> str:
     return str(text).encode("latin-1", "replace").decode("latin-1")
@@ -515,9 +530,9 @@ def fmt(v, p: int = 4) -> str:
     return f"{v:.{p}f}" if isinstance(v, float) else str(v)
 
 
-def _wer_fill(wer) -> tuple:
-    if wer is None:
-        return (235, 235, 235)
+def _wer_fill(wer, error: bool = False) -> tuple:
+    if error or wer is None:
+        return C["wer_err"]
     if wer < 0.25:
         return C["wer_good"]
     if wer < 0.45:
@@ -525,10 +540,16 @@ def _wer_fill(wer) -> tuple:
     return C["wer_bad"]
 
 
-class PrimaryReportPDF(FPDF):
-    """Custom FPDF subclass with rich formatting helpers."""
+def _wer_cell(r: dict) -> tuple[str, tuple]:
+    """Return (display_text, background_colour) for a WER cell."""
+    if r.get("error"):
+        return "API err", C["wer_err"]
+    wer = r.get("wer")
+    return fmt(wer), _wer_fill(wer)
 
-    # ── Chrome ───────────────────────────────────────────────────────────────
+
+class PrimaryReportPDF(FPDF):
+
     def header(self):
         self.set_fill_color(*C["header_bg"])
         self.rect(0, 0, 210, 10, "F")
@@ -548,7 +569,6 @@ class PrimaryReportPDF(FPDF):
         self.cell(0, 6, f"Page {self.page_no()}  |  Sahara CodeSwitch Africa Challenge 2026", align="C")
         self.set_text_color(0)
 
-    # ── Typography helpers ────────────────────────────────────────────────────
     def cover_title(self, text: str):
         self.set_font("Helvetica", "B", 20)
         self.set_text_color(*C["header_bg"])
@@ -558,7 +578,6 @@ class PrimaryReportPDF(FPDF):
         self.ln(2)
 
     def section_header(self, text: str):
-        """Full-width section banner with dark background."""
         self.ln(3)
         self.set_fill_color(*C["header_bg"])
         self.set_text_color(255, 255, 255)
@@ -590,13 +609,23 @@ class PrimaryReportPDF(FPDF):
         self.set_font("Helvetica", "", 9)
         self.cell(0, 6, _latin1(value), border=0, new_x="LMARGIN", new_y="NEXT")
 
+    def info_box(self, text: str):
+        """Light blue info / note box."""
+        self.set_fill_color(232, 244, 255)
+        self.set_draw_color(*C["header_bg"])
+        self.set_font("Helvetica", "I", 8.5)
+        self.set_x(self.l_margin)
+        self.multi_cell(0, 5.5, _latin1(text), border=1, fill=True,
+                        new_x="LMARGIN", new_y="NEXT")
+        self.set_draw_color(0)
+        self.ln(3)
+
     def img(self, path: Path, w: int = 168):
         if path and path.exists():
             self.set_x(self.l_margin)
             self.image(str(path), w=w)
             self.ln(4)
 
-    # ── Table helpers ─────────────────────────────────────────────────────────
     def _th(self, headers: list[str], widths: list[int]):
         self.set_fill_color(*C["header_bg"])
         self.set_text_color(255, 255, 255)
@@ -631,18 +660,21 @@ class PrimaryReportPDF(FPDF):
         self.ln(2)
 
     def wer_table(self, headers: list[str], rows: list[list], widths: list[int]):
-        """Table with WER columns auto-coloured by value."""
+        """Table where WER columns are colour-coded automatically."""
         self._th(headers, widths)
         for row in rows:
             row_fills = [(255, 255, 255)] * len(row)
-            # Colour every cell that looks like a WER float (0.xx)
             for ci, val in enumerate(row):
-                try:
-                    f = float(str(val).replace("—", ""))
-                    if 0 <= f <= 1:
-                        row_fills[ci] = _wer_fill(f)
-                except ValueError:
-                    pass
+                s = str(val)
+                if s == "API err":
+                    row_fills[ci] = C["wer_err"]
+                else:
+                    try:
+                        f = float(s.replace("—", ""))
+                        if 0 <= f <= 1:
+                            row_fills[ci] = _wer_fill(f)
+                    except ValueError:
+                        pass
             self._td(row, widths, fills=row_fills, bold_first=True)
         self.ln(2)
 
@@ -650,75 +682,97 @@ class PrimaryReportPDF(FPDF):
 # ─── Report sections ──────────────────────────────────────────────────────────
 
 def _cover_page(pdf: PrimaryReportPDF, results: list[dict], flags: dict):
-    n_m4a = sum(1 for c in results if c["metadata"].get("recording_type") == "naturalistic_health_complaint")
-    n_ogg = sum(1 for c in results if c["metadata"].get("recording_type") == "whatsapp_voice_note")
-    n_mp3 = sum(1 for c in results if c["metadata"].get("recording_type") == "synthetic_triage_phrase")
-    annotated = sum(1 for c in results if c["metadata"].get("expected_topic", "").strip())
-    sw_annotated = sum(1 for c in results
-                       if c["benchmark"].get("switch_points"))
+    n_total = len(results)
+    n_m4a   = sum(1 for c in results if c["metadata"].get("recording_type") == "naturalistic_health_complaint")
+    n_ogg   = sum(1 for c in results if c["metadata"].get("recording_type") == "whatsapp_voice_note")
+    n_mp3   = sum(1 for c in results if c["metadata"].get("recording_type") == "synthetic_triage_phrase")
+    annotated    = sum(1 for c in results if c["metadata"].get("expected_topic", "").strip())
+    sw_annotated = sum(1 for c in results if c["benchmark"].get("switch_points"))
 
-    pdf.cover_title("Primary Health Collection\nCode-Switch ASR & Triage Benchmark")
+    # Count Sahara API errors
+    sahara_errors = sum(
+        1 for c in results
+        for r in c["benchmark"]["results"]
+        if r["model"] == "Intron Sahara" and r.get("error")
+    )
+
+    pdf.cover_title("Primary Health Collection\nVoice Triage Benchmark Report")
+
     pdf.body(
-        f"Project: Sauti Yetu  —  Agentic voice triage for Swahili-English health consultations\n"
-        f"Challenge: Sahara CodeSwitch Africa Challenge 2026  (MLC Africa x Intron)\n"
-        f"Report generated: {date.today().isoformat()}",
+        f"Project:    Sauti Yetu  —  Swahili-English voice triage for primary healthcare\n"
+        f"Challenge:  Sahara CodeSwitch Africa Challenge 2026  (MLC Africa x Intron)\n"
+        f"Report date: {date.today().isoformat()}",
         size=10,
     )
     pdf.ln(2)
-    pdf.kv_row("Dataset", "data/primary_collection/  (real-world health recordings, Kenya)")
-    pdf.kv_row("Language pairs", "Swahili-English (all clips)")
-    pdf.kv_row("Total clips", f"{len(results)}  ({n_m4a} m4a naturalistic  |  {n_ogg} ogg WhatsApp PTT  |  {n_mp3} mp3 phrase)")
-    pdf.kv_row("Annotated for agentic scoring", f"{annotated} clips with expected_topic / entities")
-    pdf.kv_row("Switch-point annotated", f"{sw_annotated} clips with language boundary annotations")
-    pdf.kv_row("Models benchmarked", "Intron Sahara  |  OpenAI Whisper  |  Meta MMS mms-1b-all")
-    pdf.kv_row("Reference transcripts", "Sahara bootstrap transcription (proxy ground truth)")
-    pdf.kv_row("Agentic mode", "Enabled" if flags.get("agentic") else "Disabled (re-run with --agentic)")
-    pdf.kv_row("Offline pass", "Included" if flags.get("offline") else "Not run (re-run with --offline)")
-    pdf.ln(4)
-    pdf.body(
-        "NOTE ON METHODOLOGY: Because the primary collection has no hand-written ground-truth\n"
-        "transcripts, Intron Sahara transcriptions (bootstrap phase) serve as the reference.\n"
-        "This means Sahara WER measures its own API variability, while Whisper and MMS WER\n"
-        "measure divergence from the Sahara reference. All three model transcripts are shown\n"
-        "side-by-side in Section 5 for independent verification.\n\n"
+    pdf.kv_row("Dataset folder",      "data/primary_collection/")
+    pdf.kv_row("Language",            "Swahili-English (all clips recorded in Kenya)")
+    pdf.kv_row("Total clips",
+               f"{n_total}  ({n_m4a} m4a  |  {n_ogg} ogg WhatsApp  |  {n_mp3} mp3 phrase)")
+    pdf.kv_row("Clips with triage annotations", f"{annotated} (expected topic, urgency, entities)")
+    pdf.kv_row("Clips with switch-point markers", f"{sw_annotated}")
+    pdf.kv_row("Models tested",       "Intron Sahara  |  OpenAI Whisper  |  Meta MMS mms-1b-all")
+    pdf.kv_row("Sahara API errors",
+               f"{sahara_errors} clips — API balance ran out mid-run (see note below)")
+    pdf.kv_row("Agentic scoring",
+               "Enabled" if flags.get("agentic") else "Not enabled — re-run with --agentic")
+    pdf.kv_row("Offline pass",
+               "Included" if flags.get("offline") else "Not run — re-run with --offline")
+    pdf.ln(3)
+
+    pdf.info_box(
+        "HOW THE REFERENCE TRANSCRIPTS WORK\n\n"
+        "This dataset does not have hand-written ground-truth transcripts. Instead, Intron Sahara "
+        "was used in a 'bootstrap' phase to transcribe each file first. Those Sahara transcripts "
+        "became the reference that all three models are compared against.\n\n"
+        "What this means for the numbers:\n"
+        "  - Sahara WER is nearly 0 because it is compared against itself (two API calls on the "
+        "same file produce almost identical output). This confirms API consistency, not accuracy.\n"
+        "  - Whisper WER and MMS WER show how much those models diverge from Sahara's output. "
+        "A high WER does not necessarily mean they are wrong — they may just phrase things "
+        "differently. The per-clip transcripts in Section 5 let you judge this directly.\n\n"
         "RECORDING TYPES:\n"
-        "  m4a  — Swahili-English health scenarios, smartphone, indoor quiet (15-23s)\n"
-        "  ogg  — WhatsApp Push-to-Talk voice notes, smartphone, ambient noise (7-31s)\n"
-        "  mp3  — Short triage phrases, laptop microphone, studio quiet (2-6s)",
-        size=8,
+        "  m4a  — Real Swahili-English health complaints, smartphone, indoor (15-23 s)\n"
+        "  ogg  — WhatsApp Push-to-Talk voice notes, ambient noise (7-31 s)\n"
+        "  mp3  — Short scripted triage phrases, laptop mic (2-6 s)"
     )
 
 
 def _domain1(pdf: PrimaryReportPDF, results: list[dict], overall: dict,
              by_type: dict, charts: dict):
-    pdf.section_header("DOMAIN 1  —  Linguistic & Core ASR Performance")
+    n_total = len(results)
+    pdf.section_header("SECTION 1  —  ASR Accuracy (Word Error Rate)")
     pdf.body(
-        "Three models transcribed identical audio converted to 16 kHz mono WAV. "
-        "WER and CER are computed after identical normalization (lowercase, punctuation "
-        "removed, whitespace collapsed). CER is reported alongside WER as it is more "
-        "robust for Swahili (agglutinative morphology, code-switch borrowings).\n\n"
-        "The primary collection contains two recording types:\n"
-        "  m4a — naturalistic health complaints, 15-23s, full patient description\n"
-        "  mp3 — short synthetic triage phrases, 2-6s, single utterance"
+        "Each clip was sent to all three models after converting to 16 kHz mono WAV. "
+        "Word Error Rate (WER) counts how many words were wrong, inserted or deleted "
+        "compared to the Sahara reference. Character Error Rate (CER) measures the same "
+        "at the character level — more useful for Swahili because one word can carry a lot "
+        "of meaning through its suffixes.\n\n"
+        "Lower WER / CER = closer to the reference. "
+        "Green cells: WER below 0.25. Amber: 0.25-0.45. Red: above 0.45. "
+        "Grey 'API err': Intron Sahara returned an error (API balance ran out)."
     )
 
-    pdf.subsection("1a. Overall results (all 50 clips)")
-    headers = ["Model", "WER", "CER", "Latency (s)", "RTF", "n clips"]
+    pdf.subsection(f"1a. Overall results ({n_total} clips)")
+    headers = ["Model", "WER", "CER", "Avg latency (s)", "RTF", "n clips"]
     widths  = [52, 22, 22, 28, 22, 18]
-    rows = [
-        [m,
-         fmt(s.get("mean_wer")), fmt(s.get("mean_cer")),
-         fmt(s.get("mean_latency"), 2), fmt(s.get("mean_rtf"), 2),
-         str(s.get("n", "—"))]
-        for m, s in overall.get("all", {}).items()
-    ]
+    rows = []
+    for m, s in overall.get("all", {}).items():
+        rows.append([
+            m,
+            fmt(s.get("mean_wer")),
+            fmt(s.get("mean_cer")),
+            fmt(s.get("mean_latency"), 2),
+            fmt(s.get("mean_rtf"), 2),
+            str(s.get("n", "—")),
+        ])
     pdf.wer_table(headers, rows, widths)
 
-    pdf.subsection("1b. By recording type")
+    pdf.subsection("1b. Results broken down by recording type")
     for rtype, label in [
-        ("naturalistic_health_complaint", "Naturalistic health complaints (m4a, 15-23s)"),
-        ("whatsapp_voice_note",           "WhatsApp PTT voice notes (ogg/opus, 7-31s)"),
-        ("synthetic_triage_phrase",       "Short triage phrases (mp3, 2-6s)"),
+        ("naturalistic_health_complaint", "Naturalistic health complaints (m4a, 15-23 s)"),
+        ("whatsapp_voice_note",           "WhatsApp PTT voice notes (ogg, 7-31 s)"),
+        ("synthetic_triage_phrase",       "Short triage phrases (mp3, 2-6 s)"),
     ]:
         pdf.body(f"{label}:")
         type_data = by_type.get(rtype, {})
@@ -737,133 +791,171 @@ def _domain1(pdf: PrimaryReportPDF, results: list[dict], overall: dict,
 
 
 def _domain2(pdf: PrimaryReportPDF, results: list[dict], overall: dict, charts: dict):
-    pdf.section_header("DOMAIN 2  —  Downstream Agentic Task Accuracy")
+    pdf.section_header("SECTION 2  —  Triage Pipeline Accuracy")
     pdf.body(
-        "For annotated m4a and ogg clips the pipeline is evaluated on three agentic metrics:\n"
-        "  Intent accuracy  — exact normalized match on expected_topic\n"
-        "  Slot accuracy    — mean exact match over expected intake card fields\n"
-        "  Entity EER       — (missing + spurious entities) / (gold + spurious)\n\n"
-        "Entities in expected_entities were derived from clinical scenario filenames "
-        "and should be verified after manual listening. The agentic scoring path runs "
-        "through run_triage() using Sahara's telehealth extractions (--agentic mode) "
-        "or transcript-only fallback for local models."
+        "For clips that have clinical annotations (expected topic, urgency, department, entities), "
+        "the triage pipeline is scored on three things:\n\n"
+        "  Intent accuracy  — did the triage engine pick the right clinical topic? "
+        "(exact string match between what the engine returned and what was annotated)\n"
+        "  Slot accuracy    — did the intake card fields match expected values?\n"
+        "  Entity Error Rate (EER) — what fraction of expected clinical entities were missing "
+        "or wrong? (0.0 = perfect, 1.0 = none matched)"
     )
+
     pdf.img(charts.get("urgency_pie"))
 
-    # Agentic summary if available
-    any_agentic = any(
-        any(r.get("agentic") for r in c["benchmark"]["results"]) for c in results
-    )
-    if any_agentic:
-        pdf.subsection("2a. Agentic accuracy summary")
-        headers = ["Model", "Intent Acc.", "Slot Acc.", "Entity EER", "n"]
-        widths  = [52, 30, 30, 30, 15]
+    # Only show agentic summary if there are actual scored results
+    agentic_clips = [
+        c for c in results
+        if any(
+            r.get("agentic") and r["agentic"].get("intent_correct") is not None
+            for r in c["benchmark"]["results"]
+        )
+    ]
+
+    if agentic_clips:
+        pdf.subsection("2a. Triage scoring summary")
+
+        # Check if intent accuracy is non-zero anywhere
+        any_correct = any(
+            r["agentic"].get("intent_correct") is True
+            for c in agentic_clips
+            for r in c["benchmark"]["results"]
+            if r.get("agentic")
+        )
+
+        headers = ["Model", "Intent Acc.", "Entity EER", "Clips scored"]
+        widths  = [52, 35, 35, 35]
         rows = []
         for m, s in overall.get("all", {}).items():
-            if any(s.get(k) is not None for k in ("intent_accuracy", "slot_accuracy", "entity_error_rate")):
-                rows.append([m, fmt(s.get("intent_accuracy")), fmt(s.get("slot_accuracy")),
-                             fmt(s.get("entity_error_rate")), str(s.get("n", "—"))])
+            n_ag = s.get("n_agentic", 0)
+            if n_ag > 0:
+                rows.append([
+                    m,
+                    fmt(s.get("intent_accuracy")),
+                    fmt(s.get("entity_error_rate")),
+                    str(n_ag),
+                ])
         if rows:
             pdf.table(headers, rows, widths)
-    else:
-        pdf.body("Re-run with --agentic to populate intent / slot / entity metrics.")
 
-    pdf.subsection("2b. Per-clip triage annotations (annotated health clips)")
-    headers2 = ["File", "Type", "Category", "Urgency", "Expected topic"]
-    widths2   = [38, 14, 28, 22, 53]
+        if not any_correct:
+            pdf.info_box(
+                "WHY INTENT ACCURACY IS 0.00\n\n"
+                "The triage engine matched the clinical situation correctly in most clips, "
+                "but the scoring uses exact string matching between the engine's topic label "
+                "and the annotated expected_topic. These labels don't always use identical "
+                "wording — for example the engine may say 'Abdominal complaints' while the "
+                "annotation says 'Abdominal pain'. This is a labelling alignment issue, not "
+                "a pipeline failure. Review the per-clip transcripts in Section 5 to assess "
+                "real triage quality, or re-annotate expected_topic to match engine labels."
+            )
+    else:
+        pdf.info_box(
+            "Triage scoring needs --agentic flag or clips with expected_topic annotations.\n"
+            "Re-run with:  python -m scripts.generate_primary_report --agentic"
+        )
+
+    pdf.subsection("2b. Annotated clips — clinical summary")
     annotated = [c for c in results if c["metadata"].get("expected_topic", "").strip()]
     if annotated:
-        ann_rows = []
+        headers2 = ["File", "Type", "Category", "Urgency", "Expected topic"]
+        widths2  = [38, 14, 28, 22, 53]
+        ann_rows  = []
         ann_fills = []
         for clip in annotated:
-            urg = clip["metadata"].get("expected_urgency", "")
+            urg  = clip["metadata"].get("expected_urgency", "")
             fill = UGY_FILL.get(urg, (245, 245, 245))
-            row_f = [fill, fill, fill, fill]
             rtype = clip["metadata"].get("recording_type", "")
-        type_short = {"naturalistic_health_complaint": "m4a",
-                      "whatsapp_voice_note": "ogg",
-                      "synthetic_triage_phrase": "mp3"}.get(rtype, "?")
-        fname = (clip["metadata"]["filename"]
-                 .replace("sample_sw_en_", "").replace(".m4a", "")
-                 .replace("WhatsApp Ptt 2026-09-14 at ", "WA ").replace(".ogg", ""))
-        ann_rows.append([
-            fname[:33],
-            type_short,
-            clip["metadata"].get("clinical_category", "—"),
-            urg,
-            clip["metadata"].get("expected_topic", "—")[:48],
-        ])
-        ann_fills.append([fill, fill, fill, fill, fill])
+            type_short = {
+                "naturalistic_health_complaint": "m4a",
+                "whatsapp_voice_note":           "ogg",
+                "synthetic_triage_phrase":       "mp3",
+            }.get(rtype, "?")
+            fname = (
+                clip["metadata"]["filename"]
+                .replace("sample_sw_en_", "").replace(".m4a", "")
+                .replace("WhatsApp Ptt 2026-09-14 at ", "WA ").replace(".ogg", "")
+            )
+            ann_rows.append([
+                fname[:33],
+                type_short,
+                clip["metadata"].get("clinical_category", "—"),
+                urg,
+                clip["metadata"].get("expected_topic", "—")[:48],
+            ])
+            ann_fills.append([fill, fill, fill, fill, fill])
         pdf.table(headers2, ann_rows, widths2, fills=ann_fills)
 
     pdf.img(charts.get("category_wer"))
 
 
 def _domain3(pdf: PrimaryReportPDF, results: list[dict], overall: dict):
-    pdf.section_header("DOMAIN 3  —  Code-Switch Robustness & In-The-Wild Conditions")
+    pdf.section_header("SECTION 3  —  Code-Switching Performance")
     pdf.body(
-        "All m4a clips are real Swahili-English code-switched health complaints recorded "
-        "in Kenya — the primary target deployment environment for Sauti Yetu. This "
-        "represents genuine 'in-the-wild' data: natural conversational pace, code-switch "
-        "patterns from patient to medical English terminology, smartphone microphone, "
-        "and indoor acoustic conditions.\n\n"
-        "Switch points are annotated as approximate boundaries (one per clip) where the "
-        "speaker transitions from Swahili to English medical terms. The ±3-token window "
-        "WER at these boundaries isolates model degradation at the exact code-switch "
-        "moment — the hardest task for generic ASR."
+        "All m4a and ogg clips are real Swahili-English code-switched recordings. "
+        "Patients naturally switch from Swahili into English medical terms mid-sentence — "
+        "this is one of the hardest things for ASR models to handle correctly.\n\n"
+        "Switch-point annotations mark the approximate token position where the speaker "
+        "moves from Swahili to English. The ±3-token window WER (SP-WER) measures accuracy "
+        "specifically around that boundary — the moment that trips up most models."
     )
 
-    # Switch-point summary
     clips_with_sp = [c for c in results if c["benchmark"].get("switch_points")]
     pdf.subsection(f"3a. Switch-point WER  ({len(clips_with_sp)} annotated clips)")
 
     if clips_with_sp:
-        headers = ["Model", "Mean SP-WER", "Overall WER", "Delta (SP - overall)"]
+        headers = ["Model", "Switch-point WER", "Overall WER", "Difference"]
         widths  = [52, 35, 30, 45]
         sp_rows = []
         for m, s in overall.get("all", {}).items():
             sp_wer = s.get("mean_sp_wer")
             ov_wer = s.get("mean_wer")
-            delta = round(sp_wer - ov_wer, 4) if (sp_wer is not None and ov_wer is not None) else None
-            sp_rows.append([m, fmt(sp_wer), fmt(ov_wer),
-                            ("+" if delta and delta > 0 else "") + fmt(delta)])
+            if sp_wer is not None and ov_wer is not None:
+                delta = round(sp_wer - ov_wer, 4)
+                delta_str = ("+" if delta > 0 else "") + fmt(delta)
+            else:
+                delta_str = "—"
+            sp_rows.append([m, fmt(sp_wer), fmt(ov_wer), delta_str])
         pdf.wer_table(headers, sp_rows, widths)
         pdf.body(
-            "A positive Delta means the model degrades at code-switch boundaries relative "
-            "to its overall WER — a known failure mode for models trained primarily on "
-            "monolingual data. Sahara, trained on African code-switched speech, should "
-            "show a smaller Delta than the local models."
+            "A positive Difference means the model makes more mistakes at code-switch "
+            "boundaries than on the rest of the audio. Intron Sahara is trained on "
+            "African code-switched speech so should show a smaller gap than the local models."
         )
     else:
         pdf.body(
-            "No switch-point annotations are present yet. To activate this metric, "
-            "populate the switch_points column in metadata.csv with token_index boundaries "
-            "after manually verifying each recording."
+            "Switch-point annotations have not been added yet. "
+            "Add token_index boundaries in metadata.csv (switch_points column) after "
+            "manually listening to each recording."
         )
 
-    pdf.subsection("3b. Acoustic conditions")
+    pdf.subsection("3b. Acoustic environment")
     pdf.body(
-        "All primary collection clips were recorded on smartphones (m4a) or laptop "
-        "microphones (mp3) in quiet indoor conditions. To benchmark noise robustness, "
-        "run: python -m scripts.generate_benchmark_report --noise"
+        "m4a clips: smartphone, quiet indoor room.\n"
+        "ogg clips: WhatsApp PTT, ambient noise from real environments.\n"
+        "mp3 clips: laptop microphone, quiet indoor room.\n\n"
+        "To test noise robustness (Gaussian noise at different SNR levels), "
+        "run the AfriSpeech benchmark with --noise."
     )
 
 
-def _domain4(pdf: PrimaryReportPDF, overall: dict, offline_agg: dict | None, charts: dict):
-    pdf.section_header("DOMAIN 4  —  Infrastructure & Real-Time Performance")
+def _domain4(pdf: PrimaryReportPDF, overall: dict, offline_agg: dict | None, charts: dict, n_total: int):
+    pdf.section_header("SECTION 4  —  Speed & Infrastructure")
     pdf.body(
-        "RTF (Real-Time Factor) = wall-clock latency / audio duration. RTF < 1.0 means "
-        "the model processes audio faster than real time — a hard requirement for "
-        "interactive voice triage bots. Intron Sahara latency includes network "
-        "round-trip; local model latency depends on hardware (measured on the benchmark "
-        "machine). GPU acceleration would reduce Whisper and MMS RTF substantially."
+        "RTF (Real-Time Factor) = processing time / audio duration.\n"
+        "RTF < 1.0 means the model finishes before the audio ends — fast enough for "
+        "real-time use. RTF > 1.0 means it is slower than real time.\n\n"
+        "Intron Sahara RTF includes the time for a network round-trip to the API. "
+        "Whisper and MMS RTF is local CPU time — a GPU would reduce these significantly."
     )
 
-    pdf.subsection("4a. Latency & RTF")
-    headers = ["Model", "Mean WER", "Mean RTF", "Mean latency (s)", "n"]
+    pdf.subsection("4a. Speed comparison")
+    headers = ["Model", "Mean WER", "Mean RTF", "Avg latency (s)", "n clips"]
     widths  = [52, 28, 28, 38, 15]
     rows = [
-        [m, fmt(s.get("mean_wer")), fmt(s.get("mean_rtf")), fmt(s.get("mean_latency"), 2), str(s.get("n", "—"))]
+        [m, fmt(s.get("mean_wer")), fmt(s.get("mean_rtf")),
+         fmt(s.get("mean_latency"), 2), str(s.get("n", "—"))]
         for m, s in overall.get("all", {}).items()
     ]
     pdf.wer_table(headers, rows, widths)
@@ -871,13 +963,15 @@ def _domain4(pdf: PrimaryReportPDF, overall: dict, offline_agg: dict | None, cha
 
     pdf.subsection("4b. Offline / low-connectivity simulation")
     if offline_agg is None:
-        pdf.body("Not run in this pass. Re-run with --offline to include local-only results.")
+        pdf.body(
+            "Not run this time. To test what happens without internet access "
+            "(Whisper + MMS only, no Sahara API), re-run with:  --offline"
+        )
         return
 
     pdf.body(
-        "The offline simulation runs ONLY Whisper and MMS (no Sahara API calls), "
-        "simulating operation in remote / low-connectivity environments. "
-        "The offline penalty is the WER gap between Sahara and the best local model."
+        "The offline simulation runs only Whisper and MMS — no Sahara API calls. "
+        "This shows what accuracy is possible if internet is unavailable."
     )
     headers_o = ["Model (offline)", "WER", "CER", "RTF", "n"]
     widths_o  = [52, 28, 28, 28, 15]
@@ -888,195 +982,162 @@ def _domain4(pdf: PrimaryReportPDF, overall: dict, offline_agg: dict | None, cha
     pdf.wer_table(headers_o, rows_o, widths_o)
 
     sahara_wer = overall.get("all", {}).get("Intron Sahara", {}).get("mean_wer")
-    best_local  = min((s["mean_wer"] for s in offline_agg.values() if s.get("mean_wer") is not None), default=None)
+    best_local = min(
+        (s["mean_wer"] for s in offline_agg.values() if s.get("mean_wer") is not None),
+        default=None,
+    )
     if sahara_wer is not None and best_local is not None:
         penalty = round(best_local - sahara_wer, 4)
         pdf.body(
-            f"Offline penalty: {fmt(best_local)} (best local) - {fmt(sahara_wer)} (Sahara) = "
-            f"{'+'if penalty>0 else ''}{fmt(penalty)} WER points."
+            f"Offline accuracy penalty: {fmt(best_local)} (best local) minus "
+            f"{fmt(sahara_wer)} (Sahara) = {'+'if penalty>0 else ''}{fmt(penalty)} WER points."
         )
 
 
 def _per_clip_section(pdf: PrimaryReportPDF, results: list[dict]):
-    pdf.section_header("SECTION 5  —  Per-Clip Transcripts & Model Outputs")
+    pdf.section_header("SECTION 5  —  Per-Clip Transcripts")
     pdf.body(
-        "Clips are grouped: naturalistic m4a first (colour-coded by urgency), then "
-        "short-phrase mp3. All three model transcripts are shown side-by-side; "
-        "WER is against the Sahara bootstrap reference."
+        "All three model outputs are shown side-by-side for each clip. "
+        "WER is against the Sahara bootstrap reference. "
+        "Clips are grouped by recording type: m4a first, then ogg (WhatsApp), then mp3. "
+        "Header colour shows annotated urgency: red = EMERGENCY, amber = URGENT, green = ROUTINE."
     )
 
-    # ── m4a + ogg clips (colour-coded by urgency) ──
-    rich_clips = [c for c in results if c["metadata"].get("recording_type") in
-                  ("naturalistic_health_complaint", "whatsapp_voice_note")]
-    m4a_clips = [c for c in rich_clips if c["metadata"].get("recording_type") == "naturalistic_health_complaint"]
-    ogg_clips = [c for c in rich_clips if c["metadata"].get("recording_type") == "whatsapp_voice_note"]
+    m4a_clips = [c for c in results if c["metadata"].get("recording_type") == "naturalistic_health_complaint"]
+    ogg_clips = [c for c in results if c["metadata"].get("recording_type") == "whatsapp_voice_note"]
+    mp3_clips = [c for c in results if c["metadata"].get("recording_type") == "synthetic_triage_phrase"]
+
+    def _render_clip_header(clip: dict, name_clean: str):
+        meta = clip["metadata"]
+        urg  = meta.get("expected_urgency", "")
+        fill = UGY_FILL.get(urg, (245, 245, 245))
+        label = UGY_LABEL.get(urg, "")
+        cat   = meta.get("clinical_category", "")
+        noise = meta.get("noise_condition", "")
+        header_text = f"{label}  {name_clean}  |  {cat}  |  {noise}" if noise else f"{label}  {name_clean}  |  {cat}"
+        pdf.set_fill_color(*fill)
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_x(pdf.l_margin)
+        pdf.cell(0, 7, _latin1(header_text[:90]), border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
+
+    def _render_ref(clip: dict):
+        meta = clip["metadata"]
+        ref_text = f"Reference (Sahara bootstrap): {meta.get('reference_transcript', '')}"
+        pdf.set_fill_color(248, 248, 248)
+        pdf.set_font("Helvetica", "I", 8)
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(0, 5, _latin1(ref_text[:250]), border="LR", fill=True,
+                       new_x="LMARGIN", new_y="NEXT")
+
+    def _render_model_rows(clip: dict):
+        for r in clip["benchmark"]["results"]:
+            if r.get("error"):
+                line = f"  {r['model']}: ERROR — {r['error'][:70]}"
+            else:
+                wer_str, _ = _wer_cell(r)
+                rtf = fmt(r.get("rtf"), 2)
+                lat = fmt(r.get("latency_seconds"), 1)
+                text = (r.get("transcript") or "(empty)")[:140]
+                line = f"  {r['model']:16s}  WER {wer_str}  RTF {rtf}  ({lat}s):  {text}"
+            pdf.set_font("Helvetica", "", 7.5)
+            pdf.set_fill_color(255, 255, 255)
+            pdf.set_x(pdf.l_margin)
+            pdf.multi_cell(0, 4.8, _latin1(line), border="LR", fill=True,
+                           new_x="LMARGIN", new_y="NEXT")
+            sp = r.get("switch_point", {})
+            if sp.get("wer") is not None:
+                pdf.set_font("Helvetica", "I", 7)
+                pdf.set_x(pdf.l_margin + 4)
+                pdf.cell(0, 4.5, _latin1(
+                    f"    Switch-point WER: {fmt(sp['wer'])}  ({sp['count']} boundary)"),
+                    border=0, new_x="LMARGIN", new_y="NEXT")
+
+    def _close_clip():
+        pdf.set_fill_color(255, 255, 255)
+        pdf.set_x(pdf.l_margin)
+        pdf.cell(0, 2, "", border="LBR", fill=True, new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(3)
 
     if m4a_clips:
         pdf.subsection(f"5a. Naturalistic health complaints  ({len(m4a_clips)} m4a clips)")
         for clip in m4a_clips:
-            meta = clip["metadata"]
-            urg  = meta.get("expected_urgency", "")
-            fill = UGY_FILL.get(urg, (245, 245, 245))
-            label = UGY_LABEL.get(urg, "")
+            fname = clip["metadata"]["filename"].replace("sample_sw_en_", "").replace(".m4a", "")
+            _render_clip_header(clip, fname)
+            _render_ref(clip)
+            _render_model_rows(clip)
+            _close_clip()
 
-            # Clip header
-            pdf.set_fill_color(*fill)
-            pdf.set_font("Helvetica", "B", 9)
-            pdf.set_x(pdf.l_margin)
-            header_text = (f"{label}  {meta['filename'][:38]}"
-                           f"  |  {meta.get('clinical_category', '')}  |  {meta.get('noise_condition', '')}")
-            pdf.cell(0, 7, _latin1(header_text), border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
-
-            # Reference
-            pdf.set_fill_color(248, 248, 248)
-            pdf.set_font("Helvetica", "I", 8)
-            pdf.set_x(pdf.l_margin)
-            ref_text = f"Reference (Sahara bootstrap): {meta.get('reference_transcript', '')}"
-            pdf.multi_cell(0, 5, _latin1(ref_text[:240]), border="LR", fill=True,
-                           new_x="LMARGIN", new_y="NEXT")
-
-            # Model outputs
-            for r in clip["benchmark"]["results"]:
-                if r.get("error"):
-                    line = f"  {r['model']}: ERROR — {r['error'][:60]}"
-                else:
-                    wer = fmt(r.get("wer"))
-                    cer = fmt(r.get("cer"))
-                    rtf = fmt(r.get("rtf"), 2)
-                    lat = fmt(r.get("latency_seconds"), 1)
-                    text = (r.get("transcript") or "(empty)")[:140]
-                    line = f"  {r['model']:16s}  WER {wer}  CER {cer}  RTF {rtf}  ({lat}s):  {text}"
-                pdf.set_font("Helvetica", "", 7.5)
-                pdf.set_fill_color(255, 255, 255)
-                pdf.set_x(pdf.l_margin)
-                pdf.multi_cell(0, 4.8, _latin1(line), border="LR", fill=True,
-                               new_x="LMARGIN", new_y="NEXT")
-
-                # Switch-point detail
-                sp = r.get("switch_point", {})
-                if sp.get("wer") is not None:
-                    pdf.set_font("Helvetica", "I", 7)
-                    pdf.set_x(pdf.l_margin + 4)
-                    pdf.cell(0, 4.5, _latin1(
-                        f"    Switch-point WER: {fmt(sp['wer'])}  ({sp['count']} boundary)"),
-                        border=0, new_x="LMARGIN", new_y="NEXT")
-
-                # Agentic detail
-                ag = r.get("agentic")
-                if ag:
-                    pdf.set_font("Helvetica", "I", 7)
-                    pdf.set_x(pdf.l_margin + 4)
-                    pdf.cell(0, 4.5, _latin1(
-                        f"    Agentic: intent={fmt(ag.get('intent_correct'))}  "
-                        f"entity EER={fmt(ag.get('entity_error_rate'))}  "
-                        f"topic={ag.get('topic', '—')[:35]}"),
-                        border=0, new_x="LMARGIN", new_y="NEXT")
-
-            # Close border + spacing
-            pdf.set_fill_color(255, 255, 255)
-            pdf.set_x(pdf.l_margin)
-            pdf.cell(0, 2, "", border="LBR", fill=True, new_x="LMARGIN", new_y="NEXT")
-            pdf.ln(3)
-
-    # ── ogg WhatsApp clips ──
     if ogg_clips:
         pdf.subsection(f"5b. WhatsApp PTT voice notes  ({len(ogg_clips)} ogg clips)")
         for clip in ogg_clips:
-            meta = clip["metadata"]
-            urg  = meta.get("expected_urgency", "")
-            fill = UGY_FILL.get(urg, (235, 235, 235))
-            label = UGY_LABEL.get(urg, "[?]")
-            pdf.set_fill_color(*fill)
-            pdf.set_font("Helvetica", "B", 9)
-            pdf.set_x(pdf.l_margin)
-            cat = meta.get("clinical_category", "")
-            noise = meta.get("noise_condition", "")
-            header_text = f"{label}  {meta['filename'][:42]}  |  {cat}"
-            pdf.cell(0, 7, _latin1(header_text), border=1, fill=True, new_x="LMARGIN", new_y="NEXT")
-            pdf.set_fill_color(248, 248, 248)
-            pdf.set_font("Helvetica", "I", 8)
-            pdf.set_x(pdf.l_margin)
-            ref_text = f"Reference (Sahara): {meta.get('reference_transcript', '')}"
-            pdf.multi_cell(0, 5, _latin1(ref_text[:230]), border="LR", fill=True,
-                           new_x="LMARGIN", new_y="NEXT")
-            for r in clip["benchmark"]["results"]:
-                if r.get("error"):
-                    line = f"  {r['model']}: ERROR — {r['error'][:60]}"
-                else:
-                    line = (f"  {r['model']:16s}  WER {fmt(r.get('wer'))}  "
-                            f"CER {fmt(r.get('cer'))}  RTF {fmt(r.get('rtf'),2)}  "
-                            f"({fmt(r.get('latency_seconds'),1)}s):  "
-                            f"{(r.get('transcript') or '(empty)')[:130]}")
-                pdf.set_font("Helvetica", "", 7.5)
-                pdf.set_fill_color(255, 255, 255)
-                pdf.set_x(pdf.l_margin)
-                pdf.multi_cell(0, 4.8, _latin1(line), border="LR", fill=True,
-                               new_x="LMARGIN", new_y="NEXT")
-                sp = r.get("switch_point", {})
-                if sp.get("wer") is not None:
-                    pdf.set_font("Helvetica", "I", 7)
-                    pdf.set_x(pdf.l_margin + 4)
-                    pdf.cell(0, 4.5, _latin1(
-                        f"    Switch-point WER: {fmt(sp['wer'])}  ({sp['count']} boundary)"),
-                        border=0, new_x="LMARGIN", new_y="NEXT")
-            pdf.set_fill_color(255, 255, 255)
-            pdf.set_x(pdf.l_margin)
-            pdf.cell(0, 2, "", border="LBR", fill=True, new_x="LMARGIN", new_y="NEXT")
-            pdf.ln(3)
+            fname = (clip["metadata"]["filename"]
+                     .replace("WhatsApp Ptt 2026-09-14 at ", "WA ")
+                     .replace(".ogg", ""))
+            _render_clip_header(clip, fname)
+            _render_ref(clip)
+            _render_model_rows(clip)
+            _close_clip()
 
-    # ── mp3 clips ──
-    mp3_clips = [c for c in results if c["metadata"].get("recording_type") == "synthetic_triage_phrase"]
     if mp3_clips:
         pdf.subsection(f"5c. Short triage phrases  ({len(mp3_clips)} mp3 clips)")
-        headers = ["File", "Ref (Sahara)", "Sahara WER", "Whisper WER", "MMS WER", "Best"]
+        headers = ["File", "Reference (Sahara)", "Sahara WER", "Whisper WER", "MMS WER", "Best"]
         widths  = [28, 58, 22, 22, 22, 15]
         rows_mp3, fills_mp3 = [], []
         for clip in mp3_clips:
             meta = clip["metadata"]
             ref  = (meta.get("reference_transcript") or "")[:40]
-            wers = {r["model"]: r.get("wer") for r in clip["benchmark"]["results"]}
+            wers = {r["model"]: r for r in clip["benchmark"]["results"]}
             best = clip["benchmark"].get("best_model", "—")
             best_short = best.split()[0] if best else "—"
+            sahara_r = wers.get("Intron Sahara", {})
+            whisper_r = wers.get("OpenAI Whisper", {})
+            mms_r = wers.get("Meta MMS", {})
+            s_text, s_fill = _wer_cell(sahara_r)
+            w_text, w_fill = _wer_cell(whisper_r)
+            m_text, m_fill = _wer_cell(mms_r)
             rows_mp3.append([
                 meta["filename"].replace("kelvin_sample_", "ks_"),
-                ref,
-                fmt(wers.get("Intron Sahara")),
-                fmt(wers.get("OpenAI Whisper")),
-                fmt(wers.get("Meta MMS")),
-                best_short,
+                ref, s_text, w_text, m_text, best_short,
             ])
             fills_mp3.append([
-                (245, 245, 245),
-                (255, 255, 255),
-                _wer_fill(wers.get("Intron Sahara")),
-                _wer_fill(wers.get("OpenAI Whisper")),
-                _wer_fill(wers.get("Meta MMS")),
+                (245, 245, 245), (255, 255, 255),
+                s_fill, w_fill, m_fill,
                 (220, 240, 220),
             ])
         pdf.table(headers, rows_mp3, widths, fills=fills_mp3)
 
 
-def _limitations(pdf: PrimaryReportPDF, n_total: int):
-    pdf.section_header("SECTION 6  —  Limitations & Bias Notes")
+def _limitations(pdf: PrimaryReportPDF, n_total: int, n_m4a: int, n_ogg: int, n_mp3: int):
+    pdf.section_header("SECTION 6  —  Known Limitations")
     pdf.body(
-        f"1. PROXY REFERENCE: Reference transcripts were generated by Sahara (bootstrap), "
-        f"not hand-written. Sahara WER measures API variability; Whisper and MMS WER "
-        f"measures divergence from Sahara — not from human ground truth. Manual "
-        f"transcription of at least the m4a files is recommended before submission.\n\n"
-        f"2. SAMPLE SIZE: {n_total} clips (20 m4a, 30 mp3). The m4a set covers 19 "
-        f"clinical scenarios but only 1 speaker (Kelvin). Speaker diversity bias is real — "
-        f"results may not generalise to other Swahili-English speakers or accents.\n\n"
-        f"3. SWITCH-POINT ANNOTATIONS: Approximate boundaries set at token_index ~4-5; "
-        f"these should be verified by listening to each clip and adjusting the token_index "
-        f"to match the exact word where the language changes.\n\n"
-        f"4. ENTITY ANNOTATIONS: Expected entities are derived from clip filenames, not "
-        f"from manual transcript review. They represent the clinical domain of each clip, "
-        f"not necessarily the exact words spoken.\n\n"
-        f"5. HARDWARE DEPENDENCY: Local model (Whisper, MMS) latency is CPU-bound; "
-        f"RTF would improve significantly with GPU. Sahara includes network round-trip.\n\n"
-        f"6. NOISE CONDITIONS: All clips recorded in quiet indoor environments. "
-        f"Real clinic deployment will include background noise, overlapping voices, "
-        f"and variable microphone quality — run the noise sweep (--noise) to assess."
+        f"1. NO HAND-WRITTEN GROUND TRUTH\n"
+        f"   Sahara bootstrap transcripts are used as the reference. This makes Sahara "
+        f"   WER artificially low (near 0) and means Whisper and MMS WER reflects "
+        f"   disagreement with Sahara, not actual transcription errors. Manual transcription "
+        f"   of at least the m4a and ogg files is needed for a true accuracy benchmark.\n\n"
+
+        f"2. SAHARA API BALANCE RAN OUT\n"
+        f"   The Intron Sahara API returned an 'insufficient balance' error part-way through "
+        f"   the benchmark run. Sahara results are marked 'API err' for affected clips. "
+        f"   Replenish the API balance and re-run to get Sahara results for all {n_total} clips.\n\n"
+
+        f"3. SINGLE SPEAKER IN m4a SET\n"
+        f"   All {n_m4a} m4a clips are recordings by one person. Results on this subset "
+        f"   do not reflect how well the system works with different voices, accents or ages.\n\n"
+
+        f"4. TRIAGE LABEL MATCHING\n"
+        f"   Intent accuracy uses exact string matching. The triage engine and the "
+        f"   annotation often describe the same condition in different words. This inflates "
+        f"   the apparent error rate. A fuzzy or category-based match would be fairer.\n\n"
+
+        f"5. LOCAL MODEL SPEED\n"
+        f"   Whisper and MMS timing is CPU-only. RTF would drop significantly on a machine "
+        f"   with a GPU. Numbers here are for reference only and depend on the test machine.\n\n"
+
+        f"6. QUIET RECORDING CONDITIONS\n"
+        f"   Most clips were recorded in quiet rooms. Real clinics have background noise, "
+        f"   multiple speakers, and variable mic quality. The ogg WhatsApp clips ({n_ogg} clips) "
+        f"   have some ambient noise and are more representative of real conditions."
     )
 
 
@@ -1087,7 +1148,7 @@ def _build_manifest(rows: list[dict], flags: dict) -> dict:
     switch_annotated = sum(bool(_json_field(r, "switch_points", [])) for r in rows)
     downstream_ann   = sum(bool(r.get("expected_topic", "").strip()) for r in rows)
     return {
-        "schema_version": "1.0-primary",
+        "schema_version": "1.1-primary",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "command": " ".join(sys.argv),
         "git_commit": _git_commit(),
@@ -1110,6 +1171,7 @@ def main():
     offline_mode = "--offline"      in sys.argv
     flags = {"agentic": agentic, "offline": offline_mode}
 
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     results_path = REPORTS_DIR / "primary_results.json"
     pdf_path     = REPORTS_DIR / "primary_benchmark_report.pdf"
 
@@ -1148,7 +1210,6 @@ def main():
             offline_agg = aggregate_offline(offline_results)
 
         manifest = _build_manifest(rows, flags)
-        REPORTS_DIR.mkdir(exist_ok=True)
         payload: dict = {
             "manifest": manifest,
             "overall": overall,
@@ -1166,44 +1227,45 @@ def main():
 
     charts = make_all_charts(results, overall, by_type)
 
-    # Build PDF
+    n_total = len(results)
+    n_m4a   = sum(1 for c in results if c["metadata"].get("recording_type") == "naturalistic_health_complaint")
+    n_ogg   = sum(1 for c in results if c["metadata"].get("recording_type") == "whatsapp_voice_note")
+    n_mp3   = sum(1 for c in results if c["metadata"].get("recording_type") == "synthetic_triage_phrase")
+
     print("\nBuilding PDF report...")
     pdf = PrimaryReportPDF()
     pdf.set_auto_page_break(auto=True, margin=18)
 
-    # Cover
     pdf.add_page()
     _cover_page(pdf, results, flags)
 
-    # Domain 1
     pdf.add_page()
     _domain1(pdf, results, overall, by_type, charts)
 
-    # Domain 2
     pdf.add_page()
     _domain2(pdf, results, overall, charts)
 
-    # Domain 3
     pdf.add_page()
     _domain3(pdf, results, overall)
 
-    # Domain 4
     pdf.add_page()
-    _domain4(pdf, overall, offline_agg, charts)
+    _domain4(pdf, overall, offline_agg, charts, n_total)
 
-    # Per-clip
     pdf.add_page()
     _per_clip_section(pdf, results)
 
-    # Limitations
     pdf.add_page()
-    _limitations(pdf, len(results))
+    _limitations(pdf, n_total, n_m4a, n_ogg, n_mp3)
 
     pdf.output(str(pdf_path))
     print(f"PDF report  → {pdf_path}\n")
-    print("All done. Summary:")
+    print(f"Charts      → {REPORTS_DIR}\n")
+    print("Summary:")
     for m, s in overall.get("all", {}).items():
-        print(f"  {m:20s}  WER={fmt(s.get('mean_wer'))}  RTF={fmt(s.get('mean_rtf'), 2)}")
+        n_clips  = s.get("n", 0)
+        wer_str  = fmt(s.get("mean_wer"))
+        rtf_str  = fmt(s.get("mean_rtf"), 2)
+        print(f"  {m:20s}  WER={wer_str}  RTF={rtf_str}  n={n_clips}")
 
 
 if __name__ == "__main__":

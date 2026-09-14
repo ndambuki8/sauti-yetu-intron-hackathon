@@ -54,7 +54,7 @@ from backend.benchmark import (  # noqa: E402
 )
 from backend.config import PROJECT_ROOT, SAMPLES_DIR, SUPPORTED_LANGUAGES  # noqa: E402
 
-REPORTS_DIR = PROJECT_ROOT / "reports"
+REPORTS_DIR = PROJECT_ROOT / "reports" / "afrispeech"
 MODELS = ["Intron Sahara", "OpenAI Whisper", "Meta MMS"]
 LOCAL_MODELS = ["OpenAI Whisper", "Meta MMS"]
 DEFAULT_SNR_LEVELS = [30.0, 20.0, 10.0, 5.0]
@@ -357,7 +357,7 @@ def _bar_chart(ax, labels, values, ylabel, title, color="#555555"):
 
 
 def make_charts(overall: dict, by_pair: dict) -> list[Path]:
-    REPORTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     paths = []
 
     # 1: Overall WER by model
@@ -413,7 +413,7 @@ def make_charts(overall: dict, by_pair: dict) -> list[Path]:
 
 
 def make_noise_charts(noise_agg: dict, snr_levels: list[float]) -> list[Path]:
-    REPORTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     paths = []
 
     snr_keys = [str(int(s)) for s in sorted(snr_levels, reverse=True)]
@@ -469,7 +469,7 @@ def make_noise_charts(noise_agg: dict, snr_levels: list[float]) -> list[Path]:
 
 def make_offline_chart(offline_agg: dict, online_agg: dict) -> list[Path]:
     """Compare online vs offline WER per local model."""
-    REPORTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     paths = []
     local_models = [m for m in LOCAL_MODELS if m in offline_agg]
     if not local_models:
@@ -950,7 +950,7 @@ def build_pdf(
         "these labels; labelling conventions affect the score."
     )
 
-    REPORTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     out_path = REPORTS_DIR / "benchmark_report.pdf"
     pdf.output(str(out_path))
     return out_path
@@ -1039,7 +1039,7 @@ def main():
         offline_agg = aggregate_offline(offline_results)
 
     # Persist all results to JSON
-    REPORTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     json_payload: dict = {
         "manifest": manifest,
         "overall": overall,
