@@ -170,8 +170,9 @@ def _first_key_containing(data: dict, *needles: str) -> str:
 def _parse_result(payload: dict) -> dict:
     """Normalize the Intron response into the fields the app uses."""
     data = payload.get("data", {}) or {}
+    transcript = data.get("audio_transcript") or _first_key_containing(data, "transcript")
     return {
-        "transcript": data.get("audio_transcript", "") or "",
+        "transcript": transcript,
         "summary": _first_key_containing(data, "summary"),
         "entities": _first_key_containing(data, "entity"),
         "differential_diagnosis": _first_key_containing(data, "differential"),

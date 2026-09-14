@@ -133,11 +133,12 @@ Record your code-switched clips into `data/samples/`, register them in
 `metadata.csv`, then run:
 
 ```bash
-python -m scripts.generate_benchmark_report
+python3 -m scripts.generate_benchmark_report --agentic
 ```
 
 This writes `reports/benchmark_report.pdf` (methodology, overall and
-per-language-pair/per-noise WER/CER/latency, charts, per-clip transcripts,
+per-language-pair/per-noise WER/CER/latency, switch-point WER, RTF, optional
+downstream intent/slot/entity metrics, charts, per-clip transcripts,
 limitations) and `reports/results.json` (raw outputs for reproducibility).
 Draft answers to the 8 submission questions live in [SUBMISSION.md](SUBMISSION.md).
 
@@ -151,8 +152,9 @@ Afrikaans-English (`af`), Luganda-English (`lg`), Wolof-French (`wo`), and Engli
 ## Benchmark data (`data/samples/`)
 
 Code-switched test clips live in `data/samples/` with `metadata.csv`
-(columns: `filename, language_pair, domain, accent_country, device_type,
-noise_condition, reference_transcript`). These double as the challenge's
+(columns: `filename, language_pair, language_code, domain, accent_country,
+device_type, noise_condition, reference_transcript`, plus optional switch-point
+and downstream gold annotations documented in `data/samples/README.md`). These double as the challenge's
 audio-sample submission. Run the whole set from the UI's Benchmark section
 or via `POST /api/benchmark`.
 

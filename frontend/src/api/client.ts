@@ -85,14 +85,27 @@ export async function respond(
 }
 
 export async function runBenchmark(
-  audio: File,
+  audio: Blob,
+  filename: string,
   referenceTranscript: string,
   languageCode: string,
+  options: {
+    switchPoints?: Array<Record<string, unknown>>;
+    agentReference?: Record<string, unknown>;
+    expectedSlots?: Record<string, string>;
+    agentic?: boolean;
+  } = {},
 ): Promise<BenchmarkResponse> {
   const form = new FormData();
-  form.append("audio", audio, audio.name);
+  form.append("audio", audio, filename);
   form.append("reference_transcript", referenceTranscript);
   form.append("language_code", languageCode);
+  form.append("switch_points", JSON.stringify(options.switchPoints ?? []));
+  form.append("agent_reference", JSON.stringify({
+    ...(options.agentReference ?? {}),
+    expected_slots: options.expectedSlots ?? {},
+  }));
+  form.append("agentic", String(options.agentic ?? false));
   const res = await fetch("/api/benchmark", { method: "POST", body: form });
   return parseResponse<BenchmarkResponse>(res);
 }

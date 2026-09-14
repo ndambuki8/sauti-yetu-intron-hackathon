@@ -57,12 +57,28 @@ export interface BenchmarkResult {
   cer: number | null;
   latency_seconds: number | null;
   transcript: string;
+  rtf?: number | null;
+  audio_duration_seconds?: number | null;
+  switch_point?: {
+    wer: number | null;
+    count: number;
+    windows: Array<{ token_index: number; wer: number | null }>;
+  };
+  agentic?: {
+    intent_correct: boolean | null;
+    slot_accuracy: number | null;
+    entity_error_rate: number | null;
+  };
+  warning?: string | null;
   error?: string;
 }
 
 export interface BenchmarkResponse {
   results: BenchmarkResult[];
   best_model: string | null;
+  language_code?: string;
+  switch_points?: Array<Record<string, unknown>>;
+  agentic?: boolean;
 }
 
 /** One recording's worth of conversation, derived client-side from a

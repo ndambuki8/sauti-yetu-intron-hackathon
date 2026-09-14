@@ -27,12 +27,14 @@ interface ConsultationState {
   tab: Tab;
   languages: Record<string, string>;
   languageCode: string;
+  capturedAudio: { blob: Blob; filename: string } | null;
 }
 
 type Action =
   | { type: "languagesLoaded"; languages: Record<string, string> }
   | { type: "tabChanged"; tab: Tab }
   | { type: "languageChanged"; languageCode: string }
+  | { type: "audioCaptured"; blob: Blob; filename: string }
   | { type: "sessionStarted"; sessionId: string }
   | { type: "analysisStarted" }
   | { type: "turnAdded"; response: TriageResponse; languageName: string }
@@ -49,6 +51,7 @@ const initialState: ConsultationState = {
   tab: "triage",
   languages: {},
   languageCode: "sw",
+  capturedAudio: null,
 };
 
 /** Build a timeline item from a spoken worker reply, decoding the audio
@@ -92,6 +95,11 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
       return { ...state, tab: action.tab };
     case "languageChanged":
       return { ...state, languageCode: action.languageCode };
+    case "audioCaptured":
+      return {
+        ...state,
+        capturedAudio: { blob: action.blob, filename: action.filename },
+      };
     case "sessionStarted":
       return { ...state, sessionId: action.sessionId };
     case "analysisStarted":
