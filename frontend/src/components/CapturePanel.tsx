@@ -24,6 +24,7 @@ export default function CapturePanel() {
   const acceptAudio = (next: Blob, nextFilename: string) => {
     setBlob(next);
     setFilename(nextFilename);
+    dispatch({ type: "audioCaptured", blob: next, filename: nextFilename });
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(URL.createObjectURL(next));
   };
@@ -141,6 +142,15 @@ export default function CapturePanel() {
       <button onClick={analyse} disabled={!blob || state.analysing} className="btn-primary mt-4 w-full">
         {state.analysing ? "Analysing…" : "Analyse with Sahara"}
       </button>
+
+      {blob && !state.analysing && (
+        <button
+          onClick={() => dispatch({ type: "tabChanged", tab: "benchmark" })}
+          className="btn-secondary mt-2 w-full"
+        >
+          Use this exact clip for benchmark
+        </button>
+      )}
 
       {state.analysing && <StageStepper />}
 

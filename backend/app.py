@@ -19,6 +19,7 @@ server (port 5173, proxies /api here); for a single-process deployment run
 """
 
 import base64
+import json
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
@@ -206,6 +207,9 @@ def run_benchmark(
     audio: UploadFile = File(...),
     reference_transcript: str = Form(...),
     language_code: str = Form("en"),
+    switch_points: str = Form("[]"),
+    agent_reference: str = Form(""),
+    agentic: bool = Form(False),
 ):
     if not reference_transcript.strip():
         raise HTTPException(status_code=400, detail="Reference transcript is required.")
@@ -215,11 +219,24 @@ def run_benchmark(
     # triage flow (and its tests) must not require.
     from . import benchmark as benchmark_module
 
+    try:
+        parsed_switch_points = json.loads(switch_points or "[]")
+        parsed_agent_reference = json.loads(agent_reference) if agent_reference else None
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=400, detail=f"Invalid benchmark annotation JSON: {exc}")
+    if not isinstance(parsed_switch_points, list):
+        raise HTTPException(status_code=400, detail="switch_points must be a JSON list.")
+    if parsed_agent_reference is not None and not isinstance(parsed_agent_reference, dict):
+        raise HTTPException(status_code=400, detail="agent_reference must be a JSON object.")
+
     return benchmark_module.run_benchmark(
         audio_bytes,
         filename=audio.filename or "recording.webm",
         reference_transcript=reference_transcript.strip(),
         language_code=language_code,
+        switch_points=parsed_switch_points,
+        agent_reference=parsed_agent_reference,
+        agentic=agentic,
     )
 
 
