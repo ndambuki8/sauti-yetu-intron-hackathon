@@ -4,6 +4,7 @@ import Svg, { G, Line, Rect, Text as SvgText } from "react-native-svg";
 import type { Graph } from "../api/types";
 import { NODE_COLORS, NODE_KIND_LABELS, NODE_TINTS, type NodeKind } from "../lib/palette";
 import { colors, fonts } from "../theme";
+import { SourceCitation } from "./ProvenanceBadge";
 
 const COLUMNS: NodeKind[][] = [
   ["patient"],
@@ -31,25 +32,31 @@ export function ReasoningGraph({ graph }: { graph: Graph | null }) {
       list.push(node);
       byKind.set(kind, list);
     }
-    const positions = new Map<string, { x: number; y: number; node: (typeof graph.nodes)[0] }>();
+    const positions = new Map<string, { x: number; y: number; h: number; node: (typeof graph.nodes)[0] }>();
+    let maxBottom = NODE_H;
     COLUMNS.forEach((kinds, col) => {
       const nodes = kinds.flatMap((k) => byKind.get(k) ?? []);
-      nodes.forEach((node, row) => {
+      let y = 16;
+      nodes.forEach((node) => {
+        const extra =
+          node.data.kind === "condition" && typeof node.data.probability === "number"
+            ? 8 + Math.round(node.data.probability * 14)
+            : 0;
+        const h = NODE_H + extra;
         positions.set(node.data.id, {
           x: 16 + col * (NODE_W + COL_GAP),
-          y: 16 + row * (NODE_H + ROW_GAP),
+          y,
+          h,
           node,
         });
+        y += h + ROW_GAP;
+        maxBottom = Math.max(maxBottom, y);
       });
     });
-    const maxRow = Math.max(
-      1,
-      ...COLUMNS.map((kinds) => kinds.flatMap((k) => byKind.get(k) ?? []).length),
-    );
     return {
       positions,
       width: 16 * 2 + COLUMNS.length * NODE_W + (COLUMNS.length - 1) * COL_GAP,
-      height: 16 * 2 + maxRow * NODE_H + (maxRow - 1) * ROW_GAP,
+      height: maxBottom + 8,
     };
   }, [graph]);
 
@@ -86,9 +93,14 @@ export function ReasoningGraph({ graph }: { graph: Graph | null }) {
             />
           );
         })}
-        {Array.from(layout.positions.values()).map(({ x, y, node }) => {
+        {Array.from(layout.positions.values()).map(({ x, y, h, node }) => {
           const kind = node.data.kind;
           const on = selected === node.data.id;
+          const prob = node.data.probability;
+          const kindLabel =
+            kind === "condition" && typeof prob === "number"
+              ? `${NODE_KIND_LABELS[kind]} ${Math.round(prob * 100)}%`
+              : NODE_KIND_LABELS[kind];
           return (
             <G
               key={node.data.id}
@@ -98,7 +110,7 @@ export function ReasoningGraph({ graph }: { graph: Graph | null }) {
                 x={x}
                 y={y}
                 width={NODE_W}
-                height={NODE_H}
+                height={h}
                 fill={NODE_TINTS[kind]}
                 stroke={on ? NODE_COLORS[kind] : colors.line}
                 strokeWidth={on ? 2 : 1}
@@ -110,7 +122,7 @@ export function ReasoningGraph({ graph }: { graph: Graph | null }) {
                 fontSize={9}
                 fontFamily={fonts.bodyMed}
               >
-                {NODE_KIND_LABELS[kind]}
+                {kindLabel}
               </SvgText>
               <SvgText
                 x={x + 8}
@@ -129,7 +141,13 @@ export function ReasoningGraph({ graph }: { graph: Graph | null }) {
         <View style={styles.inspector}>
           <Text style={styles.inspKind}>{NODE_KIND_LABELS[selectedNode.data.kind]}</Text>
           <Text style={styles.inspLabel}>{selectedNode.data.label}</Text>
+          {typeof selectedNode.data.probability === "number" ? (
+            <Text style={styles.inspTurn}>
+              Posterior {Math.round(selectedNode.data.probability * 100)}%
+            </Text>
+          ) : null}
           <Text style={styles.inspTurn}>First heard on turn {selectedNode.data.turn}</Text>
+          {selectedNode.data.source ? <SourceCitation source={selectedNode.data.source} /> : null}
         </View>
       ) : null}
     </View>

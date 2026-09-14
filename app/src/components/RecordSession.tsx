@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { createSession, runTriage } from "../api/client";
 import { pickAudio, startRecording, type Clip, type RecordingHandle } from "../lib/audio";
@@ -6,9 +6,12 @@ import { latestTurn, useConsultation } from "../state/consultation";
 import { colors, fonts } from "../theme";
 import { ClinicalCard } from "./ClinicalCard";
 import { LanguageSelect } from "./LanguageSelect";
+import { PatientContextForm } from "./PatientContextForm";
 import { RecordControl } from "./RecordControl";
 import { ReplySheet } from "./ReplySheet";
 import { Timeline } from "./Timeline";
+
+const MAX_RECORD_MS = 120_000;
 
 export function RecordSession({ compact = false }: { compact?: boolean }) {
   const { state, dispatch } = useConsultation();
@@ -17,6 +20,30 @@ export function RecordSession({ compact = false }: { compact?: boolean }) {
   const [ready, setReady] = useState<Clip | null>(null);
   const handle = useRef<RecordingHandle | null>(null);
   const turn = latestTurn(state);
+
+  const stopRecording = async () => {
+    if (!handle.current) return;
+    try {
+      const clip = await handle.current.stop();
+      handle.current = null;
+      setReady(clip);
+    } catch (err) {
+      dispatch({
+        type: "analysisFailed",
+        message: err instanceof Error ? err.message : "Could not stop recording",
+      });
+    } finally {
+      setRecording(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!recording) return;
+    const timer = setTimeout(() => {
+      void stopRecording();
+    }, MAX_RECORD_MS);
+    return () => clearTimeout(timer);
+  }, [recording]);
 
   const status = state.analysing
     ? "Listening through Sahara…"
@@ -31,18 +58,7 @@ export function RecordSession({ compact = false }: { compact?: boolean }) {
   const toggleRecord = async () => {
     if (!consented || state.analysing) return;
     if (recording && handle.current) {
-      try {
-        const clip = await handle.current.stop();
-        handle.current = null;
-        setReady(clip);
-      } catch (err) {
-        dispatch({
-          type: "analysisFailed",
-          message: err instanceof Error ? err.message : "Could not stop recording",
-        });
-      } finally {
-        setRecording(false);
-      }
+      await stopRecording();
       return;
     }
     try {
@@ -81,6 +97,7 @@ export function RecordSession({ compact = false }: { compact?: boolean }) {
         state.languageCode,
         state.doctorLanguage,
         sessionId,
+        state.patient,
       );
       dispatch({ type: "turnAdded", response, languageName });
       setReady(null);
@@ -104,6 +121,8 @@ export function RecordSession({ compact = false }: { compact?: boolean }) {
         </Text>
       </Pressable>
 
+      <PatientContextForm />
+
       <LanguageSelect
         title="Your language"
         options={state.doctorLanguages}
@@ -121,6 +140,7 @@ export function RecordSession({ compact = false }: { compact?: boolean }) {
 
       <RecordControl
         recording={recording}
+        analysing={state.analysing}
         disabled={!consented || state.analysing}
         onPress={toggleRecord}
         label={status}

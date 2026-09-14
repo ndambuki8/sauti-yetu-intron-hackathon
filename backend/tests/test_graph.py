@@ -14,7 +14,8 @@ from backend.app import app
 from backend.asr_models import closed_set_lid
 from backend.graph import _split_extraction, build_graph_delta
 from backend.graph_store import SessionStore
-from backend.triage import run_triage
+from backend.extract import extract_patient_hints
+from backend.triage import PatientContext, run_triage
 
 FAKE_INTRON_RESULT = {
     "transcript": "Naumwa kifua, chest pain since morning, I feel dizzy",
@@ -155,6 +156,9 @@ def test_triage_returns_doctor_transcript(monkeypatch):
     assert body["transcript_doctor"]
     assert body["detected_language"] == "sw"
     assert "artifacts" in body
+    ctx = body["triage"]["patient_context"]
+    assert ctx["age"] is None or isinstance(ctx["age"], (int, float))
+    assert "sex" in ctx
 
 
 def test_command_persists_artifact(monkeypatch):
@@ -308,3 +312,57 @@ def test_auto_audio_lid_failure_uses_session_prior(monkeypatch):
     assert second.status_code == 200
     assert sahara_languages[-1] == "sw"
     assert second.json()["detected_language"] == "sw"
+
+
+# ---------- knowledge-base triage ----------
+
+def test_chest_pain_emergency_only_when_over_50():
+    young = run_triage(FAKE_INTRON_RESULT, "English", PatientContext(age=8))
+    old = run_triage(FAKE_INTRON_RESULT, "English", PatientContext(age=55))
+    young_ids = {d["id"] for d in young["matched_discriminators"]}
+    old_ids = {d["id"] for d in old["matched_discriminators"]}
+    assert "acute-chest-abdo-pain-over-50" not in young_ids
+    assert "acute-chest-abdo-pain-over-50" in old_ids
+    assert old["urgency"] == "EMERGENCY"
+
+
+def test_vitals_hr_150_emergency_at_age_8_not_age_3():
+    toddler = run_triage(FAKE_INTRON_RESULT, "English", PatientContext(age=3, hr=150))
+    child = run_triage(FAKE_INTRON_RESULT, "English", PatientContext(age=8, hr=150))
+    toddler_vitals = [d for d in toddler["matched_discriminators"] if d["id"].startswith("vital-")]
+    child_vitals = [d for d in child["matched_discriminators"] if d["id"].startswith("vital-")]
+    assert toddler_vitals == []
+    assert child_vitals
+    assert child["urgency"] == "EMERGENCY"
+
+
+def test_differential_ranks_cited_conditions():
+    result = run_triage(FAKE_INTRON_RESULT, "English", PatientContext(age=55))
+    assert result["differential"]
+    top = result["differential"][0]
+    assert 0 < top["probability"] <= 1
+    assert top["source"]["ref"]
+    assert top["contributing"]
+
+
+def test_extract_patient_hints_from_transcript():
+    hints = extract_patient_hints("34-year-old woman, 28 weeks pregnant, chest pain")
+    assert hints["age"] == 34
+    assert hints["sex"] == "female"
+    assert hints["pregnant"] is True
+
+
+def test_triage_returns_extracted_patient_context(monkeypatch):
+    spoken = {
+        **FAKE_INTRON_RESULT,
+        "transcript": "34-year-old woman with chest pain since morning",
+        "summary": "34-year-old woman with chest pain since morning",
+    }
+    monkeypatch.setattr("backend.app.transcribe_telehealth", lambda *a, **k: dict(spoken))
+    client = TestClient(app)
+    res = _post_triage(client)
+    assert res.status_code == 200
+    ctx = res.json()["triage"]["patient_context"]
+    assert ctx["age"] == 34
+    assert ctx["sex"] == "female"
+    assert "age" in res.json()["triage"]["auto_detected"]

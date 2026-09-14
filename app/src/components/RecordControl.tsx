@@ -4,11 +4,13 @@ import { colors, fonts } from "../theme";
 
 export function RecordControl({
   recording,
+  analysing,
   disabled,
   onPress,
   label,
 }: {
   recording: boolean;
+  analysing?: boolean;
   disabled?: boolean;
   onPress: () => void;
   label: string;
@@ -16,7 +18,7 @@ export function RecordControl({
   const pulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (!recording) {
+    if (!recording && !analysing) {
       pulse.setValue(0);
       return;
     }
@@ -28,7 +30,7 @@ export function RecordControl({
     );
     loop.start();
     return () => loop.stop();
-  }, [recording, pulse]);
+  }, [recording, analysing, pulse]);
 
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.18] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0] });
@@ -36,13 +38,24 @@ export function RecordControl({
   return (
     <View style={styles.wrap}>
       <View style={styles.stage}>
-        <Animated.View style={[styles.ring, { transform: [{ scale }], opacity }]} />
+        <Animated.View
+          style={[
+            styles.ring,
+            analysing && styles.ringAnalyse,
+            { transform: [{ scale }], opacity },
+          ]}
+        />
         <Pressable
           onPress={onPress}
           disabled={disabled}
-          style={[styles.button, recording && styles.buttonHot, disabled && styles.buttonOff]}
+          style={[
+            styles.button,
+            recording && styles.buttonHot,
+            analysing && styles.buttonAnalyse,
+            disabled && styles.buttonOff,
+          ]}
         >
-          <View style={[styles.core, recording && styles.coreHot]} />
+          <View style={[styles.core, recording && styles.coreHot, analysing && styles.coreAnalyse]} />
         </Pressable>
       </View>
       <Text style={styles.label}>{label}</Text>
@@ -73,6 +86,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
   },
   buttonHot: { backgroundColor: colors.blood },
+  buttonAnalyse: { backgroundColor: colors.cedar },
+  ringAnalyse: { backgroundColor: colors.celadon },
   buttonOff: { opacity: 0.4 },
   core: {
     width: 36,
@@ -81,6 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.paper,
   },
   coreHot: { width: 34, height: 34, borderRadius: 6 },
+  coreAnalyse: { width: 18, height: 18, borderRadius: 9, opacity: 0.85 },
   label: {
     fontFamily: fonts.bodyMed,
     fontSize: 15,

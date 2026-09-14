@@ -30,10 +30,11 @@ from .config import (
     SAHARA_OUTPUT_LANGUAGES,
     SUPPORTED_LANGUAGES,
 )
+from .extract import extract_patient_hints
 from .graph import build_graph_delta
 from .graph_store import SESSION_STORE
 from .intron_client import IntronError, transcribe_plain, transcribe_telehealth
-from .triage import run_triage
+from .triage import PatientContext, run_triage
 
 app = FastAPI(title="Voice Triage Hint")
 app.add_middleware(
@@ -154,6 +155,14 @@ def triage(
     language_code: str = Form("auto"),
     doctor_language: str = Form("en"),
     session_id: str | None = Form(None),
+    age: float | None = Form(None),
+    sex: str | None = Form(None),
+    pregnant: bool | None = Form(None),
+    hr: float | None = Form(None),
+    rr: float | None = Form(None),
+    temp: float | None = Form(None),
+    spo2: float | None = Form(None),
+    avpu: str | None = Form(None),
 ):
     if language_code != "auto" and language_code not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=400, detail=f"Unsupported language: {language_code}")
@@ -204,7 +213,47 @@ def triage(
         }
 
     language_name = SUPPORTED_LANGUAGES.get(asr_language, asr_language)
-    triage_result = run_triage(intron_result, language_name)
+
+    explicit_age = age if age is not None and age >= 0 else None
+    explicit_sex = sex if sex in ("male", "female") else None
+    hints = extract_patient_hints(
+        intron_result.get("transcript", ""),
+        intron_result.get("summary", ""),
+        intron_result.get("entities", ""),
+    )
+    eff_age = explicit_age if explicit_age is not None else hints["age"]
+    eff_sex = explicit_sex if explicit_sex is not None else hints["sex"]
+    eff_pregnant = pregnant if pregnant is not None else hints["pregnant"]
+    auto_detected: list[str] = []
+    if explicit_age is None and hints["age"] is not None:
+        auto_detected.append("age")
+    if explicit_sex is None and hints["sex"] is not None:
+        auto_detected.append("sex")
+    if pregnant is None and hints["pregnant"] is not None:
+        auto_detected.append("pregnancy")
+
+    patient = PatientContext(
+        age=eff_age,
+        sex=eff_sex,
+        pregnant=eff_pregnant,
+        hr=hr,
+        rr=rr,
+        temp=temp,
+        spo2=spo2,
+        avpu=avpu if avpu else None,
+    )
+    triage_result = run_triage(intron_result, language_name, patient)
+    triage_result["auto_detected"] = auto_detected
+    triage_result["patient_context"] = {
+        "age": eff_age,
+        "sex": eff_sex,
+        "pregnant": eff_pregnant,
+        "hr": hr,
+        "rr": rr,
+        "temp": temp,
+        "spo2": spo2,
+        "avpu": avpu or None,
+    }
 
     transcript_doctor = translator.translate_to_doctor(
         transcript_patient, asr_language, doctor_language

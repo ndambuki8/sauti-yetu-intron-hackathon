@@ -1,19 +1,15 @@
 import { ScrollView, StyleSheet, Text } from "react-native";
-import { ReasoningGraph } from "../../components/ReasoningGraph";
-import { useConsultation } from "../../state/consultation";
+import { ReasoningView } from "../../components/ReasoningView";
 import { colors, fonts } from "../../theme";
 
 export default function GraphScreen() {
-  const { state } = useConsultation();
   return (
     <ScrollView contentContainerStyle={styles.page} horizontal={false}>
       <Text style={styles.title}>Clinical picture</Text>
       <Text style={styles.sub}>
-        How this consult connects — symptoms, topics, probable conditions, and where to send the patient.
+        Summary, ranked conditions, cited evidence, and the map of how this consult connects.
       </Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <ReasoningGraph graph={state.graph} />
-      </ScrollView>
+      <ReasoningView />
     </ScrollView>
   );
 }

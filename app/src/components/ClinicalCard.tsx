@@ -1,6 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
-import type { Turn } from "../api/types";
+import type { PatientContext, Turn } from "../api/types";
 import { colors, fonts, urgencyColor } from "../theme";
+
+function formatContext(ctx?: PatientContext): string {
+  if (!ctx) return "";
+  const age =
+    ctx.age == null ? "" : Number.isInteger(ctx.age) ? `${ctx.age} yrs` : `${ctx.age} yrs`;
+  const sex = (ctx.sex || "").replace(/^./, (c) => c.toUpperCase());
+  const preg = ctx.pregnant ? "Pregnant" : "";
+  return [age, sex, preg].filter(Boolean).join(" · ");
+}
+
+function Row({ label, value }: { label: string; value?: string | null }) {
+  if (!value) return null;
+  return (
+    <View>
+      <Text style={styles.dt}>{label}</Text>
+      <Text style={styles.dd}>{value}</Text>
+    </View>
+  );
+}
 
 export function ClinicalCard({ turn }: { turn: Turn }) {
   const urgency = turn.triage.urgency;
@@ -14,6 +33,26 @@ export function ClinicalCard({ turn }: { turn: Turn }) {
           {turn.triage.topic} · {turn.triage.suggested_department}
         </Text>
       </View>
+      <View style={styles.intake}>
+        <Row
+          label="Patient"
+          value={
+            turn.triage.intake_card.patient_summary
+            || formatContext(turn.triage.patient_context)
+          }
+        />
+        <Row label="Vitals" value={turn.triage.intake_card.vitals} />
+        {turn.triage.auto_detected?.length ? (
+          <Text style={styles.warn}>
+            From the recording: {turn.triage.auto_detected.join(", ")}. Confirm on Record.
+          </Text>
+        ) : null}
+      </View>
+      {turn.triage.acuity ? (
+        <Text style={styles.acuity}>
+          Escalated by {turn.triage.acuity.discriminator}
+        </Text>
+      ) : null}
       <Text style={styles.kicker}>Heard as</Text>
       <Text style={styles.transcript}>{turn.transcriptDoctor}</Text>
       {turn.transcript !== turn.transcriptDoctor ? (
@@ -55,6 +94,11 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   meta: { fontFamily: fonts.bodyMed, fontSize: 13, color: colors.muted, flex: 1 },
+  intake: { gap: 8, paddingTop: 4 },
+  dt: { fontFamily: fonts.bodyMed, fontSize: 11, color: colors.muted, letterSpacing: 0.4 },
+  dd: { fontFamily: fonts.body, fontSize: 14, color: colors.ink, marginTop: 2 },
+  warn: { fontFamily: fonts.body, fontSize: 12, color: colors.ember, lineHeight: 17 },
+  acuity: { fontFamily: fonts.bodySemi, fontSize: 13, color: colors.blood },
   kicker: {
     fontFamily: fonts.bodyMed,
     fontSize: 11,

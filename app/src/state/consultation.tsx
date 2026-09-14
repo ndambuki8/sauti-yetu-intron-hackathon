@@ -8,6 +8,8 @@ import {
 import { getLanguages } from "../api/client";
 import type {
   Artifact,
+  PatientContext,
+  PatientInput,
   RespondResponse,
   TimelineItem,
   TriageResponse,
@@ -15,6 +17,38 @@ import type {
   WorkerReply,
 } from "../api/types";
 import { splitExtraction, splitRedFlags } from "../lib/extraction";
+
+export const emptyPatient = (): PatientInput => ({
+  age: "",
+  sex: "",
+  pregnant: null,
+  hr: "",
+  rr: "",
+  temp: "",
+  spo2: "",
+  avpu: "",
+});
+
+function fieldFrom(value: string | number | boolean | null | undefined): string {
+  if (value === null || value === undefined || value === "") return "";
+  if (typeof value === "number" && Number.isInteger(value)) return String(value);
+  return String(value);
+}
+
+/** Fill blank clinician fields from the values the engine used. */
+export function mergePatient(current: PatientInput, ctx?: PatientContext): PatientInput {
+  if (!ctx) return current;
+  return {
+    age: current.age || fieldFrom(ctx.age),
+    sex: current.sex || ctx.sex || "",
+    pregnant: current.pregnant !== null ? current.pregnant : ctx.pregnant,
+    hr: current.hr || fieldFrom(ctx.hr),
+    rr: current.rr || fieldFrom(ctx.rr),
+    temp: current.temp || fieldFrom(ctx.temp),
+    spo2: current.spo2 || fieldFrom(ctx.spo2),
+    avpu: current.avpu || ctx.avpu || "",
+  };
+}
 
 interface ConsultationState {
   sessionId: string | null;
@@ -29,6 +63,7 @@ interface ConsultationState {
   doctorLanguage: string;
   artifacts: Artifact[];
   detectedLanguages: string[];
+  patient: PatientInput;
 }
 
 type Action =
@@ -46,6 +81,7 @@ type Action =
   | { type: "commandStarted" }
   | { type: "commandFinished"; artifacts: Artifact[] }
   | { type: "analysisFailed"; message: string }
+  | { type: "patientChanged"; patient: PatientInput }
   | { type: "reset" };
 
 const initialState: ConsultationState = {
@@ -61,6 +97,7 @@ const initialState: ConsultationState = {
   doctorLanguage: "en",
   artifacts: [],
   detectedLanguages: [],
+  patient: emptyPatient(),
 };
 
 export function toWorkerReply(response: RespondResponse): WorkerReply {
@@ -104,6 +141,8 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
       return { ...state, languageCode: action.languageCode };
     case "doctorLanguageChanged":
       return { ...state, doctorLanguage: action.doctorLanguage };
+    case "patientChanged":
+      return { ...state, patient: action.patient };
     case "sessionStarted":
       return { ...state, sessionId: action.sessionId };
     case "analysisStarted":
@@ -117,6 +156,7 @@ function reducer(state: ConsultationState, action: Action): ConsultationState {
         turns: [...state.turns, toTurn(action.response, action.languageName)],
         artifacts: action.response.artifacts ?? state.artifacts,
         detectedLanguages: action.response.detected_languages ?? state.detectedLanguages,
+        patient: mergePatient(state.patient, action.response.triage.patient_context),
       };
     case "replyAdded":
       return { ...state, turns: [...state.turns, action.reply] };

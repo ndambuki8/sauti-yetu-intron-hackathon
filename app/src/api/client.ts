@@ -5,6 +5,7 @@ import { fetch as expoFetch } from "expo/fetch";
 import type { Clip } from "../lib/audioTypes";
 import type {
   CommandResponse,
+  PatientInput,
   Phrase,
   RespondResponse,
   SessionResponse,
@@ -110,17 +111,33 @@ async function postForm(path: string, form: FormData): Promise<Response> {
   return expoFetch(target, { method: "POST", body: form }) as unknown as Response;
 }
 
+function appendIfPresent(form: FormData, key: string, value: string | boolean | null | undefined) {
+  if (value === null || value === undefined || value === "") return;
+  form.append(key, String(value));
+}
+
 export async function runTriage(
   audio: Clip,
   languageCode: string,
   doctorLanguage: string,
   sessionId: string,
+  patient?: PatientInput,
 ): Promise<TriageResponse> {
   const form = new FormData();
   appendAudio(form, audio);
   form.append("language_code", languageCode);
   form.append("doctor_language", doctorLanguage);
   form.append("session_id", sessionId);
+  if (patient) {
+    appendIfPresent(form, "age", patient.age);
+    appendIfPresent(form, "sex", patient.sex);
+    if (patient.pregnant !== null) form.append("pregnant", String(patient.pregnant));
+    appendIfPresent(form, "hr", patient.hr);
+    appendIfPresent(form, "rr", patient.rr);
+    appendIfPresent(form, "temp", patient.temp);
+    appendIfPresent(form, "spo2", patient.spo2);
+    appendIfPresent(form, "avpu", patient.avpu);
+  }
   const res = await postForm("/api/triage", form);
   return parseResponse<TriageResponse>(res);
 }
