@@ -1,0 +1,849 @@
+{
+  "kelvin_sample_1.mp3": {
+    "transcript": "I need to see a doctor today.\n",
+    "latency_seconds": 16.154715797005338
+  },
+  "kelvin_sample_2.mp3": {
+    "transcript": "Nahitaji kumwona daktari leo.\n",
+    "latency_seconds": 3.2846553740018862
+  },
+  "kelvin_sample_3.mp3": {
+    "transcript": "Nahitaji kuona doc leo.\n",
+    "latency_seconds": 3.0225806110029225
+  },
+  "kelvin_sample_4.mp3": {
+    "transcript": "My head hurts badly.\n",
+    "latency_seconds": 3.2276475580001716
+  },
+  "kelvin_sample_5.mp3": {
+    "transcript": "Kichwa kinaniuma sana.\n",
+    "latency_seconds": 15.677868863996991
+  },
+  "kelvin_sample_6.mp3": {
+    "transcript": "Kichwa inauma mbaya.\n",
+    "latency_seconds": 3.374598819995299
+  },
+  "kelvin_sample_7.mp3": {
+    "transcript": "Remember to take your medicine.\n",
+    "latency_seconds": 3.2930954069961444
+  },
+  "kelvin_sample_8.mp3": {
+    "transcript": "Kumbuka kumeza dawa zako.\n",
+    "latency_seconds": 3.622781297999609
+  },
+  "kelvin_sample_9.mp3": {
+    "transcript": "Kumbuka kumeza dawa zako za prescription.\n",
+    "latency_seconds": 3.6133235980014433
+  },
+  "kelvin_sample_10.mp3": {
+    "transcript": "I am feeling much better now.\n",
+    "latency_seconds": 3.1042840410009376
+  },
+  "kelvin_sample_11.mp3": {
+    "transcript": "Najisikia vizuri zaidi sasa.\n",
+    "latency_seconds": 3.1335126740013948
+  },
+  "kelvin_sample_12.mp3": {
+    "transcript": "Najisikia fit sana saa hii.\n",
+    "latency_seconds": 3.4001777980010957
+  },
+  "kelvin_sample_13.mp3": {
+    "transcript": "Washi your hands with soap.\n",
+    "latency_seconds": 3.1441949119980563
+  },
+  "kelvin_sample_14.mp3": {
+    "transcript": "Osha mikono yako kwa sabuni.\n",
+    "latency_seconds": 3.766468118003104
+  },
+  "kelvin_sample_15.mp3": {
+    "transcript": "Osha mikono yako na soap.\n",
+    "latency_seconds": 3.4995892040024046
+  },
+  "kelvin_sample_16.mp3": {
+    "transcript": "He has a severe cough.\n",
+    "latency_seconds": 2.771473923996382
+  },
+  "kelvin_sample_17.mp3": {
+    "transcript": "Anakohoa sana.\n",
+    "latency_seconds": 4.163113708003948
+  },
+  "kelvin_sample_18.mp3": {
+    "transcript": "Ana cough mbaya sana.\n",
+    "latency_seconds": 3.0827402639988577
+  },
+  "kelvin_sample_19.mp3": {
+    "transcript": "Drink plenti of water everyday.\n",
+    "latency_seconds": 3.5878942310009734
+  },
+  "kelvin_sample_20.mp3": {
+    "transcript": "Kunywa maji mengi kila siku.\n",
+    "latency_seconds": 4.000690597000357
+  },
+  "kelvin_sample_21.mp3": {
+    "transcript": "Kunywa maji mengi kila day.\n",
+    "latency_seconds": 3.551650426001288
+  },
+  "kelvin_sample_22.mp3": {
+    "transcript": "The clinic is closed on sundays.\n",
+    "latency_seconds": 4.6496662060017115
+  },
+  "kelvin_sample_23.mp3": {
+    "transcript": "Sahanati imefungwa siku ya Jumapili.\n",
+    "latency_seconds": 3.3571704349960783
+  },
+  "kelvin_sample_24.mp3": {
+    "transcript": "Hiyo clinic imefungwa Sunday.\n",
+    "latency_seconds": 3.9205968430032954
+  },
+  "kelvin_sample_25.mp3": {
+    "transcript": "Where is the nearest hospital?\n",
+    "latency_seconds": 6.694222213998728
+  },
+  "kelvin_sample_26.mp3": {
+    "transcript": "Hospitali ya karibu iko wapi?\n",
+    "latency_seconds": 4.172485581002547
+  },
+  "kelvin_sample_27.mp3": {
+    "transcript": "Hospital nearest iko wapi?\n",
+    "latency_seconds": 20.792280489004042
+  },
+  "kelvin_sample_28.mp3": {
+    "transcript": "Can I book an appointment?\n",
+    "latency_seconds": 3.107450562994927
+  },
+  "kelvin_sample_29.mp3": {
+    "transcript": "Naweza kuweka miadi.\n",
+    "latency_seconds": 41.45642212600069
+  },
+  "kelvin_sample_30.mp3": {
+    "transcript": "Naweza kubuka appendicid.\n",
+    "latency_seconds": 11.07545348200074
+  },
+  "sample_sw_en_Persisent_cough.m4a": {
+    "transcript": "Nimekuwa nikikohoa for about 3 weeks. Usiku natokwa na jasho sana na nguo zimeanza kunilegea even though sijajaribu kupunguza weight. Wakati mwingine natoa makohozi, lakini sijaona damu. Sijatumia antibiotics.\n",
+    "summary": "The patient reports a persistent cough for about 3 weeks, night sweats, and unintentional weight loss. Occasionally produces sputum but has not noticed blood. No antibiotics have been used so far.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Persistent cough (3 weeks), night sweats, unintentional weight loss, occasional sputum production, no hemoptysis\n2. Relevant Medical/Surgical History: None discussed\n3. Examinations and Examination findings: None provided\n4. Medical Diagnosis: Suspected pulmonary tuberculosis (TB), chronic respiratory infection\n5. Drugs or Medicines: None used, no antibiotics\n6. Laboratory tests or laboratory Observations: None performed yet\n7. Imaging requests or results: None performed yet\n8. Doctor's Treatment Plan: Recommend sputum analysis for TB, chest X-ray, possible referral to TB clinic, no antibiotics at this stage",
+    "differential_diagnosis": "- Pulmonary tuberculosis\n- Chronic bronchitis\n- Lung cancer\n- Fungal lung infection\n- HIV-related respiratory illness\n- Post-infectious cough\n- Other causes of chronic cough (e.g., asthma, GERD)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 18,
+    "raw": {
+      "audio_file_name": "sample_sw_en_Persisent_cough_wav",
+      "audio_transcript": "Nimekuwa nikikohoa for about 3 weeks. Usiku natokwa na jasho sana na nguo zimeanza kunilegea even though sijajaribu kupunguza weight. Wakati mwingine natoa makohozi, lakini sijaona damu. Sijatumia antibiotics.\n",
+      "file_id": "f1bd138a-dc22-426b-b6ad-7c94fadc9838",
+      "processed_audio_duration_in_seconds": 18,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Pulmonary tuberculosis\n- Chronic bronchitis\n- Lung cancer\n- Fungal lung infection\n- HIV-related respiratory illness\n- Post-infectious cough\n- Other causes of chronic cough (e.g., asthma, GERD)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Persistent cough (3 weeks), night sweats, unintentional weight loss, occasional sputum production, no hemoptysis\n2. Relevant Medical/Surgical History: None discussed\n3. Examinations and Examination findings: None provided\n4. Medical Diagnosis: Suspected pulmonary tuberculosis (TB), chronic respiratory infection\n5. Drugs or Medicines: None used, no antibiotics\n6. Laboratory tests or laboratory Observations: None performed yet\n7. Imaging requests or results: None performed yet\n8. Doctor's Treatment Plan: Recommend sputum analysis for TB, chest X-ray, possible referral to TB clinic, no antibiotics at this stage",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a persistent cough for about 3 weeks, night sweats, and unintentional weight loss. Occasionally produces sputum but has not noticed blood. No antibiotics have been used so far."
+    }
+  },
+  "sample_sw_en_Symptoms_after_taking_meds.m4a": {
+    "transcript": "Nimekunywa dawa mpya about 15 minutes ago, sasa mwili unawasha na midomo imeanza kuvimba. Nahisi pia koo kama inafunga, na breathing imekuwa ngumu. Dawa yenyewe nimekuja nayo, lakini sijui jina.\n",
+    "summary": "The patient took a new medication 15 minutes ago and is now experiencing body itching, swelling of the lips, throat tightness, and difficulty breathing. The patient brought the medication but does not know its name.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Generalized itching, swelling of lips, throat tightness, difficulty breathing after taking a new medication.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None documented.\n4. Medical Diagnosis: Suspected anaphylaxis (acute allergic reaction) to new medication.\n5. Drugs or Medicines: New, unidentified medication (patient brought it but does not know the name).\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Immediate emergency management for anaphylaxis, including epinephrine administration and urgent transfer to hospital.",
+    "differential_diagnosis": "- Angioedema (non-allergic)\n- Acute asthma exacerbation\n- Panic attack (less likely given swelling and itching)\n- Hereditary angioedema (if recurrent, but no history provided)\n- Other causes of airway obstruction (unlikely given temporal relation to medication)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 17,
+    "raw": {
+      "audio_file_name": "sample_sw_en_Symptoms_after_taking_meds_wav",
+      "audio_transcript": "Nimekunywa dawa mpya about 15 minutes ago, sasa mwili unawasha na midomo imeanza kuvimba. Nahisi pia koo kama inafunga, na breathing imekuwa ngumu. Dawa yenyewe nimekuja nayo, lakini sijui jina.\n",
+      "file_id": "bdf63355-2f0c-4c60-83bc-2431063fabf4",
+      "processed_audio_duration_in_seconds": 17,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Angioedema (non-allergic)\n- Acute asthma exacerbation\n- Panic attack (less likely given swelling and itching)\n- Hereditary angioedema (if recurrent, but no history provided)\n- Other causes of airway obstruction (unlikely given temporal relation to medication)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Generalized itching, swelling of lips, throat tightness, difficulty breathing after taking a new medication.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None documented.\n4. Medical Diagnosis: Suspected anaphylaxis (acute allergic reaction) to new medication.\n5. Drugs or Medicines: New, unidentified medication (patient brought it but does not know the name).\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Immediate emergency management for anaphylaxis, including epinephrine administration and urgent transfer to hospital.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient took a new medication 15 minutes ago and is now experiencing body itching, swelling of the lips, throat tightness, and difficulty breathing. The patient brought the medication but does not know its name."
+    }
+  },
+  "sample_sw_en_adbominal_pain.m4a": {
+    "transcript": "Tumbo imekuwa ikiniuma for 3 days. Ah, sorry. Ni tangu juzi jioni. Mwanzo ilikuwa hapo katikati, lakini sasa inaniuma zaidi chini upande wa kulia. I feel nouces, lakini sijatapika. Nikitembea au nikikohoa, maumivu yanaongezeka.\n",
+    "summary": "The patient reports right lower abdominal pain for 3 days, initially central but now localized to the right lower quadrant. The pain worsens with movement and coughing. The patient feels nauseous but has not vomited.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Abdominal pain (initially central, now right lower quadrant)\n   - Nausea\n   - Pain worsens with movement and coughing\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None performed or discussed\n4. Medical Diagnosis:\n   - Suspected acute appendicitis\n5. Drugs or Medicines:\n   - None discussed\n6. Laboratory tests or laboratory Observations:\n   - None discussed\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Urgent evaluation for appendicitis, recommend immediate medical attention",
+    "differential_diagnosis": "- Ovarian torsion (if female)\n- Ectopic pregnancy (if female)\n- Gastroenteritis\n- Urinary tract infection\n- Mesenteric adenitis\n- Renal colic",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 20,
+    "raw": {
+      "audio_file_name": "sample_sw_en_adbominal_pain_wav",
+      "audio_transcript": "Tumbo imekuwa ikiniuma for 3 days. Ah, sorry. Ni tangu juzi jioni. Mwanzo ilikuwa hapo katikati, lakini sasa inaniuma zaidi chini upande wa kulia. I feel nouces, lakini sijatapika. Nikitembea au nikikohoa, maumivu yanaongezeka.\n",
+      "file_id": "74129d1b-7541-4ef6-a69b-cd74569d02dc",
+      "processed_audio_duration_in_seconds": 20,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Ovarian torsion (if female)\n- Ectopic pregnancy (if female)\n- Gastroenteritis\n- Urinary tract infection\n- Mesenteric adenitis\n- Renal colic",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Abdominal pain (initially central, now right lower quadrant)\n   - Nausea\n   - Pain worsens with movement and coughing\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None performed or discussed\n4. Medical Diagnosis:\n   - Suspected acute appendicitis\n5. Drugs or Medicines:\n   - None discussed\n6. Laboratory tests or laboratory Observations:\n   - None discussed\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Urgent evaluation for appendicitis, recommend immediate medical attention",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports right lower abdominal pain for 3 days, initially central but now localized to the right lower quadrant. The pain worsens with movement and coughing. The patient feels nauseous but has not vomited."
+    }
+  },
+  "sample_sw_en_backpain_explicit_negatives.m4a": {
+    "transcript": "Mgongo wa chini ulianza kuuma jana after kubeba sanduku nzito. Maumivu yako hapo tu, hayaendi kwa miguu. Sina ganzi wala shida ya kukojoa, nikikaa bila kusonga napata nafuu but kuinama inauma.\n",
+    "summary": "The patient developed lower back pain yesterday after lifting a heavy box. The pain is localized to the lower back, does not radiate to the legs, and is not associated with numbness or urinary problems. Pain improves with rest and worsens with bending.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Lower back pain after lifting a heavy box\n2. Relevant Medical/Surgical History: None mentioned\n3. Examinations and Examination findings: No neurological deficits reported; no urinary symptoms\n4. Medical Diagnosis: Acute mechanical lower back pain (muscle strain)\n5. Drugs or Medicines: Analgesics (suggested, not specified)\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Rest, avoid heavy lifting, analgesics, gentle stretching, monitor for new symptoms",
+    "differential_diagnosis": "- Lumbar disc herniation (less likely, as no radiation or neurological symptoms)\n- Lumbar sprain\n- Vertebral fracture (unlikely without trauma or severe pain)\n- Renal colic (no urinary symptoms)\n- Infection (no fever or systemic symptoms)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 16,
+    "raw": {
+      "audio_file_name": "sample_sw_en_backpain_explicit_negatives_wav",
+      "audio_transcript": "Mgongo wa chini ulianza kuuma jana after kubeba sanduku nzito. Maumivu yako hapo tu, hayaendi kwa miguu. Sina ganzi wala shida ya kukojoa, nikikaa bila kusonga napata nafuu but kuinama inauma.\n",
+      "file_id": "31d8a7c4-7374-4be7-8df1-29fc10991f8c",
+      "processed_audio_duration_in_seconds": 16,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Lumbar disc herniation (less likely, as no radiation or neurological symptoms)\n- Lumbar sprain\n- Vertebral fracture (unlikely without trauma or severe pain)\n- Renal colic (no urinary symptoms)\n- Infection (no fever or systemic symptoms)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Lower back pain after lifting a heavy box\n2. Relevant Medical/Surgical History: None mentioned\n3. Examinations and Examination findings: No neurological deficits reported; no urinary symptoms\n4. Medical Diagnosis: Acute mechanical lower back pain (muscle strain)\n5. Drugs or Medicines: Analgesics (suggested, not specified)\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Rest, avoid heavy lifting, analgesics, gentle stretching, monitor for new symptoms",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient developed lower back pain yesterday after lifting a heavy box. The pain is localized to the lower back, does not radiate to the legs, and is not associated with numbness or urinary problems. Pain improves with rest and worsens with bending."
+    }
+  },
+  "sample_sw_en_chest_discomfort.m4a": {
+    "transcript": "Ninahisi kifua kinabana kama kuna kitu kizito hapa katikati. Ilianza about 30 minutes ago nikiwa nimekaa. Sasa maumivu yanaendelea kwa mkono wa kushoto natokwa na jasho. Hii haijawai kunitokea before.\n",
+    "summary": "The patient reports sudden onset of chest tightness and heaviness, radiating to the left arm, accompanied by sweating. Symptoms started 30 minutes ago while sitting and have never occurred before.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Chest tightness, heaviness in the chest, pain radiating to the left arm, sweating.\n2. Relevant Medical/Surgical History: No previous similar episodes reported.\n3. Examinations and Examination findings: None provided in the conversation.\n4. Medical Diagnosis: Suspected acute coronary syndrome (ACS) or myocardial infarction.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None performed yet; cardiac enzymes recommended.\n7. Imaging requests or results: None performed yet; ECG recommended.\n8. Doctor's Treatment Plan: Immediate referral to emergency department, urgent investigations (ECG, cardiac enzymes), continuous monitoring.",
+    "differential_diagnosis": "- Acute coronary syndrome (unstable angina, NSTEMI, STEMI)\n- Pulmonary embolism\n- Aortic dissection\n- Pericarditis\n- Gastroesophageal reflux disease (GERD)\n- Musculoskeletal chest pain",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 19,
+    "raw": {
+      "audio_file_name": "sample_sw_en_chest_discomfort_wav",
+      "audio_transcript": "Ninahisi kifua kinabana kama kuna kitu kizito hapa katikati. Ilianza about 30 minutes ago nikiwa nimekaa. Sasa maumivu yanaendelea kwa mkono wa kushoto natokwa na jasho. Hii haijawai kunitokea before.\n",
+      "file_id": "9a43e160-1494-4c6b-ba39-e66b6b466eb5",
+      "processed_audio_duration_in_seconds": 19,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Acute coronary syndrome (unstable angina, NSTEMI, STEMI)\n- Pulmonary embolism\n- Aortic dissection\n- Pericarditis\n- Gastroesophageal reflux disease (GERD)\n- Musculoskeletal chest pain",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Chest tightness, heaviness in the chest, pain radiating to the left arm, sweating.\n2. Relevant Medical/Surgical History: No previous similar episodes reported.\n3. Examinations and Examination findings: None provided in the conversation.\n4. Medical Diagnosis: Suspected acute coronary syndrome (ACS) or myocardial infarction.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None performed yet; cardiac enzymes recommended.\n7. Imaging requests or results: None performed yet; ECG recommended.\n8. Doctor's Treatment Plan: Immediate referral to emergency department, urgent investigations (ECG, cardiac enzymes), continuous monitoring.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports sudden onset of chest tightness and heaviness, radiating to the left arm, accompanied by sweating. Symptoms started 30 minutes ago while sitting and have never occurred before."
+    }
+  },
+  "sample_sw_en_child_described.m4a": {
+    "transcript": "Mtoto wangu ana miaka 2, amekuwa na fever tangu jana na leo hataki kula wala kunywa vizuri. Usually anacheza sana lakini leo amelala tu karibu siku nzima. Nimempa dawa ya homa, lakini sikumbuki jina nimeleta chupa.\n",
+    "summary": "A 2-year-old child has had a fever since yesterday, is refusing to eat or drink, and is unusually lethargic today. The parent has given some fever medication but cannot recall the name. The child is typically active but has been sleeping most of the day.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Fever, refusal to eat or drink, lethargy\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None provided\n4. Medical Diagnosis: Fever of unknown origin, possible dehydration, possible infection\n5. Drugs or Medicines: Fever medication (antipyretic, name not specified)\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Urgent medical evaluation, monitor for dehydration, bring medication bottle, encourage fluids",
+    "differential_diagnosis": "- Viral infection (e.g., influenza, RSV)\n- Bacterial infection (e.g., urinary tract infection, pneumonia, sepsis)\n- Gastroenteritis\n- Meningitis (due to lethargy)\n- Other causes of fever (malaria, if endemic)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 20,
+    "raw": {
+      "audio_file_name": "sample_sw_en_child_described_wav",
+      "audio_transcript": "Mtoto wangu ana miaka 2, amekuwa na fever tangu jana na leo hataki kula wala kunywa vizuri. Usually anacheza sana lakini leo amelala tu karibu siku nzima. Nimempa dawa ya homa, lakini sikumbuki jina nimeleta chupa.\n",
+      "file_id": "d43d9a09-e082-4e3a-a988-36e1687317e1",
+      "processed_audio_duration_in_seconds": 20,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Viral infection (e.g., influenza, RSV)\n- Bacterial infection (e.g., urinary tract infection, pneumonia, sepsis)\n- Gastroenteritis\n- Meningitis (due to lethargy)\n- Other causes of fever (malaria, if endemic)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Fever, refusal to eat or drink, lethargy\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None provided\n4. Medical Diagnosis: Fever of unknown origin, possible dehydration, possible infection\n5. Drugs or Medicines: Fever medication (antipyretic, name not specified)\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Urgent medical evaluation, monitor for dehydration, bring medication bottle, encourage fluids",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "A 2-year-old child has had a fever since yesterday, is refusing to eat or drink, and is unusually lethargic today. The parent has given some fever medication but cannot recall the name. The child is typically active but has been sleeping most of the day."
+    }
+  },
+  "sample_sw_en_dental_pain_swelling.m4a": {
+    "transcript": "Jino la nyuma limekuwa likiniuma for 4 days na leo shavu limevimba. Nikitafuna inauma sana. I can swallow, lakini kufunga mdomo vizuri ni shida. Nimekunywa painkillers, sijatumia dawa nyingine.\n",
+    "summary": "The patient reports a 4-day history of pain in a back tooth, with swelling of the cheek today. Chewing is very painful, and closing the mouth fully is difficult. The patient has taken painkillers but no other medications. Swallowing is not affected.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Pain in back tooth for 4 days\n   - Cheek swelling\n   - Severe pain when chewing\n   - Difficulty closing mouth fully\n2. Relevant Medical/Surgical History:\n   - None mentioned\n3. Examinations and Examination findings:\n   - Cheek swelling (self-reported)\n4. Medical Diagnosis:\n   - Suspected dental abscess or severe dental infection\n5. Drugs or Medicines:\n   - Painkillers (unspecified)\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None mentioned\n8. Doctor's Treatment Plan:\n   - Urgent dental evaluation\n   - Consider antibiotics\n   - Continue pain management\n   - Warm saline mouth rinses\n   - Monitor for worsening symptoms",
+    "differential_diagnosis": "- Pericoronitis (especially if wisdom tooth involved)\n- Cellulitis of the face\n- Osteomyelitis of the jaw\n- Temporomandibular joint disorder (less likely)\n- Sinusitis (if upper molar involved)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 16,
+    "raw": {
+      "audio_file_name": "sample_sw_en_dental_pain_swelling_wav",
+      "audio_transcript": "Jino la nyuma limekuwa likiniuma for 4 days na leo shavu limevimba. Nikitafuna inauma sana. I can swallow, lakini kufunga mdomo vizuri ni shida. Nimekunywa painkillers, sijatumia dawa nyingine.\n",
+      "file_id": "388d4d9f-8424-49a6-bb44-377a400e198e",
+      "processed_audio_duration_in_seconds": 16,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Pericoronitis (especially if wisdom tooth involved)\n- Cellulitis of the face\n- Osteomyelitis of the jaw\n- Temporomandibular joint disorder (less likely)\n- Sinusitis (if upper molar involved)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Pain in back tooth for 4 days\n   - Cheek swelling\n   - Severe pain when chewing\n   - Difficulty closing mouth fully\n2. Relevant Medical/Surgical History:\n   - None mentioned\n3. Examinations and Examination findings:\n   - Cheek swelling (self-reported)\n4. Medical Diagnosis:\n   - Suspected dental abscess or severe dental infection\n5. Drugs or Medicines:\n   - Painkillers (unspecified)\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None mentioned\n8. Doctor's Treatment Plan:\n   - Urgent dental evaluation\n   - Consider antibiotics\n   - Continue pain management\n   - Warm saline mouth rinses\n   - Monitor for worsening symptoms",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a 4-day history of pain in a back tooth, with swelling of the cheek today. Chewing is very painful, and closing the mouth fully is difficult. The patient has taken painkillers but no other medications. Swallowing is not affected."
+    }
+  },
+  "sample_sw_en_diabetes_missed_food.m4a": {
+    "transcript": "Nina diabetes na leo nimejidunga insulin kama kawaida, lakini sikupata breakfast. sasa natetemeka, natokwa na jasho, na nahisi kizunguzungu. Sina kifaa changu cha kupima sugar hapa, so sijui iko ngapi.\n",
+    "summary": "A patient with diabetes injected insulin as usual but skipped breakfast and is now experiencing tremors, sweating, and dizziness. The patient does not have their glucometer to check blood sugar levels.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Tremors, sweating, dizziness.\n2. Relevant Medical/Surgical History: Diabetes mellitus, on insulin therapy.\n3. Examinations and Examination findings: None performed; symptoms reported.\n4. Medical Diagnosis: Suspected hypoglycemia.\n5. Drugs or Medicines: Insulin.\n6. Laboratory tests or laboratory Observations: None performed; glucometer not available.\n7. Imaging requests or results: None.\n8. Doctor's Treatment Plan: Immediate intake of fast-acting carbohydrates, monitor symptoms, seek help if not improving, review insulin and meal timing.",
+    "differential_diagnosis": "- Hypoglycemia (most likely)\n- Anxiety/panic attack\n- Orthostatic hypotension\n- Cardiac arrhythmia (less likely given context)\n- Other metabolic disturbances",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 19,
+    "raw": {
+      "audio_file_name": "sample_sw_en_diabetes_missed_food_wav",
+      "audio_transcript": "Nina diabetes na leo nimejidunga insulin kama kawaida, lakini sikupata breakfast. sasa natetemeka, natokwa na jasho, na nahisi kizunguzungu. Sina kifaa changu cha kupima sugar hapa, so sijui iko ngapi.\n",
+      "file_id": "8e2d7f9b-ad1f-4eb8-90c9-6437d766e275",
+      "processed_audio_duration_in_seconds": 19,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Hypoglycemia (most likely)\n- Anxiety/panic attack\n- Orthostatic hypotension\n- Cardiac arrhythmia (less likely given context)\n- Other metabolic disturbances",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Tremors, sweating, dizziness.\n2. Relevant Medical/Surgical History: Diabetes mellitus, on insulin therapy.\n3. Examinations and Examination findings: None performed; symptoms reported.\n4. Medical Diagnosis: Suspected hypoglycemia.\n5. Drugs or Medicines: Insulin.\n6. Laboratory tests or laboratory Observations: None performed; glucometer not available.\n7. Imaging requests or results: None.\n8. Doctor's Treatment Plan: Immediate intake of fast-acting carbohydrates, monitor symptoms, seek help if not improving, review insulin and meal timing.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "A patient with diabetes injected insulin as usual but skipped breakfast and is now experiencing tremors, sweating, and dizziness. The patient does not have their glucometer to check blood sugar levels."
+    }
+  },
+  "sample_sw_en_diarrhoea_vomiting.m4a": {
+    "transcript": "Tangu usiku nimeharisha kama mara 6 na nimetapika twice nikikunywa maji sometimes nayatapika tena. Mdomo umekauka na nasikia kizunguzungu nikisimama mara ya mwisho kukojoa ilikuwa asubuhi na ilikua kidogo.\n",
+    "summary": "The patient reports acute onset of diarrhea (6 times since last night), vomiting (twice), dry mouth, dizziness upon standing, and decreased urine output since morning. The patient is unable to tolerate oral fluids and is showing signs of dehydration.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Diarrhea (6 times since last night), vomiting (twice), dry mouth, dizziness on standing, decreased urine output since morning.\n2. Relevant Medical/Surgical History: Not discussed in the conversation.\n3. Examinations and Examination findings: No formal examination, but signs of dehydration (dry mouth, dizziness, oliguria).\n4. Medical Diagnosis: Acute gastroenteritis with dehydration.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None performed yet, but suggested.\n7. Imaging requests or results: None mentioned.\n8. Doctor's Treatment Plan: Urgent medical evaluation, likely need for IV fluids, monitor for worsening symptoms, possible laboratory investigations.",
+    "differential_diagnosis": "- Food poisoning\n- Infectious gastroenteritis (bacterial, viral, or parasitic)\n- Acute appendicitis (if abdominal pain develops)\n- Urinary tract infection (if new symptoms arise)\n- Diabetic ketoacidosis (if history of diabetes)\n- Medication-induced diarrhea/vomiting (if on medications)\n- Other causes of acute dehydration (e.g., heat stroke)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 22,
+    "raw": {
+      "audio_file_name": "sample_sw_en_diarrhoea_vomiting_wav",
+      "audio_transcript": "Tangu usiku nimeharisha kama mara 6 na nimetapika twice nikikunywa maji sometimes nayatapika tena. Mdomo umekauka na nasikia kizunguzungu nikisimama mara ya mwisho kukojoa ilikuwa asubuhi na ilikua kidogo.\n",
+      "file_id": "8a35d3de-afd3-4bff-859e-f98a74f33c7e",
+      "processed_audio_duration_in_seconds": 22,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Food poisoning\n- Infectious gastroenteritis (bacterial, viral, or parasitic)\n- Acute appendicitis (if abdominal pain develops)\n- Urinary tract infection (if new symptoms arise)\n- Diabetic ketoacidosis (if history of diabetes)\n- Medication-induced diarrhea/vomiting (if on medications)\n- Other causes of acute dehydration (e.g., heat stroke)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Diarrhea (6 times since last night), vomiting (twice), dry mouth, dizziness on standing, decreased urine output since morning.\n2. Relevant Medical/Surgical History: Not discussed in the conversation.\n3. Examinations and Examination findings: No formal examination, but signs of dehydration (dry mouth, dizziness, oliguria).\n4. Medical Diagnosis: Acute gastroenteritis with dehydration.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None performed yet, but suggested.\n7. Imaging requests or results: None mentioned.\n8. Doctor's Treatment Plan: Urgent medical evaluation, likely need for IV fluids, monitor for worsening symptoms, possible laboratory investigations.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports acute onset of diarrhea (6 times since last night), vomiting (twice), dry mouth, dizziness upon standing, and decreased urine output since morning. The patient is unable to tolerate oral fluids and is showing signs of dehydration."
+    }
+  },
+  "sample_sw_en_difficulty_breathing.m4a": {
+    "transcript": "Nina asthma, na leo tangu asubuhi kupumua imekuwa shida. Nimetumia inhaler yangu mara 2, but bado kifua kinabana. Nikitembea hata hatua chache I have to stop nipumue. Hata kuongea sentensi ndefu inanichosha.\n",
+    "summary": "The patient with a known history of asthma reports worsening shortness of breath, chest tightness, and difficulty speaking in full sentences despite using their inhaler twice today. Symptoms are severe enough to limit walking and conversation.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Difficulty breathing (dyspnea)\n   - Chest tightness\n   - Shortness of breath on minimal exertion\n   - Difficulty speaking in full sentences\n2. Relevant Medical/Surgical History:\n   - Asthma\n3. Examinations and Examination findings:\n   - None provided in the conversation\n4. Medical Diagnosis:\n   - Acute severe asthma exacerbation\n5. Drugs or Medicines:\n   - Inhaler (type not specified)\n6. Laboratory tests or laboratory Observations:\n   - None discussed\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Immediate escalation to emergency care\n   - Supplemental oxygen, nebulized bronchodilators, systemic corticosteroids (as per protocol)",
+    "differential_diagnosis": "- Pulmonary embolism\n- Acute heart failure\n- Pneumonia\n- Anaphylaxis\n- Upper airway obstruction (e.g., foreign body, vocal cord dysfunction)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 17,
+    "raw": {
+      "audio_file_name": "sample_sw_en_difficulty_breathing_wav",
+      "audio_transcript": "Nina asthma, na leo tangu asubuhi kupumua imekuwa shida. Nimetumia inhaler yangu mara 2, but bado kifua kinabana. Nikitembea hata hatua chache I have to stop nipumue. Hata kuongea sentensi ndefu inanichosha.\n",
+      "file_id": "ac1362af-51a5-4115-8d9a-ae36c2090dbd",
+      "processed_audio_duration_in_seconds": 17,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Pulmonary embolism\n- Acute heart failure\n- Pneumonia\n- Anaphylaxis\n- Upper airway obstruction (e.g., foreign body, vocal cord dysfunction)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Difficulty breathing (dyspnea)\n   - Chest tightness\n   - Shortness of breath on minimal exertion\n   - Difficulty speaking in full sentences\n2. Relevant Medical/Surgical History:\n   - Asthma\n3. Examinations and Examination findings:\n   - None provided in the conversation\n4. Medical Diagnosis:\n   - Acute severe asthma exacerbation\n5. Drugs or Medicines:\n   - Inhaler (type not specified)\n6. Laboratory tests or laboratory Observations:\n   - None discussed\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Immediate escalation to emergency care\n   - Supplemental oxygen, nebulized bronchodilators, systemic corticosteroids (as per protocol)",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient with a known history of asthma reports worsening shortness of breath, chest tightness, and difficulty speaking in full sentences despite using their inhaler twice today. Symptoms are severe enough to limit walking and conversation."
+    }
+  },
+  "sample_sw_en_emotinal distress.m4a": {
+    "transcript": "For the past 2 weeks, sijakuwa nikila vizuri na najihisi overwhelmed kila siku. Leo nimekunywa na mawazo ya kujiumiza na siamini naweza kukaa peke yangu safely. Sijafanya chochote kujiumiza wala kunywa dawa yoyote. Nimekuja na rafiki yangu nipate msaada.\n",
+    "summary": "The patient reports poor appetite and feeling overwhelmed for the past two weeks. Today, they have had thoughts of self-harm but have not acted on them or taken any medication. The patient does not feel safe being alone and has come with a friend to seek help.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Poor appetite, feeling overwhelmed daily, thoughts of self-harm, not feeling safe alone\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Acute psychological distress with suicidal ideation\n5. Drugs or Medicines: None reported\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Immediate mental health assessment, safety measures, possible psychiatric referral/admission, supportive counseling, safety plan",
+    "differential_diagnosis": "- Major depressive disorder\n- Adjustment disorder with depressed mood\n- Acute stress reaction\n- Generalized anxiety disorder\n- Substance-induced mood disorder (if substance use is later disclosed)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 22,
+    "raw": {
+      "audio_file_name": "sample_sw_en_emotinal distress_wav",
+      "audio_transcript": "For the past 2 weeks, sijakuwa nikila vizuri na najihisi overwhelmed kila siku. Leo nimekunywa na mawazo ya kujiumiza na siamini naweza kukaa peke yangu safely. Sijafanya chochote kujiumiza wala kunywa dawa yoyote. Nimekuja na rafiki yangu nipate msaada.\n",
+      "file_id": "033dfb11-a5af-4694-baee-993d4c133d13",
+      "processed_audio_duration_in_seconds": 22,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Major depressive disorder\n- Adjustment disorder with depressed mood\n- Acute stress reaction\n- Generalized anxiety disorder\n- Substance-induced mood disorder (if substance use is later disclosed)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Poor appetite, feeling overwhelmed daily, thoughts of self-harm, not feeling safe alone\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Acute psychological distress with suicidal ideation\n5. Drugs or Medicines: None reported\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Immediate mental health assessment, safety measures, possible psychiatric referral/admission, supportive counseling, safety plan",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports poor appetite and feeling overwhelmed for the past two weeks. Today, they have had thoughts of self-harm but have not acted on them or taken any medication. The patient does not feel safe being alone and has come with a friend to seek help."
+    }
+  },
+  "sample_sw_en_eye_exposure.m4a": {
+    "transcript": "Nilikuwa nafanya cleaning, maji ya kusafisha choo yakanirukia kwa jicho la kushoto. Nimeliosha na maji bado linaungua naona ukungu. Lilitokea kwa dakika 10 zilizopita. Sijui jina la hiyo chemical.\n",
+    "summary": "Patient reports accidental exposure of the left eye to an unknown toilet cleaning chemical about 10 minutes ago. The eye was rinsed with water but continues to burn and vision is blurry. The patient does not know the name of the chemical.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Chemical splash into left eye\n   - Burning sensation\n   - Blurred vision (foggy)\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None provided\n4. Medical Diagnosis:\n   - Chemical conjunctivitis/chemical eye injury (left eye)\n5. Drugs or Medicines:\n   - None mentioned\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None mentioned\n8. Doctor's Treatment Plan:\n   - Immediate irrigation with water\n   - Seek urgent medical attention\n   - Bring chemical container or photo if possible",
+    "differential_diagnosis": "- Chemical conjunctivitis\n- Corneal abrasion\n- Alkali or acid burn of the eye\n- Infective conjunctivitis (less likely given the acute chemical exposure)\n- Foreign body in the eye",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 20,
+    "raw": {
+      "audio_file_name": "sample_sw_en_eye_exposure_wav",
+      "audio_transcript": "Nilikuwa nafanya cleaning, maji ya kusafisha choo yakanirukia kwa jicho la kushoto. Nimeliosha na maji bado linaungua naona ukungu. Lilitokea kwa dakika 10 zilizopita. Sijui jina la hiyo chemical.\n",
+      "file_id": "87de8506-fdd6-4de6-9a64-aea4c6f3adbb",
+      "processed_audio_duration_in_seconds": 20,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Chemical conjunctivitis\n- Corneal abrasion\n- Alkali or acid burn of the eye\n- Infective conjunctivitis (less likely given the acute chemical exposure)\n- Foreign body in the eye",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Chemical splash into left eye\n   - Burning sensation\n   - Blurred vision (foggy)\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None provided\n4. Medical Diagnosis:\n   - Chemical conjunctivitis/chemical eye injury (left eye)\n5. Drugs or Medicines:\n   - None mentioned\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None mentioned\n8. Doctor's Treatment Plan:\n   - Immediate irrigation with water\n   - Seek urgent medical attention\n   - Bring chemical container or photo if possible",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "Patient reports accidental exposure of the left eye to an unknown toilet cleaning chemical about 10 minutes ago. The eye was rinsed with water but continues to burn and vision is blurry. The patient does not know the name of the chemical."
+    }
+  },
+  "sample_sw_en_fever_and_headache.m4a": {
+    "transcript": "Nimekuwa na homa tangu jana usiku na kichwa kinauma sana I feel weak. Hata kwenda kazi leo sikuweza, nimekunywa paracetamol, lakini bado sijapata nafuu. Sijakohoa na sina maumivu ya.\n",
+    "summary": "The patient reports onset of fever and severe headache since last night, accompanied by generalized weakness. Paracetamol has not provided relief. No cough or other pain is present. The patient was unable to go to work due to symptoms.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Fever, severe headache, generalized weakness, inability to work\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Acute febrile illness (etiology undetermined)\n5. Drugs or Medicines: Paracetamol (self-administered)\n6. Laboratory tests or laboratory Observations: None performed yet\n7. Imaging requests or results: None\n8. Doctor's Treatment Plan: Further evaluation, consider laboratory investigations, symptomatic management, rest, hydration, follow up if symptoms worsen",
+    "differential_diagnosis": "- Malaria\n- Viral infection (e.g., influenza)\n- Dengue fever\n- Meningitis (if new symptoms develop)\n- Typhoid fever\n- Early bacterial infection",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 16,
+    "raw": {
+      "audio_file_name": "sample_sw_en_fever_and_headache_wav",
+      "audio_transcript": "Nimekuwa na homa tangu jana usiku na kichwa kinauma sana I feel weak. Hata kwenda kazi leo sikuweza, nimekunywa paracetamol, lakini bado sijapata nafuu. Sijakohoa na sina maumivu ya.\n",
+      "file_id": "c815cd5f-4029-4475-b3a2-fe0181b47419",
+      "processed_audio_duration_in_seconds": 16,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Malaria\n- Viral infection (e.g., influenza)\n- Dengue fever\n- Meningitis (if new symptoms develop)\n- Typhoid fever\n- Early bacterial infection",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Fever, severe headache, generalized weakness, inability to work\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Acute febrile illness (etiology undetermined)\n5. Drugs or Medicines: Paracetamol (self-administered)\n6. Laboratory tests or laboratory Observations: None performed yet\n7. Imaging requests or results: None\n8. Doctor's Treatment Plan: Further evaluation, consider laboratory investigations, symptomatic management, rest, hydration, follow up if symptoms worsen",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports onset of fever and severe headache since last night, accompanied by generalized weakness. Paracetamol has not provided relief. No cough or other pain is present. The patient was unable to go to work due to symptoms."
+    }
+  },
+  "sample_sw_en_head_injury_uncertainity.m4a": {
+    "transcript": "Nimeanguka kwa stires leo asubuhi na nagonga kichwa. Sikupoteza fahamu atleast sidhani, lakini nimetapika mara 2 since then kichwa kinauma na nahisi usingizi kuliko kawaida. Sijakunywa.\n",
+    "summary": "The patient reports falling due to stress this morning, hitting their head. They did not lose consciousness (at least as far as they know), but have vomited twice since the incident, have a headache, and feel more sleepy than usual. No alcohol was consumed.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Fall due to stress\n   - Head injury (hit head)\n   - Vomiting (twice)\n   - Headache\n   - Increased sleepiness\n2. Relevant Medical/Surgical History:\n   - No relevant past history mentioned\n3. Examinations and Examination findings:\n   - None discussed\n4. Medical Diagnosis:\n   - Head injury with concerning symptoms (vomiting, headache, drowsiness)\n5. Drugs or Medicines:\n   - None mentioned\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None performed yet, but neuroimaging (CT head) indicated\n8. Doctor's Treatment Plan:\n   - Urgent medical evaluation\n   - Observation and possible neuroimaging\n   - Monitor for worsening symptoms",
+    "differential_diagnosis": "- Concussion\n- Intracranial hemorrhage (e.g., subdural or epidural hematoma)\n- Post-concussive syndrome\n- Skull fracture\n- Simple scalp contusion",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 18,
+    "raw": {
+      "audio_file_name": "sample_sw_en_head_injury_uncertainity_wav",
+      "audio_transcript": "Nimeanguka kwa stires leo asubuhi na nagonga kichwa. Sikupoteza fahamu atleast sidhani, lakini nimetapika mara 2 since then kichwa kinauma na nahisi usingizi kuliko kawaida. Sijakunywa.\n",
+      "file_id": "a218966a-6438-4238-aca5-e3e860a1adaa",
+      "processed_audio_duration_in_seconds": 18,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Concussion\n- Intracranial hemorrhage (e.g., subdural or epidural hematoma)\n- Post-concussive syndrome\n- Skull fracture\n- Simple scalp contusion",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Fall due to stress\n   - Head injury (hit head)\n   - Vomiting (twice)\n   - Headache\n   - Increased sleepiness\n2. Relevant Medical/Surgical History:\n   - No relevant past history mentioned\n3. Examinations and Examination findings:\n   - None discussed\n4. Medical Diagnosis:\n   - Head injury with concerning symptoms (vomiting, headache, drowsiness)\n5. Drugs or Medicines:\n   - None mentioned\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None performed yet, but neuroimaging (CT head) indicated\n8. Doctor's Treatment Plan:\n   - Urgent medical evaluation\n   - Observation and possible neuroimaging\n   - Monitor for worsening symptoms",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports falling due to stress this morning, hitting their head. They did not lose consciousness (at least as far as they know), but have vomited twice since the incident, have a headache, and feel more sleepy than usual. No alcohol was consumed."
+    }
+  },
+  "sample_sw_en_injury_ongoning_bleeding.m4a": {
+    "transcript": "Nimejikata mkono na kisu nikitayarisha chakula about 20 minutes ago. Nimefunga na kitambaa but damu bado inapita. Kidole hiki nahisi kama kimekufa ganzi. Sijui last tetenous injection nilipata.\n",
+    "summary": "The patient sustained a knife cut to the finger while preparing food 20 minutes ago. Bleeding persists despite applying a cloth bandage, and the finger feels numb. The patient is unsure about their last tetanus injection.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Knife cut to finger, ongoing bleeding, numbness in finger.\n2. Relevant Medical/Surgical History: Uncertain tetanus immunization status.\n3. Examinations and Examination findings: None provided in transcript.\n4. Medical Diagnosis: Acute finger laceration with persistent bleeding and numbness.\n5. Drugs or Medicines: None mentioned yet; tetanus prophylaxis considered.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Advise wound care, direct pressure, urgent medical review, tetanus prophylaxis, possible antibiotics.",
+    "differential_diagnosis": "- Digital nerve injury\n- Tendon injury\n- Foreign body in wound\n- Infection (if wound is not managed appropriately)\n- Vascular injury to the finger",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 17,
+    "raw": {
+      "audio_file_name": "sample_sw_en_injury_ongoning_bleeding_wav",
+      "audio_transcript": "Nimejikata mkono na kisu nikitayarisha chakula about 20 minutes ago. Nimefunga na kitambaa but damu bado inapita. Kidole hiki nahisi kama kimekufa ganzi. Sijui last tetenous injection nilipata.\n",
+      "file_id": "368a073d-ab68-424a-9412-0340a038340c",
+      "processed_audio_duration_in_seconds": 17,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Digital nerve injury\n- Tendon injury\n- Foreign body in wound\n- Infection (if wound is not managed appropriately)\n- Vascular injury to the finger",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Knife cut to finger, ongoing bleeding, numbness in finger.\n2. Relevant Medical/Surgical History: Uncertain tetanus immunization status.\n3. Examinations and Examination findings: None provided in transcript.\n4. Medical Diagnosis: Acute finger laceration with persistent bleeding and numbness.\n5. Drugs or Medicines: None mentioned yet; tetanus prophylaxis considered.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Advise wound care, direct pressure, urgent medical review, tetanus prophylaxis, possible antibiotics.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient sustained a knife cut to the finger while preparing food 20 minutes ago. Bleeding persists despite applying a cloth bandage, and the finger feels numb. The patient is unsure about their last tetanus injection."
+    }
+  },
+  "sample_sw_en_medication-refill.m4a": {
+    "transcript": "Nimekuja fue refill ya dawa za pressure, ziliisha jana. Last dose nilikunywa jana asubuhi, sina headache, maumivu ya kifua, wala shida ya kupumua. Sikumbuki jina la dawa, lakini nimeleta.\n",
+    "summary": "The patient presented for a refill of antihypertensive medication, which ran out yesterday. The last dose was taken yesterday morning. The patient denies headache, chest pain, or shortness of breath. The patient does not recall the name of the medication but has brought the medication container for reference.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Request for antihypertensive medication refill; ran out of medication yesterday.\n2. Relevant Medical/Surgical History: Hypertension.\n3. Examinations and Examination findings: None discussed; patient denies headache, chest pain, or shortness of breath.\n4. Medical Diagnosis: Hypertension.\n5. Drugs or Medicines: Antihypertensive medication (specific name not mentioned, but patient brought the container).\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Review medication container, refill prescription, advise resumption of medication, monitor for symptoms, schedule follow-up.",
+    "differential_diagnosis": "- Secondary hypertension\n- Medication non-adherence\n- White coat hypertension (less likely, as patient is requesting refill)\n- Other causes of elevated blood pressure (e.g., renal disease)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 15,
+    "raw": {
+      "audio_file_name": "sample_sw_en_medication-refill_wav",
+      "audio_transcript": "Nimekuja fue refill ya dawa za pressure, ziliisha jana. Last dose nilikunywa jana asubuhi, sina headache, maumivu ya kifua, wala shida ya kupumua. Sikumbuki jina la dawa, lakini nimeleta.\n",
+      "file_id": "61cb0be1-5105-409e-af47-d1a4614a63d6",
+      "processed_audio_duration_in_seconds": 15,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Secondary hypertension\n- Medication non-adherence\n- White coat hypertension (less likely, as patient is requesting refill)\n- Other causes of elevated blood pressure (e.g., renal disease)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Request for antihypertensive medication refill; ran out of medication yesterday.\n2. Relevant Medical/Surgical History: Hypertension.\n3. Examinations and Examination findings: None discussed; patient denies headache, chest pain, or shortness of breath.\n4. Medical Diagnosis: Hypertension.\n5. Drugs or Medicines: Antihypertensive medication (specific name not mentioned, but patient brought the container).\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Review medication container, refill prescription, advise resumption of medication, monitor for symptoms, schedule follow-up.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient presented for a refill of antihypertensive medication, which ran out yesterday. The last dose was taken yesterday morning. The patient denies headache, chest pain, or shortness of breath. The patient does not recall the name of the medication but has brought the medication container for reference."
+    }
+  },
+  "sample_sw_en_mild_respiratory_symptoms.m4a": {
+    "transcript": "Nina mafua na koo inawasha tangu juzi. Nakohoa kidogo mostly usiku, lakini sina shida ya kupumua wala maumivu ya kifua. Nakula nakunywa kawaida. Nimekuja because koo bado inanisumbua.\n",
+    "summary": "The patient reports a sore throat and runny nose for two days, with mild nighttime cough. There is no chest pain, breathing difficulty, or issues with eating and drinking. The main concern is persistent throat discomfort.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Sore throat, runny nose, mild nighttime cough\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: Not discussed\n4. Medical Diagnosis: Likely viral upper respiratory tract infection (pharyngitis/rhinitis)\n5. Drugs or Medicines: Not discussed\n6. Laboratory tests or laboratory Observations: Not discussed\n7. Imaging requests or results: Not discussed\n8. Doctor's Treatment Plan: Symptomatic management, monitor for worsening symptoms, return if not improving",
+    "differential_diagnosis": "- Allergic rhinitis\n- Streptococcal pharyngitis\n- Early influenza\n- COVID-19\n- Post-nasal drip\n- Laryngitis",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 16,
+    "raw": {
+      "audio_file_name": "sample_sw_en_mild_respiratory_symptoms_wav",
+      "audio_transcript": "Nina mafua na koo inawasha tangu juzi. Nakohoa kidogo mostly usiku, lakini sina shida ya kupumua wala maumivu ya kifua. Nakula nakunywa kawaida. Nimekuja because koo bado inanisumbua.\n",
+      "file_id": "edccd8fe-f8dd-42fd-98ac-56b88b60dcb6",
+      "processed_audio_duration_in_seconds": 16,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Allergic rhinitis\n- Streptococcal pharyngitis\n- Early influenza\n- COVID-19\n- Post-nasal drip\n- Laryngitis",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Sore throat, runny nose, mild nighttime cough\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: Not discussed\n4. Medical Diagnosis: Likely viral upper respiratory tract infection (pharyngitis/rhinitis)\n5. Drugs or Medicines: Not discussed\n6. Laboratory tests or laboratory Observations: Not discussed\n7. Imaging requests or results: Not discussed\n8. Doctor's Treatment Plan: Symptomatic management, monitor for worsening symptoms, return if not improving",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a sore throat and runny nose for two days, with mild nighttime cough. There is no chest pain, breathing difficulty, or issues with eating and drinking. The main concern is persistent throat discomfort."
+    }
+  },
+  "sample_sw_en_pain_urinating.m4a": {
+    "transcript": "Nikikojoa kuna burning na naenda choo mara nyingi, lakini mkojo ni kidogo. This started 2 days ago. Pia nahisi maumivu chini ya tumbo, sina homa, na sijaona damu kwa mkojo.\n",
+    "summary": "The patient reports a 2-day history of burning sensation during urination, increased urinary frequency with small amounts of urine, and lower abdominal pain. There is no fever or visible blood in the urine.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Burning sensation during urination\n   - Frequent urination with small amounts\n   - Lower abdominal pain\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None provided\n4. Medical Diagnosis:\n   - Suspected urinary tract infection (UTI)\n5. Drugs or Medicines:\n   - None discussed yet\n6. Laboratory tests or laboratory Observations:\n   - Urinalysis recommended\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Urinalysis, possible antibiotics, increased fluids, monitor symptoms",
+    "differential_diagnosis": "- Urethritis\n- Vaginitis\n- Interstitial cystitis\n- Bladder stones\n- Early sexually transmitted infection (STI)\n- Pelvic inflammatory disease (less likely without fever or discharge)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 15,
+    "raw": {
+      "audio_file_name": "sample_sw_en_pain_urinating_wav",
+      "audio_transcript": "Nikikojoa kuna burning na naenda choo mara nyingi, lakini mkojo ni kidogo. This started 2 days ago. Pia nahisi maumivu chini ya tumbo, sina homa, na sijaona damu kwa mkojo.\n",
+      "file_id": "b66f3877-37e9-4d9c-884e-201d985ce038",
+      "processed_audio_duration_in_seconds": 15,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Urethritis\n- Vaginitis\n- Interstitial cystitis\n- Bladder stones\n- Early sexually transmitted infection (STI)\n- Pelvic inflammatory disease (less likely without fever or discharge)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Burning sensation during urination\n   - Frequent urination with small amounts\n   - Lower abdominal pain\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None provided\n4. Medical Diagnosis:\n   - Suspected urinary tract infection (UTI)\n5. Drugs or Medicines:\n   - None discussed yet\n6. Laboratory tests or laboratory Observations:\n   - Urinalysis recommended\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Urinalysis, possible antibiotics, increased fluids, monitor symptoms",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a 2-day history of burning sensation during urination, increased urinary frequency with small amounts of urine, and lower abdominal pain. There is no fever or visible blood in the urine."
+    }
+  },
+  "sample_sw_en_pregancy_bleeding.m4a": {
+    "transcript": "Nina mimba ya miezi 7. About an hour ago nimeanza kuona damu na tumbo linauma chini. Sijui kama ni leba. Pia leo sijahisi mtoto akicheza kama kawaida na hiyo ndio imenifanya nije.\n",
+    "summary": "A pregnant woman at 7 months gestation reports onset of vaginal bleeding and lower abdominal pain for the past hour, with decreased fetal movements today. She is concerned about possible labor.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Vaginal bleeding at 7 months pregnancy\n   - Lower abdominal pain\n   - Decreased fetal movements\n2. Relevant Medical/Surgical History:\n   - 7 months pregnant (no other history provided)\n3. Examinations and Examination findings:\n   - None provided in the conversation\n4. Medical Diagnosis:\n   - Antepartum hemorrhage (possible)\n   - Decreased fetal movements\n   - Possible preterm labor\n5. Drugs or Medicines:\n   - None mentioned\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None mentioned\n8. Doctor's Treatment Plan:\n   - Immediate referral for hospital evaluation, fetal monitoring, and ultrasound",
+    "differential_diagnosis": "- Placenta previa\n- Placental abruption\n- Threatened preterm labor\n- Cervical changes or infection\n- Vasa previa",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 17,
+    "raw": {
+      "audio_file_name": "sample_sw_en_pregancy_bleeding_wav",
+      "audio_transcript": "Nina mimba ya miezi 7. About an hour ago nimeanza kuona damu na tumbo linauma chini. Sijui kama ni leba. Pia leo sijahisi mtoto akicheza kama kawaida na hiyo ndio imenifanya nije.\n",
+      "file_id": "8dff25c3-1d30-47ee-89c3-c272cd018bb5",
+      "processed_audio_duration_in_seconds": 17,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Placenta previa\n- Placental abruption\n- Threatened preterm labor\n- Cervical changes or infection\n- Vasa previa",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Vaginal bleeding at 7 months pregnancy\n   - Lower abdominal pain\n   - Decreased fetal movements\n2. Relevant Medical/Surgical History:\n   - 7 months pregnant (no other history provided)\n3. Examinations and Examination findings:\n   - None provided in the conversation\n4. Medical Diagnosis:\n   - Antepartum hemorrhage (possible)\n   - Decreased fetal movements\n   - Possible preterm labor\n5. Drugs or Medicines:\n   - None mentioned\n6. Laboratory tests or laboratory Observations:\n   - None mentioned\n7. Imaging requests or results:\n   - None mentioned\n8. Doctor's Treatment Plan:\n   - Immediate referral for hospital evaluation, fetal monitoring, and ultrasound",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "A pregnant woman at 7 months gestation reports onset of vaginal bleeding and lower abdominal pain for the past hour, with decreased fetal movements today. She is concerned about possible labor."
+    }
+  },
+  "sample_sw_en_sudden_change_relative.m4a": {
+    "transcript": "Nimemleta baba yangu, tulikuwa tunaongea vizuri, then suddenly, maneno yake yakaanza kutoka vibaya na upande 1 wa uso ukaonekana tofauti. Hawezi kuinua mkono na wa kulia vizuri. Imeanza kama dakika 20 zilizopita kabla ya hapo, alikuwa sawa.\n",
+    "summary": "A patient was brought in after a sudden onset of slurred speech, facial asymmetry, and right-sided weakness that started 20 minutes ago. Prior to this, he was well. There is concern for an acute neurological event.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Sudden slurred speech, right-sided facial asymmetry, right arm weakness, onset 20 minutes ago.\n2. Relevant Medical/Surgical History: Not discussed in this conversation.\n3. Examinations and Examination findings: Right-sided facial droop, right arm weakness.\n4. Medical Diagnosis: Suspected acute stroke (CVA).\n5. Drugs or Medicines: Not discussed in this conversation.\n6. Laboratory tests or laboratory Observations: Not discussed in this conversation.\n7. Imaging requests or results: Urgent neuroimaging (CT/MRI brain) recommended.\n8. Doctor's Treatment Plan: Immediate referral to emergency department, urgent neuroimaging, stroke protocol initiation.",
+    "differential_diagnosis": "- Transient ischemic attack (TIA)\n- Intracerebral hemorrhage\n- Seizure with postictal paralysis (Todd's paralysis)\n- Hypoglycemia with focal neurological deficit\n- Bell's palsy (less likely due to arm involvement)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 23,
+    "raw": {
+      "audio_file_name": "sample_sw_en_sudden_change_relative_wav",
+      "audio_transcript": "Nimemleta baba yangu, tulikuwa tunaongea vizuri, then suddenly, maneno yake yakaanza kutoka vibaya na upande 1 wa uso ukaonekana tofauti. Hawezi kuinua mkono na wa kulia vizuri. Imeanza kama dakika 20 zilizopita kabla ya hapo, alikuwa sawa.\n",
+      "file_id": "e7b28ce8-73d6-4b2d-981b-1284891a9400",
+      "processed_audio_duration_in_seconds": 23,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Transient ischemic attack (TIA)\n- Intracerebral hemorrhage\n- Seizure with postictal paralysis (Todd's paralysis)\n- Hypoglycemia with focal neurological deficit\n- Bell's palsy (less likely due to arm involvement)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Sudden slurred speech, right-sided facial asymmetry, right arm weakness, onset 20 minutes ago.\n2. Relevant Medical/Surgical History: Not discussed in this conversation.\n3. Examinations and Examination findings: Right-sided facial droop, right arm weakness.\n4. Medical Diagnosis: Suspected acute stroke (CVA).\n5. Drugs or Medicines: Not discussed in this conversation.\n6. Laboratory tests or laboratory Observations: Not discussed in this conversation.\n7. Imaging requests or results: Urgent neuroimaging (CT/MRI brain) recommended.\n8. Doctor's Treatment Plan: Immediate referral to emergency department, urgent neuroimaging, stroke protocol initiation.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "A patient was brought in after a sudden onset of slurred speech, facial asymmetry, and right-sided weakness that started 20 minutes ago. Prior to this, he was well. There is concern for an acute neurological event."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.33.26 PM.ogg": {
+    "transcript": "Habari, naumwa na kichwa. My head is ziki.\n",
+    "summary": "The patient reports a headache. No further details about the headache, associated symptoms, medical history, medications, or examination findings are provided in the conversation.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Headache\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- Not discussed\n4. Medical Diagnosis:\n- Headache (unspecified)\n5. Drugs or Medicines:\n- Not discussed\n6. Laboratory tests or laboratory Observations:\n- Not discussed\n7. Imaging requests or results:\n- Not discussed\n8. Doctor's Treatment Plan:\n- Not discussed",
+    "differential_diagnosis": "- Tension-type headache\n- Migraine\n- Sinusitis\n- Cluster headache\n- Secondary headache due to infection, trauma, or other causes",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 7,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_33_26 PM_ogg",
+      "audio_transcript": "Habari, naumwa na kichwa. My head is ziki.\n",
+      "file_id": "b560ea7a-bc07-4c72-8411-45baee5b5638",
+      "processed_audio_duration_in_seconds": 7,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Tension-type headache\n- Migraine\n- Sinusitis\n- Cluster headache\n- Secondary headache due to infection, trauma, or other causes",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Headache\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- Not discussed\n4. Medical Diagnosis:\n- Headache (unspecified)\n5. Drugs or Medicines:\n- Not discussed\n6. Laboratory tests or laboratory Observations:\n- Not discussed\n7. Imaging requests or results:\n- Not discussed\n8. Doctor's Treatment Plan:\n- Not discussed",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a headache. No further details about the headache, associated symptoms, medical history, medications, or examination findings are provided in the conversation."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.33.54 PM.ogg": {
+    "transcript": "Habari, mama alisema mama alisema nikisikia tumbo inauma alafu my legs are swollen and need to go to the doctor that's why I came.\n",
+    "summary": "The patient reports abdominal pain and swollen legs, prompting the visit to the doctor. No further details about the onset, duration, or associated symptoms are provided.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Abdominal pain\n- Swollen legs\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- Not discussed\n4. Medical Diagnosis:\n- Not established\n5. Drugs or Medicines:\n- Not discussed\n6. Laboratory tests or laboratory Observations:\n- Not discussed\n7. Imaging requests or results:\n- Not discussed\n8. Doctor's Treatment Plan:\n- Not discussed; further evaluation required",
+    "differential_diagnosis": "- Congestive heart failure\n- Nephrotic syndrome\n- Liver disease (e.g., cirrhosis)\n- Deep vein thrombosis\n- Chronic kidney disease\n- Malnutrition/hypoalbuminemia\n- Localized infection or inflammation",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 17,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_33_54 PM_ogg",
+      "audio_transcript": "Habari, mama alisema mama alisema nikisikia tumbo inauma alafu my legs are swollen and need to go to the doctor that's why I came.\n",
+      "file_id": "cfe83d6b-a2bc-4f3a-a478-0e393481db98",
+      "processed_audio_duration_in_seconds": 17,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Congestive heart failure\n- Nephrotic syndrome\n- Liver disease (e.g., cirrhosis)\n- Deep vein thrombosis\n- Chronic kidney disease\n- Malnutrition/hypoalbuminemia\n- Localized infection or inflammation",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Abdominal pain\n- Swollen legs\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- Not discussed\n4. Medical Diagnosis:\n- Not established\n5. Drugs or Medicines:\n- Not discussed\n6. Laboratory tests or laboratory Observations:\n- Not discussed\n7. Imaging requests or results:\n- Not discussed\n8. Doctor's Treatment Plan:\n- Not discussed; further evaluation required",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports abdominal pain and swollen legs, prompting the visit to the doctor. No further details about the onset, duration, or associated symptoms are provided."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.34.13 PM.ogg": {
+    "transcript": "Ah nimekuwa naumwa na tumbo, tumbo imekuwa inaniuma, wow I just feel lick. I just need some assistance.\n",
+    "summary": "The patient reports abdominal pain and feeling unwell, requesting assistance. No further details about the pain, associated symptoms, medical history, or medications are provided in the conversation.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Abdominal pain\n   - Feeling unwell\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None discussed\n4. Medical Diagnosis:\n   - Abdominal pain (unspecified)\n5. Drugs or Medicines:\n   - None discussed\n6. Laboratory tests or laboratory Observations:\n   - None discussed\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Not specified; further assessment required",
+    "differential_diagnosis": "- Gastroenteritis\n- Peptic ulcer disease\n- Urinary tract infection\n- Appendicitis\n- Gynecological causes (if female)\n- Constipation\n- Food poisoning\n- Other causes of abdominal pain (e.g., gallstones, pancreatitis)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 13,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_34_13 PM_ogg",
+      "audio_transcript": "Ah nimekuwa naumwa na tumbo, tumbo imekuwa inaniuma, wow I just feel lick. I just need some assistance.\n",
+      "file_id": "99167151-6340-4620-ad78-521fcda70122",
+      "processed_audio_duration_in_seconds": 13,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Gastroenteritis\n- Peptic ulcer disease\n- Urinary tract infection\n- Appendicitis\n- Gynecological causes (if female)\n- Constipation\n- Food poisoning\n- Other causes of abdominal pain (e.g., gallstones, pancreatitis)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n   - Abdominal pain\n   - Feeling unwell\n2. Relevant Medical/Surgical History:\n   - Not discussed\n3. Examinations and Examination findings:\n   - None discussed\n4. Medical Diagnosis:\n   - Abdominal pain (unspecified)\n5. Drugs or Medicines:\n   - None discussed\n6. Laboratory tests or laboratory Observations:\n   - None discussed\n7. Imaging requests or results:\n   - None discussed\n8. Doctor's Treatment Plan:\n   - Not specified; further assessment required",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports abdominal pain and feeling unwell, requesting assistance. No further details about the pain, associated symptoms, medical history, or medications are provided in the conversation."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.34.36 PM.ogg": {
+    "transcript": "I don't know what glaucoma is, but I would love to know because I goled my symptoms nikaambiwa inaweza kuwa ni glaucoma.\n",
+    "summary": "The patient is inquiring about glaucoma after being told their symptoms could be related to it. No specific symptoms, medical history, or examination findings are provided in the conversation.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Inquiry about glaucoma; no specific symptoms described.\n2. Relevant Medical/Surgical History: None provided.\n3. Examinations and Examination findings: None provided.\n4. Medical Diagnosis: None established; suspicion of glaucoma.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None mentioned.\n7. Imaging requests or results: None mentioned.\n8. Doctor's Treatment Plan: Education about glaucoma; recommendation for further assessment and eye examination.",
+    "differential_diagnosis": "- Ocular hypertension\n- Cataracts\n- Age-related macular degeneration\n- Diabetic retinopathy\n- Other causes of visual disturbance (if symptoms are present)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 13,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_34_36 PM_ogg",
+      "audio_transcript": "I don't know what glaucoma is, but I would love to know because I goled my symptoms nikaambiwa inaweza kuwa ni glaucoma.\n",
+      "file_id": "b0d57cb8-62ee-4fe6-84d2-eaf200476684",
+      "processed_audio_duration_in_seconds": 13,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Ocular hypertension\n- Cataracts\n- Age-related macular degeneration\n- Diabetic retinopathy\n- Other causes of visual disturbance (if symptoms are present)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Inquiry about glaucoma; no specific symptoms described.\n2. Relevant Medical/Surgical History: None provided.\n3. Examinations and Examination findings: None provided.\n4. Medical Diagnosis: None established; suspicion of glaucoma.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None mentioned.\n7. Imaging requests or results: None mentioned.\n8. Doctor's Treatment Plan: Education about glaucoma; recommendation for further assessment and eye examination.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient is inquiring about glaucoma after being told their symptoms could be related to it. No specific symptoms, medical history, or examination findings are provided in the conversation."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.34.48 PM.ogg": {
+    "transcript": "Mtu anajua aje kama ako na kisukari ama kama uko na stress nyingi unafanya nini please help me.\n",
+    "summary": "The patient inquired about how to know if they have diabetes and what to do if experiencing a lot of stress. No specific symptoms, medical history, or medications were discussed.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Concern about having diabetes\n- Concern about high stress\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- None discussed\n4. Medical Diagnosis:\n- None established\n5. Drugs or Medicines:\n- None discussed\n6. Laboratory tests or laboratory Observations:\n- None discussed, but blood sugar testing implied\n7. Imaging requests or results:\n- None\n8. Doctor's Treatment Plan:\n- Advise on diabetes screening and stress management",
+    "differential_diagnosis": "- Anxiety disorder\n- Depression\n- Other endocrine disorders (e.g., thyroid dysfunction)\n- Adjustment disorder\n- Pre-diabetes",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 9,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_34_48 PM_ogg",
+      "audio_transcript": "Mtu anajua aje kama ako na kisukari ama kama uko na stress nyingi unafanya nini please help me.\n",
+      "file_id": "dcbe2bfb-1df8-45fb-9021-43b2611b7945",
+      "processed_audio_duration_in_seconds": 9,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Anxiety disorder\n- Depression\n- Other endocrine disorders (e.g., thyroid dysfunction)\n- Adjustment disorder\n- Pre-diabetes",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Concern about having diabetes\n- Concern about high stress\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- None discussed\n4. Medical Diagnosis:\n- None established\n5. Drugs or Medicines:\n- None discussed\n6. Laboratory tests or laboratory Observations:\n- None discussed, but blood sugar testing implied\n7. Imaging requests or results:\n- None\n8. Doctor's Treatment Plan:\n- Advise on diabetes screening and stress management",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient inquired about how to know if they have diabetes and what to do if experiencing a lot of stress. No specific symptoms, medical history, or medications were discussed."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.35.07 PM.ogg": {
+    "transcript": "I have severe stomach, very, very, very, very, very severe and my legs are swollen here husaidia.\n",
+    "summary": "The patient reports severe abdominal pain and significant swelling in the legs. No further history, examination, or management details are provided in the conversation.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Severe abdominal pain\n- Swollen legs\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- Not discussed\n4. Medical Diagnosis:\n- Not established\n5. Drugs or Medicines:\n- Not discussed\n6. Laboratory tests or laboratory Observations:\n- Not discussed\n7. Imaging requests or results:\n- Not discussed\n8. Doctor's Treatment Plan:\n- Not discussed",
+    "differential_diagnosis": "- Congestive heart failure\n- Liver disease (e.g., cirrhosis with ascites)\n- Nephrotic syndrome or renal failure\n- Deep vein thrombosis\n- Severe infection (e.g., sepsis, cellulitis)\n- Gastrointestinal obstruction or perforation\n- Acute pancreatitis\n- Malignancy with metastasis",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 11,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_35_07 PM_ogg",
+      "audio_transcript": "I have severe stomach, very, very, very, very, very severe and my legs are swollen here husaidia.\n",
+      "file_id": "cc270b89-5844-4e5c-85af-7ef671f9fad7",
+      "processed_audio_duration_in_seconds": 11,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Congestive heart failure\n- Liver disease (e.g., cirrhosis with ascites)\n- Nephrotic syndrome or renal failure\n- Deep vein thrombosis\n- Severe infection (e.g., sepsis, cellulitis)\n- Gastrointestinal obstruction or perforation\n- Acute pancreatitis\n- Malignancy with metastasis",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints:\n- Severe abdominal pain\n- Swollen legs\n2. Relevant Medical/Surgical History:\n- Not discussed\n3. Examinations and Examination findings:\n- Not discussed\n4. Medical Diagnosis:\n- Not established\n5. Drugs or Medicines:\n- Not discussed\n6. Laboratory tests or laboratory Observations:\n- Not discussed\n7. Imaging requests or results:\n- Not discussed\n8. Doctor's Treatment Plan:\n- Not discussed",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports severe abdominal pain and significant swelling in the legs. No further history, examination, or management details are provided in the conversation."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.35.23 PM.ogg": {
+    "transcript": "Je for a baby who is 6 months old to take water melon and eggs? Is that healthy and also soda?\n",
+    "summary": "A caregiver asked if it is healthy for a 6-month-old baby to consume watermelon, eggs, and soda. The doctor should provide guidance on appropriate foods for infants at this age.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Inquiry about appropriate foods for a 6-month-old baby (watermelon, eggs, soda).\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Not applicable (dietary advice sought).\n5. Drugs or Medicines: None discussed.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Provide dietary guidance for infant feeding at 6 months, advise against soda, discuss safe introduction of fruits and eggs.",
+    "differential_diagnosis": "- Not applicable; no illness or symptoms presented. Only dietary advice sought.",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 11,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_35_23 PM_ogg",
+      "audio_transcript": "Je for a baby who is 6 months old to take water melon and eggs? Is that healthy and also soda?\n",
+      "file_id": "3771cb94-faf6-4638-8842-d9619509b18a",
+      "processed_audio_duration_in_seconds": 11,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Not applicable; no illness or symptoms presented. Only dietary advice sought.",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Inquiry about appropriate foods for a 6-month-old baby (watermelon, eggs, soda).\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Not applicable (dietary advice sought).\n5. Drugs or Medicines: None discussed.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Provide dietary guidance for infant feeding at 6 months, advise against soda, discuss safe introduction of fruits and eggs.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "A caregiver asked if it is healthy for a 6-month-old baby to consume watermelon, eggs, and soda. The doctor should provide guidance on appropriate foods for infants at this age."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.35.46 PM.ogg": {
+    "transcript": "Nasikia kichwa changu cha umma niko nimejiswa na mawazo mengi, I don't know if it's depression I don't know it's headache, I would still have some mild headache, 1-sided I don't know, we tuside unaeza.\n",
+    "summary": "The patient reports persistent, mild, one-sided headaches and feeling overwhelmed by many thoughts, expressing uncertainty if these symptoms are due to depression or just headaches.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Mild, one-sided headache; feeling overwhelmed with many thoughts; uncertainty about depression.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Possible tension-type headache, migraine, or depression/anxiety.\n5. Drugs or Medicines: None discussed.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Further assessment, possible headache diary, mental health screening, stress management advice.",
+    "differential_diagnosis": "- Migraine\n- Tension-type headache\n- Depression\n- Anxiety disorder\n- Cluster headache\n- Sinusitis",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 18,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_35_46 PM_ogg",
+      "audio_transcript": "Nasikia kichwa changu cha umma niko nimejiswa na mawazo mengi, I don't know if it's depression I don't know it's headache, I would still have some mild headache, 1-sided I don't know, we tuside unaeza.\n",
+      "file_id": "68f33fd6-1f1b-462b-ba15-7668d681451f",
+      "processed_audio_duration_in_seconds": 18,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Migraine\n- Tension-type headache\n- Depression\n- Anxiety disorder\n- Cluster headache\n- Sinusitis",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Mild, one-sided headache; feeling overwhelmed with many thoughts; uncertainty about depression.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Possible tension-type headache, migraine, or depression/anxiety.\n5. Drugs or Medicines: None discussed.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Further assessment, possible headache diary, mental health screening, stress management advice.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports persistent, mild, one-sided headaches and feeling overwhelmed by many thoughts, expressing uncertainty if these symptoms are due to depression or just headaches."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.36.04 PM.ogg": {
+    "transcript": "No, I have a serious headache. What can I do? Please help me. Na kit.\n",
+    "summary": "The patient reports a serious headache and is seeking advice on what to do. No further details about the headache or medical history are provided.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Serious headache\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Headache (unspecified)\n5. Drugs or Medicines: None discussed\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: None provided",
+    "differential_diagnosis": "- Migraine\n- Tension-type headache\n- Cluster headache\n- Sinusitis\n- Medication overuse headache\n- Intracranial pathology (e.g., tumor, hemorrhage, infection)\n- Hypertension-related headache",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 10,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_36_04 PM_ogg",
+      "audio_transcript": "No, I have a serious headache. What can I do? Please help me. Na kit.\n",
+      "file_id": "973fac57-7559-44d3-83e3-ca5da609df6d",
+      "processed_audio_duration_in_seconds": 10,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Migraine\n- Tension-type headache\n- Cluster headache\n- Sinusitis\n- Medication overuse headache\n- Intracranial pathology (e.g., tumor, hemorrhage, infection)\n- Hypertension-related headache",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Serious headache\n2. Relevant Medical/Surgical History: Not discussed\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Headache (unspecified)\n5. Drugs or Medicines: None discussed\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: None provided",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a serious headache and is seeking advice on what to do. No further details about the headache or medical history are provided."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.36.42 PM.ogg": {
+    "transcript": "I don't know, but I been profily sweating and yeah I was really sweating, I don't know, but I started on Saturday, like Saturday usiku nilikuwa tumelala lakini nikaanza ku sweat sijui ndio maana nimekuja niyaangalie.\n",
+    "summary": "The patient reports experiencing profuse sweating that began on Saturday night while sleeping. No other symptoms or relevant history are provided in the conversation.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Profuse sweating, onset Saturday night, occurred during sleep.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: Not discussed.\n4. Medical Diagnosis: Not established; complaint of profuse sweating.\n5. Drugs or Medicines: Not discussed.\n6. Laboratory tests or laboratory Observations: Not discussed.\n7. Imaging requests or results: Not discussed.\n8. Doctor's Treatment Plan: Not specified; further evaluation implied.",
+    "differential_diagnosis": "- Hyperthyroidism\n- Infection (e.g., tuberculosis, malaria)\n- Hypoglycemia\n- Anxiety or panic disorder\n- Menopause (if female)\n- Medication side effect\n- Idiopathic hyperhidrosis",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 30,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_36_42 PM_ogg",
+      "audio_transcript": "I don't know, but I been profily sweating and yeah I was really sweating, I don't know, but I started on Saturday, like Saturday usiku nilikuwa tumelala lakini nikaanza ku sweat sijui ndio maana nimekuja niyaangalie.\n",
+      "file_id": "4dafe603-9180-42b8-bfc0-1d57d2a3c988",
+      "processed_audio_duration_in_seconds": 30,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Hyperthyroidism\n- Infection (e.g., tuberculosis, malaria)\n- Hypoglycemia\n- Anxiety or panic disorder\n- Menopause (if female)\n- Medication side effect\n- Idiopathic hyperhidrosis",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Profuse sweating, onset Saturday night, occurred during sleep.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: Not discussed.\n4. Medical Diagnosis: Not established; complaint of profuse sweating.\n5. Drugs or Medicines: Not discussed.\n6. Laboratory tests or laboratory Observations: Not discussed.\n7. Imaging requests or results: Not discussed.\n8. Doctor's Treatment Plan: Not specified; further evaluation implied.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports experiencing profuse sweating that began on Saturday night while sleeping. No other symptoms or relevant history are provided in the conversation."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.37.02 PM.ogg": {
+    "transcript": "What is hypertension? And niliambiwa na daktari can take Panadol, paracetamol Ibuprofen. Yeah, I don't know if that is okay to take medicine when you have a headache.\n",
+    "summary": "The patient asked about hypertension and whether it is safe to take Panadol, paracetamol, or ibuprofen for headaches when diagnosed with hypertension.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Headache, concern about medication safety with hypertension\n2. Relevant Medical/Surgical History: Hypertension (history implied by question)\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Hypertension (by history)\n5. Drugs or Medicines: Panadol, paracetamol, ibuprofen\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Advice on safe analgesics for hypertensive patients",
+    "differential_diagnosis": "- Tension headache\n- Migraine\n- Secondary headache due to uncontrolled hypertension\n- Medication overuse headache",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 17,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_37_02 PM_ogg",
+      "audio_transcript": "What is hypertension? And niliambiwa na daktari can take Panadol, paracetamol Ibuprofen. Yeah, I don't know if that is okay to take medicine when you have a headache.\n",
+      "file_id": "ef063ccf-aa42-4680-a76f-678d1803a8a5",
+      "processed_audio_duration_in_seconds": 17,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Tension headache\n- Migraine\n- Secondary headache due to uncontrolled hypertension\n- Medication overuse headache",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Headache, concern about medication safety with hypertension\n2. Relevant Medical/Surgical History: Hypertension (history implied by question)\n3. Examinations and Examination findings: None discussed\n4. Medical Diagnosis: Hypertension (by history)\n5. Drugs or Medicines: Panadol, paracetamol, ibuprofen\n6. Laboratory tests or laboratory Observations: None discussed\n7. Imaging requests or results: None discussed\n8. Doctor's Treatment Plan: Advice on safe analgesics for hypertensive patients",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient asked about hypertension and whether it is safe to take Panadol, paracetamol, or ibuprofen for headaches when diagnosed with hypertension."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.38.08 PM.ogg": {
+    "transcript": "Niko na mtoto anakohoa sana usiku, like he is really coughing, but it's only at night, which is so wered. Mchana ako sawa ni makamasi kidogo na imekuwa very recurrent. Initially tulikuwa tumeambiwa we avoid far and around animals. I don't know if there is anything. Inaweza kuwa ni allergy, inaweza kuwa bado anabuiden. What.\n",
+    "summary": "A parent reports that their child has a recurrent, severe nighttime cough, with mild daytime nasal congestion. The symptoms are worse at night and have been ongoing. There is a history of being advised to avoid fur and animals, suggesting possible allergies. The parent is unsure if this is due to allergies or if the child is still recovering from a previous illness.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Recurrent, severe nighttime cough; mild daytime nasal congestion.\n2. Relevant Medical/Surgical History: Previously advised to avoid fur and animals (suggesting possible allergy history).\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Possible allergy (allergic rhinitis, postnasal drip, or mild asthma); post-infectious cough considered.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None mentioned.\n7. Imaging requests or results: None mentioned.\n8. Doctor's Treatment Plan: Environmental control (avoid triggers), consider allergy evaluation, monitor symptoms.",
+    "differential_diagnosis": "- Allergic rhinitis/postnasal drip\n- Mild asthma (cough variant)\n- Post-infectious cough\n- Environmental irritant exposure\n- Gastroesophageal reflux disease (GERD)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 30,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_38_08 PM_ogg",
+      "audio_transcript": "Niko na mtoto anakohoa sana usiku, like he is really coughing, but it's only at night, which is so wered. Mchana ako sawa ni makamasi kidogo na imekuwa very recurrent. Initially tulikuwa tumeambiwa we avoid far and around animals. I don't know if there is anything. Inaweza kuwa ni allergy, inaweza kuwa bado anabuiden. What.\n",
+      "file_id": "bd594d0b-ce6d-4c98-a54d-a506579cb03a",
+      "processed_audio_duration_in_seconds": 30,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Allergic rhinitis/postnasal drip\n- Mild asthma (cough variant)\n- Post-infectious cough\n- Environmental irritant exposure\n- Gastroesophageal reflux disease (GERD)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Recurrent, severe nighttime cough; mild daytime nasal congestion.\n2. Relevant Medical/Surgical History: Previously advised to avoid fur and animals (suggesting possible allergy history).\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Possible allergy (allergic rhinitis, postnasal drip, or mild asthma); post-infectious cough considered.\n5. Drugs or Medicines: None mentioned.\n6. Laboratory tests or laboratory Observations: None mentioned.\n7. Imaging requests or results: None mentioned.\n8. Doctor's Treatment Plan: Environmental control (avoid triggers), consider allergy evaluation, monitor symptoms.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "A parent reports that their child has a recurrent, severe nighttime cough, with mild daytime nasal congestion. The symptoms are worse at night and have been ongoing. There is a history of being advised to avoid fur and animals, suggesting possible allergies. The parent is unsure if this is due to allergies or if the child is still recovering from a previous illness."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.39.00 PM.ogg": {
+    "transcript": "Is there anything like weak bonds ama soft bonds? Mtu akigonga mguu anasikia uchungu na ni kugongwa tu siki tunafaa kumpea uchungu alafu ukipona inakaribia inaweza kuwa nini?\n",
+    "summary": "{'text': \"The patient asked about the concept of 'weak bonds' or 'soft bonds' in relation to experiencing pain after a minor trauma to the leg. They described pain after being hit on the leg, which resolved over time, and are seeking an explanation for this occurrence.\"}",
+    "entities": "{'text': \"Medical Clinical Extraction:\\n1. Patient Complaints: Pain in the leg after being hit.\\n2. Relevant Medical/Surgical History: Not discussed.\\n3. Examinations and Examination findings: None discussed.\\n4. Medical Diagnosis: Likely soft tissue injury (contusion/bruise).\\n5. Drugs or Medicines: None discussed.\\n6. Laboratory tests or laboratory Observations: None discussed.\\n7. Imaging requests or results: None discussed.\\n8. Doctor's Treatment Plan: Reassurance, advice on monitoring symptoms, RICE protocol if needed.\"}",
+    "differential_diagnosis": "{'text': '- Soft tissue contusion/bruise\\n- Minor muscle strain\\n- Periosteal (bone surface) injury\\n- Minor ligament sprain\\n- Undiagnosed hairline fracture (less likely given resolution of symptoms)'}",
+    "suggestions": "{'text': 'None'}",
+    "followup_instructions": "{'text': 'None'}",
+    "duration_seconds": 16,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_39_00 PM_ogg",
+      "audio_transcript": "Is there anything like weak bonds ama soft bonds? Mtu akigonga mguu anasikia uchungu na ni kugongwa tu siki tunafaa kumpea uchungu alafu ukipona inakaribia inaweza kuwa nini?\n",
+      "processed_audio_duration_in_seconds": 16,
+      "processing_status": "FILE_TRANSCRIBED",
+      "transcript_differential_diagnosis": {
+        "text": "- Soft tissue contusion/bruise\n- Minor muscle strain\n- Periosteal (bone surface) injury\n- Minor ligament sprain\n- Undiagnosed hairline fracture (less likely given resolution of symptoms)"
+      },
+      "transcript_entity_list": {
+        "text": "Medical Clinical Extraction:\n1. Patient Complaints: Pain in the leg after being hit.\n2. Relevant Medical/Surgical History: Not discussed.\n3. Examinations and Examination findings: None discussed.\n4. Medical Diagnosis: Likely soft tissue injury (contusion/bruise).\n5. Drugs or Medicines: None discussed.\n6. Laboratory tests or laboratory Observations: None discussed.\n7. Imaging requests or results: None discussed.\n8. Doctor's Treatment Plan: Reassurance, advice on monitoring symptoms, RICE protocol if needed."
+      },
+      "transcript_followup_instructions": {
+        "text": "None"
+      },
+      "transcript_suggestions": {
+        "text": "None"
+      },
+      "transcript_summary": {
+        "text": "The patient asked about the concept of 'weak bonds' or 'soft bonds' in relation to experiencing pain after a minor trauma to the leg. They described pain after being hit on the leg, which resolved over time, and are seeking an explanation for this occurrence."
+      }
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.40.30 PM.ogg": {
+    "transcript": "Niliamba niko na kipindupindu, alafu daktari did me some x-rays on the chest cause I was also feeling some pain like know what I can do so that I can so.\n",
+    "summary": "The patient reports a previous diagnosis of cholera and recent chest pain. A chest x-ray was performed by the doctor to investigate the chest pain. The patient is seeking advice on further management.",
+    "entities": "Medical Clinical Extraction:\n1. Patient Complaints: Chest pain, history of cholera.\n2. Relevant Medical/Surgical History: Previous diagnosis of cholera.\n3. Examinations and Examination findings: Chest x-ray performed (findings not specified).\n4. Medical Diagnosis: History of cholera, chest pain (cause not specified).\n5. Drugs or Medicines: Not mentioned.\n6. Laboratory tests or laboratory Observations: Not mentioned.\n7. Imaging requests or results: Chest x-ray performed.\n8. Doctor's Treatment Plan: Not fully specified; further management pending x-ray results.",
+    "differential_diagnosis": "- Musculoskeletal chest pain\n- Pneumonia or other respiratory infection\n- Cardiac causes (e.g., angina)\n- Gastroesophageal reflux disease (GERD)\n- Complications related to previous cholera (e.g., dehydration, electrolyte imbalance)",
+    "suggestions": "None",
+    "followup_instructions": "None",
+    "duration_seconds": 16,
+    "raw": {
+      "audio_file_name": "WhatsApp Ptt 2026-09-14 at 8_40_30 PM_ogg",
+      "audio_transcript": "Niliamba niko na kipindupindu, alafu daktari did me some x-rays on the chest cause I was also feeling some pain like know what I can do so that I can so.\n",
+      "file_id": "c0053826-7b9a-4247-b1a8-66d97828d925",
+      "processed_audio_duration_in_seconds": 16,
+      "processing_status": "FILE_QUEUED",
+      "transcript_differential_diagnosis": "- Musculoskeletal chest pain\n- Pneumonia or other respiratory infection\n- Cardiac causes (e.g., angina)\n- Gastroesophageal reflux disease (GERD)\n- Complications related to previous cholera (e.g., dehydration, electrolyte imbalance)",
+      "transcript_entity_list": "Medical Clinical Extraction:\n1. Patient Complaints: Chest pain, history of cholera.\n2. Relevant Medical/Surgical History: Previous diagnosis of cholera.\n3. Examinations and Examination findings: Chest x-ray performed (findings not specified).\n4. Medical Diagnosis: History of cholera, chest pain (cause not specified).\n5. Drugs or Medicines: Not mentioned.\n6. Laboratory tests or laboratory Observations: Not mentioned.\n7. Imaging requests or results: Chest x-ray performed.\n8. Doctor's Treatment Plan: Not fully specified; further management pending x-ray results.",
+      "transcript_followup_instructions": "None",
+      "transcript_suggestions": "None",
+      "transcript_summary": "The patient reports a previous diagnosis of cholera and recent chest pain. A chest x-ray was performed by the doctor to investigate the chest pain. The patient is seeking advice on further management."
+    }
+  },
+  "WhatsApp Ptt 2026-09-14 at 8.41.07 PM.ogg": {
+    "transcript": "",
+    "error": "Intron API error 400: {\"data\":{},\"message\":\"insufficient balance to process the file\",\"status\":\"Error\"}\n"
+  }
+}

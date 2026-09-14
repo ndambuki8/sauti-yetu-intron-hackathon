@@ -177,16 +177,20 @@ def run_benchmark(
     with wave.open(str(wav_path), "rb") as wav_file:
         duration_seconds = wav_file.getnframes() / wav_file.getframerate()
 
+    # Phone recordings (m4a/mp4/aac) must be converted to WAV before Intron
+    # accepts them; prepare_for_intron is a no-op for already-compatible formats.
+    safe_bytes, safe_name = asr_models.prepare_for_intron(audio_bytes, filename)
+
     runners = [
         (
             "Intron Sahara",
             "commercial API (African-accent optimized)",
             lambda: (
                 intron_client.transcribe_telehealth(
-                    audio_bytes, filename, language_code, output_language="en"
+                    safe_bytes, safe_name, language_code, output_language="en"
                 )
                 if agentic
-                else intron_client.transcribe_plain(audio_bytes, filename, language_code)
+                else intron_client.transcribe_plain(safe_bytes, safe_name, language_code)
             ),
         ),
         (
@@ -402,6 +406,8 @@ def run_noise_benchmark(
 
     suffix = Path(filename).suffix or ".webm"
     wav_path = asr_models.convert_to_wav_16k(audio_bytes, suffix=suffix)
+    # Intron-safe copy of the original bytes (converts m4a → wav if needed).
+    safe_bytes, safe_name = asr_models.prepare_for_intron(audio_bytes, filename)
     with wave.open(str(wav_path), "rb") as wf:
         duration_seconds = wf.getnframes() / wf.getframerate()
 
@@ -420,7 +426,7 @@ def run_noise_benchmark(
                 runners = []
                 if not skip_api:
                     runners.append(
-                        ("Intron Sahara", lambda nb_=nb: intron_client.transcribe_plain(nb_, filename, language_code))
+                        ("Intron Sahara", lambda nb_=nb: intron_client.transcribe_plain(nb_, safe_name, language_code))
                     )
                 runners += [
                     ("OpenAI Whisper", lambda np__=np_: asr_models.transcribe_whisper(np__, language_code)),
