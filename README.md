@@ -1,8 +1,8 @@
-# Voice Triage Hint — Agentic Code-Switch Assistant
+# Sauti Yetu — Agentic Code-Switch Voice Triage
 
-MLC (Africa) x Intron Agentic Voice AI Challenge — Deep Learning Indaba 2026.
+MLC (Africa) × Intron Agentic Voice AI Challenge 2026.
 
-**Sauti** is a doctor-first consult app for web, phone, and tablet (Expo).
+**Sauti Yetu** is a doctor-first consult app for web, phone, and tablet (Expo).
 A patient who code-switches (Swahili-English, Hausa-English, Yoruba-English, Pidgin, ...)
 arrives at a facility where staff work in English or French. The doctor starts a
 record session; the system **auto-detects** the patient's language, transcribes
@@ -17,15 +17,70 @@ their own language.
 
 Voice drives triage, routing, and documentation — not just transcription.
 
+> **Decision support only.** Sauti Yetu produces *hints* to aid clinical judgement.
+> It is not a medical device and does not diagnose. See
+> [`docs/RESPONSIBLE_AI.md`](docs/RESPONSIBLE_AI.md) for privacy, consent, and safety,
+> and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full technical brief.
+
+## Project status
+
+Working prototype (hackathon scope). What is built and running today:
+
+- **End-to-end triage loop** — record → language detect → Sahara STT + clinical
+  extractions → deterministic triage (topic, urgency, department, intake card,
+  clarifying questions) → doctor-language output → cumulative reasoning graph.
+- **Deterministic, explainable reasoning** — clinical knowledge lives as
+  reviewable, source-tagged data in `backend/knowledge/triage_kb.yaml` (WHO IITT
+  discriminators, age-banded vitals, naive-Bayes differential). Every conclusion
+  carries a citation surfaced in the UI. Urgency is escalate-only (safety-first).
+- **Reply + documentation** — English → patient-language reply (NLLB) with Intron
+  TTS; doctor voice/text command → GPT-4o report or Mermaid flowchart.
+- **Reproducible benchmarking** — two harnesses (primary collection + AfriSpeech)
+  scoring three models on WER/CER/RTF, code-switch switch-point WER, downstream
+  agentic accuracy, noise robustness, and an offline pass. Both support tagged
+  runs and `--rebuild-all`.
+
+### Current benchmark standing
+
+Latest full run on the **primary collection** — 64 real Swahili-English clips
+recorded in Kenya (30 short phrases, 20 naturalistic complaints, 14 WhatsApp
+voice notes), scored against **human ground-truth transcripts**, CPU:
+
+| Model | Mean WER | Mean RTF |
+|---|---|---|
+| Intron Sahara | ~0.07 | ~0.48 |
+| Meta MMS (`mms-1b-all`) | ~0.38 | ~0.73 |
+| OpenAI Whisper (`base`) | ~0.98 | ~1.22 |
+
+Reading these honestly:
+
+- **Intron Sahara leads clearly** on African-accented, code-switched speech.
+  Note the m4a/mp3 references were seeded from an initial Sahara pass and then
+  human-verified, so Sahara keeps a small formatting edge on those subsets; the
+  **14 WhatsApp `.ogg` clips are the fully-independent three-way comparison**.
+- **Meta MMS is the strongest local/offline option** by a wide margin.
+- **Whisper `base`** struggles badly on Swahili-English code-switch — a genuine
+  finding, and a reason to prefer MMS for the offline path.
+- RTF is CPU-only; a GPU would lower the local numbers substantially.
+
+### In progress / before final submission
+
+- Re-run the **noise sweep** (`--noise`) after the recent fix — earlier Sahara
+  noise numbers excluded all mp3 clips due to a filename/extension bug (now
+  fixed in `backend/benchmark.py`); Sahara needs full coverage for the SNR sweep.
+- Top up the Intron API balance for complete Sahara coverage on long runs.
+- Clinician review of the knowledge base (discriminators are attributed to WHO
+  IITT but remain `unreviewed` until confirmed).
+
 ## How it works
 
 ```
 Doctor app (Expo: web / phone / tablet)
         |
         +-- Record session --> POST /api/triage
-        |       Whisper detect (if Auto) -> Intron Sahara STT + extractions
+        |       MMS-LID detect (if Auto) -> Intron Sahara STT + extractions
         |       -> translate transcript to doctor language (NLLB)
-        |       -> rule triage + session graph
+        |       -> deterministic KB triage + session graph
         |
         +-- Speak to patient --> POST /api/respond  (NLLB + Intron TTS)
         |
@@ -64,7 +119,7 @@ per the challenge's code-switch benchmarking requirement.
 1. System dependency (needed by Whisper and audio conversion):
 
 ```bash
-sudo apt install ffmpeg
+sudo apt install ffmpeg      # Windows: winget install ffmpeg
 ```
 
 2. Python environment:
@@ -127,20 +182,43 @@ Notes:
 - Quick-reply translations are cached in `backend/phrases.json`; a native
   speaker can hand-correct entries there and corrections are kept.
 
-## Benchmark report (submission PDF)
+## Benchmark reports (submission)
 
-Record your code-switched clips into `data/samples/`, register them in
-`metadata.csv`, then run:
+There are two harnesses. Both score three models against **human ground-truth
+transcripts**, skip any clip with no reference, and support isolated, tagged
+runs so configurations never overwrite each other.
+
+**Primary collection** (real Kenyan Swahili-English data, `data/primary_collection/`):
 
 ```bash
-python3 -m scripts.generate_benchmark_report --agentic
+# Force CPU (Whisper would otherwise grab the GPU automatically)
+export CUDA_VISIBLE_DEVICES=-1        # PowerShell: $env:CUDA_VISIBLE_DEVICES='-1'
+
+python -m scripts.generate_primary_report --agentic --offline --tag core
+python -m scripts.generate_primary_report --noise --tag noise
+python -m scripts.generate_primary_report --rebuild-all      # one PDF per saved tag
 ```
 
-This writes `reports/benchmark_report.pdf` (methodology, overall and
-per-language-pair/per-noise WER/CER/latency, switch-point WER, RTF, optional
-downstream intent/slot/entity metrics, charts, per-clip transcripts,
-limitations) and `reports/results.json` (raw outputs for reproducibility).
-Draft answers to the 8 submission questions live in [SUBMISSION.md](SUBMISSION.md).
+**AfriSpeech samples** (`data/samples/`):
+
+```bash
+python -m scripts.generate_benchmark_report --agentic --tag baseline
+python -m scripts.generate_benchmark_report --noise --tag noise
+python -m scripts.generate_benchmark_report --rebuild-all
+```
+
+Flags (both scripts): `--agentic` (triage intent/entity scoring), `--noise`
+(Gaussian SNR sweep 30/20/10/5 dB), `--noise-local` (sweep local models only, no
+API cost), `--offline` (local-only pass), `--tag <name>` (save results/PDF/charts
+under a suffix), `--rebuild-only [--tag <name>]` and `--rebuild-all` (redo
+charts/PDF from saved JSON — no model runs).
+
+Outputs land in `reports/primary_collection/` and `reports/afrispeech/`:
+`*_report[.tag].pdf` (methodology, overall + per-group WER/CER/RTF, switch-point
+WER, optional downstream metrics, noise/offline sections, charts, per-clip
+transcripts, limitations) and `primary_results[.tag].json` / `results[.tag].json`
+(raw outputs for reproducibility). Draft answers to the submission questions
+live in [SUBMISSION.md](SUBMISSION.md).
 
 ## Supported patient languages (code-switch capable)
 
@@ -149,42 +227,61 @@ Igbo-English (`ig`), Zulu-English (`zu`), Amharic-English (`am`),
 Kinyarwanda-English-French (`rw`), Pidgin-English (`pcm`),
 Afrikaans-English (`af`), Luganda-English (`lg`), Wolof-French (`wo`), and English (`en`).
 
-## Benchmark data (`data/samples/`)
+## Benchmark data
 
-Code-switched test clips live in `data/samples/` with `metadata.csv`
-(columns: `filename, language_pair, language_code, domain, accent_country,
-device_type, noise_condition, reference_transcript`, plus optional switch-point
-and downstream gold annotations documented in `data/samples/README.md`). These double as the challenge's
-audio-sample submission. Run the whole set from the UI's Benchmark section
-or via `POST /api/benchmark`.
+- **`data/primary_collection/`** — the real, first-party dataset: Swahili-English
+  health audio recorded in Kenya (smartphone m4a complaints, WhatsApp `.ogg`
+  voice notes, short scripted `.mp3` phrases) with human-verified
+  `reference_transcript`s, switch-point markers, and triage annotations in
+  `metadata.csv`. `scripts/bootstrap_primary_collection.py` can draft first-pass
+  transcripts (it refuses to overwrite the curated `metadata.csv`).
+- **`data/samples/`** — AfriSpeech-derived clips with `metadata.csv` (columns:
+  `filename, language_pair, language_code, domain, accent_country, device_type,
+  noise_condition, reference_transcript`, plus optional switch-point and
+  downstream gold annotations documented in `data/samples/README.md`). These
+  double as the challenge's audio-sample submission. Run the whole set from the
+  UI's Benchmark section or via `POST /api/benchmark`.
 
 ## Project layout
 
 ```
 backend/
-  app.py            FastAPI: session, triage, respond, command, phrases, benchmark
-  agent.py          GPT-4o doctor voice-command artifacts (report / flowchart)
-  config.py         .env, doctor + patient language lists
-  intron_client.py  Sahara STT sync upload + status-poll fallback
-  tts_client.py     Sahara TTS
-  translator.py     NLLB-200, including patient ↔ doctor
-  phrases.py/.json  quick-reply bank
-  triage.py         topic, urgency, department, intake, questions
-  graph.py          one-turn graph delta
-  graph_store.py    in-memory session graph + history + artifacts
-  asr_models.py     Whisper / MMS + language detection
-  benchmark.py      3-model WER/CER/latency
+  app.py              FastAPI: session, triage, respond, command, phrases, benchmark
+  agent.py            GPT-4o doctor voice-command artifacts (report / flowchart)
+  config.py           .env, doctor + patient language lists
+  intron_client.py    Sahara STT sync upload + status-poll fallback
+  tts_client.py       Sahara TTS
+  translator.py       NLLB-200, including patient <-> doctor
+  phrases.py/.json    quick-reply bank
+  extract.py          rule-based patient-context hints (age/sex/pregnancy)
+  lid.py              text-side language identification
+  triage.py           deterministic reasoning engine (topic/urgency/department/differential)
+  knowledge_base.py   loads + validates the clinical KB on boot
+  knowledge/
+    triage_kb.yaml    source-tagged clinical knowledge (WHO IITT / SATS)
+  graph.py            one-turn graph delta
+  graph_store.py      in-memory session graph + history + artifacts
+  asr_models.py       Whisper / MMS + MMS-LID language detection
+  benchmark.py        3-model WER/CER/latency + noise + offline
   tests/
-app/                Expo Router app (web + native)
-  src/app/          Home, Record session, Picture, Notes
-  src/api/          typed client (EXPO_PUBLIC_API_URL for devices)
-  src/state/        consultation context
-  src/components/   record control, graph, timeline, reply
-  dist/             web export, served by FastAPI at /
-frontend/           previous Vite UI (kept for reference)
+app/                  Expo Router app (web + native)
+  src/app/            Home, Record session, Picture, Notes
+  src/api/            typed client (EXPO_PUBLIC_API_URL for devices)
+  src/state/          consultation context
+  src/components/     record control, graph, timeline, reply, provenance
+  dist/               web export, served by FastAPI at /
+frontend/             previous Vite UI (kept for reference)
 scripts/
-  generate_benchmark_report.py
-data/samples/
+  generate_primary_report.py       primary-collection benchmark + report
+  generate_benchmark_report.py     AfriSpeech benchmark + report
+  bootstrap_primary_collection.py  draft transcripts (guards curated metadata)
+data/
+  primary_collection/  real Kenyan Swahili-English dataset + metadata.csv
+  samples/             AfriSpeech clips + metadata.csv
+docs/
+  ARCHITECTURE.md      technical brief + diagrams
+  RESPONSIBLE_AI.md    privacy, consent, safety, responsible data use
+reports/               generated benchmark JSON, charts, PDFs
 SUBMISSION.md
 ```
 

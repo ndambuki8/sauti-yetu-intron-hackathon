@@ -26,6 +26,13 @@ Usage (from the project root, venv active, INTRON_API_KEY in .env):
     python -m scripts.generate_benchmark_report --offline       # + local-only pass
     python -m scripts.generate_benchmark_report --noise --offline --agentic  # full suite
     python -m scripts.generate_benchmark_report --rebuild-only  # rebuild PDF from JSON
+
+    # Save runs separately with --tag (nothing gets overwritten):
+    python -m scripts.generate_benchmark_report --agentic --tag baseline
+    python -m scripts.generate_benchmark_report --noise --tag noise
+    #   -> results.<tag>.json, benchmark_report.<tag>.pdf, chart_*.<tag>.png
+    python -m scripts.generate_benchmark_report --rebuild-only --tag noise  # rebuild one tag
+    python -m scripts.generate_benchmark_report --rebuild-all               # rebuild every saved tag
 """
 
 import csv
@@ -58,6 +65,45 @@ REPORTS_DIR = PROJECT_ROOT / "reports" / "afrispeech"
 MODELS = ["Intron Sahara", "OpenAI Whisper", "Meta MMS"]
 LOCAL_MODELS = ["OpenAI Whisper", "Meta MMS"]
 DEFAULT_SNR_LEVELS = [30.0, 20.0, 10.0, 5.0]
+
+# Optional filename tag so multiple configurations can be saved side by side, e.g.
+# --tag noise -> results.noise.json / benchmark_report.noise.pdf / chart_*.noise.png
+_FILE_TAG = ""
+
+
+def _arg_value(flag: str, default: str | None = None) -> str | None:
+    """Read a value-bearing CLI arg: supports '--tag x' and '--tag=x'."""
+    for i, a in enumerate(sys.argv):
+        if a == flag and i + 1 < len(sys.argv):
+            return sys.argv[i + 1]
+        if a.startswith(flag + "="):
+            return a.split("=", 1)[1]
+    return default
+
+
+def _sanitize_tag(tag: str | None) -> str:
+    """Keep tags filesystem-safe (alnum, dash, underscore, dot)."""
+    if not tag:
+        return ""
+    return re.sub(r"[^A-Za-z0-9._-]", "_", tag.strip())
+
+
+def _tagged(filename: str) -> str:
+    """Insert the active _FILE_TAG before the extension of an output filename."""
+    if not _FILE_TAG:
+        return filename
+    p = Path(filename)
+    return f"{p.stem}.{_FILE_TAG}{p.suffix}"
+
+
+def _tag_from_results_name(name: str, prefix: str = "results") -> str:
+    """Recover the tag from a results filename ('results.noise.json' -> 'noise')."""
+    stem = name[:-5] if name.endswith(".json") else name
+    if stem == prefix:
+        return ""
+    if stem.startswith(prefix + "."):
+        return stem[len(prefix) + 1:]
+    return ""
 
 # Human-readable language_pair in metadata.csv → Intron app code
 PAIR_TO_CODE = {name.lower(): code for code, name in SUPPORTED_LANGUAGES.items()}
@@ -366,7 +412,7 @@ def make_charts(overall: dict, by_pair: dict) -> list[Path]:
     wers = [overall["all"][m]["mean_wer"] for m in models_in]
     _bar_chart(ax, models_in, wers, "Mean WER (lower is better)", "Domain 1: Overall WER by model")
     fig.tight_layout()
-    p = REPORTS_DIR / "chart_overall_wer.png"
+    p = REPORTS_DIR / _tagged("chart_overall_wer.png")
     fig.savefig(p, dpi=150)
     paths.append(p)
     plt.close(fig)
@@ -392,7 +438,7 @@ def make_charts(overall: dict, by_pair: dict) -> list[Path]:
         ax.set_title("Domain 1: WER by language pair")
         ax.legend(fontsize=8)
         fig.tight_layout()
-        p = REPORTS_DIR / "chart_wer_by_pair.png"
+        p = REPORTS_DIR / _tagged("chart_wer_by_pair.png")
         fig.savefig(p, dpi=150)
         paths.append(p)
         plt.close(fig)
@@ -404,7 +450,7 @@ def make_charts(overall: dict, by_pair: dict) -> list[Path]:
     ax.axhline(1.0, color="red", linestyle="--", linewidth=0.8, label="RTF=1 (real-time)")
     ax.legend(fontsize=8)
     fig.tight_layout()
-    p = REPORTS_DIR / "chart_rtf_by_model.png"
+    p = REPORTS_DIR / _tagged("chart_rtf_by_model.png")
     fig.savefig(p, dpi=150)
     paths.append(p)
     plt.close(fig)
@@ -438,7 +484,7 @@ def make_noise_charts(noise_agg: dict, snr_levels: list[float]) -> list[Path]:
     ax.invert_xaxis()
     ax.legend(fontsize=8)
     fig.tight_layout()
-    p = REPORTS_DIR / "chart_noise_wer_vs_snr.png"
+    p = REPORTS_DIR / _tagged("chart_noise_wer_vs_snr.png")
     fig.savefig(p, dpi=150)
     paths.append(p)
     plt.close(fig)
@@ -459,7 +505,7 @@ def make_noise_charts(noise_agg: dict, snr_levels: list[float]) -> list[Path]:
     ax.invert_xaxis()
     ax.legend(fontsize=8)
     fig.tight_layout()
-    p = REPORTS_DIR / "chart_noise_cer_vs_snr.png"
+    p = REPORTS_DIR / _tagged("chart_noise_cer_vs_snr.png")
     fig.savefig(p, dpi=150)
     paths.append(p)
     plt.close(fig)
@@ -489,7 +535,7 @@ def make_offline_chart(offline_agg: dict, online_agg: dict) -> list[Path]:
     ax.set_title("Domain 4: Online vs Offline local model accuracy")
     ax.legend(fontsize=8)
     fig.tight_layout()
-    p = REPORTS_DIR / "chart_offline_comparison.png"
+    p = REPORTS_DIR / _tagged("chart_offline_comparison.png")
     fig.savefig(p, dpi=150)
     paths.append(p)
     plt.close(fig)
@@ -951,7 +997,7 @@ def build_pdf(
     )
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = REPORTS_DIR / "benchmark_report.pdf"
+    out_path = REPORTS_DIR / _tagged("benchmark_report.pdf")
     pdf.output(str(out_path))
     return out_path
 
@@ -960,42 +1006,66 @@ def build_pdf(
 # Entry point
 # ---------------------------------------------------------------------------
 
+def _render_from_saved(results_path: Path, tag: str, snr_levels: list) -> None:
+    """Load a saved results JSON and rebuild its tagged charts + PDF (no model runs)."""
+    global _FILE_TAG
+    _FILE_TAG = tag
+    with open(results_path, encoding="utf-8") as fh:
+        saved = json.load(fh)
+    results       = saved["clips"]
+    overall       = saved["overall"]
+    by_pair       = saved["by_language_pair"]
+    by_noise      = saved["by_noise_condition"]
+    noise_agg     = saved.get("noise_robustness", {}).get("aggregated")
+    noise_results = saved.get("noise_robustness", {}).get("clips")
+    offline_agg   = saved.get("offline_simulation", {}).get("aggregated")
+    snr = saved.get("noise_robustness", {}).get("snr_levels_db", snr_levels)
+    print(f"Rebuilding report from {results_path.name} ({len(results)} clips, tag='{tag or '(none)'}')...")
+    charts   = make_charts(overall, by_pair)
+    n_charts = make_noise_charts(noise_agg, snr) if noise_agg else []
+    o_charts = make_offline_chart(offline_agg, overall) if offline_agg else []
+    pdf_path = build_pdf(
+        results, overall, by_pair, by_noise, charts,
+        noise_agg, noise_results, n_charts,
+        offline_agg, o_charts, snr,
+    )
+    print(f"Report written to {pdf_path}")
+
+
 def main():
-    results_path = REPORTS_DIR / "results.json"
+    global _FILE_TAG
 
     # ---- Flags ----
     rebuild_only = "--rebuild-only" in sys.argv
+    rebuild_all  = "--rebuild-all"  in sys.argv
     agentic      = "--agentic"      in sys.argv
     noise_mode   = "--noise"        in sys.argv
     offline_mode = "--offline"      in sys.argv
     noise_api    = "--noise-local"  not in sys.argv  # default: include API in noise sweep
+    tag          = _sanitize_tag(_arg_value("--tag", ""))
 
     snr_levels = DEFAULT_SNR_LEVELS
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    # --rebuild-all: redo every saved results*.json into its own tagged PDF.
+    if rebuild_all:
+        paths = sorted(REPORTS_DIR.glob("results*.json"))
+        if not paths:
+            print(f"No results*.json files found in {REPORTS_DIR}.")
+            sys.exit(1)
+        print(f"Rebuilding {len(paths)} saved result file(s)...\n")
+        for p in paths:
+            _render_from_saved(p, _tag_from_results_name(p.name), snr_levels)
+        return
+
+    _FILE_TAG = tag
+    results_path = REPORTS_DIR / _tagged("results.json")
 
     if rebuild_only:
         if not results_path.exists():
             print(f"No saved results at {results_path}; run without --rebuild-only first.")
             sys.exit(1)
-        with open(results_path, encoding="utf-8") as fh:
-            saved = json.load(fh)
-        results      = saved["clips"]
-        overall      = saved["overall"]
-        by_pair      = saved["by_language_pair"]
-        by_noise     = saved["by_noise_condition"]
-        noise_agg    = saved.get("noise_robustness", {}).get("aggregated")
-        noise_results = saved.get("noise_robustness", {}).get("clips")
-        offline_agg  = saved.get("offline_simulation", {}).get("aggregated")
-        offline_results = saved.get("offline_simulation", {}).get("clips", [])
-        print(f"Rebuilding report from {results_path} ({len(results)} clips)...")
-        charts  = make_charts(overall, by_pair)
-        n_charts = make_noise_charts(noise_agg, snr_levels) if noise_agg else []
-        o_charts = make_offline_chart(offline_agg, overall) if offline_agg else []
-        pdf_path = build_pdf(
-            results, overall, by_pair, by_noise, charts,
-            noise_agg, noise_results, n_charts,
-            offline_agg, o_charts, snr_levels,
-        )
-        print(f"Report written to {pdf_path}")
+        _render_from_saved(results_path, tag, snr_levels)
         return
 
     rows = load_metadata()

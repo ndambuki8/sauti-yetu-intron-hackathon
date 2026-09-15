@@ -422,11 +422,16 @@ def run_noise_benchmark(
             noisy_bytes = noisy_path.read_bytes()
             key = str(int(snr))
 
+            # Noisy bytes are always 16 kHz WAV. Label them .wav for Intron so its
+            # extension/format check passes — reusing the original name (e.g. .mp3)
+            # makes Intron reject the WAV payload as a format mismatch.
+            intron_name = Path(safe_name).with_suffix(".wav").name
+
             def _make_runners(nb: bytes, np_: Path):  # capture by value
                 runners = []
                 if not skip_api:
                     runners.append(
-                        ("Intron Sahara", lambda nb_=nb: intron_client.transcribe_plain(nb_, safe_name, language_code))
+                        ("Intron Sahara", lambda nb_=nb, name_=intron_name: intron_client.transcribe_plain(nb_, name_, language_code))
                     )
                 runners += [
                     ("OpenAI Whisper", lambda np__=np_: asr_models.transcribe_whisper(np__, language_code)),

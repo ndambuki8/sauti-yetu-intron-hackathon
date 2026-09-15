@@ -5,7 +5,11 @@ What this script does:
   - Measures Word Error Rate, Character Error Rate, and speed (Real-Time Factor)
   - Evaluates how well the triage pipeline labels topic, urgency and entities
   - Checks accuracy at code-switch points (where Swahili switches to English)
-  - Produces 5 charts and a PDF report in reports/primary_collection/
+  - Optionally sweeps noise robustness (WER vs SNR) with --noise
+  - Produces charts and a PDF report in reports/primary_collection/
+
+Clips are scored against the human ground-truth transcript in the
+reference_transcript column of metadata.csv; clips with no reference are excluded.
 
 Recording types in the dataset:
   m4a  - Real health complaints, smartphone microphone, 15-23 seconds
@@ -14,9 +18,18 @@ Recording types in the dataset:
 
 Usage (from project root, with venv active and INTRON_API_KEY set):
   python -m scripts.generate_primary_report               # full benchmark run
-  python -m scripts.generate_primary_report --agentic    # include triage scoring
-  python -m scripts.generate_primary_report --offline    # local models only
+  python -m scripts.generate_primary_report --agentic     # include triage scoring
+  python -m scripts.generate_primary_report --offline     # add local-only pass
+  python -m scripts.generate_primary_report --noise       # add SNR noise sweep (30/20/10/5 dB)
+  python -m scripts.generate_primary_report --noise --noise-local  # noise sweep, local models only
   python -m scripts.generate_primary_report --rebuild-only  # redo charts/PDF from saved JSON
+
+Saving runs separately with --tag (nothing gets overwritten):
+  python -m scripts.generate_primary_report --agentic --tag baseline
+  python -m scripts.generate_primary_report --noise   --tag noise
+  #   -> primary_results.<tag>.json, primary_benchmark_report.<tag>.pdf, chart_pc_*.<tag>.png
+  python -m scripts.generate_primary_report --rebuild-only --tag noise  # rebuild one tag
+  python -m scripts.generate_primary_report --rebuild-all               # rebuild every saved tag
 """
 
 import csv
@@ -38,13 +51,58 @@ from fpdf import FPDF
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from backend.benchmark import run_benchmark, run_offline_simulation  # noqa: E402
+from backend.benchmark import (  # noqa: E402
+    run_benchmark,
+    run_noise_benchmark,
+    run_offline_simulation,
+)
 from backend.config import PROJECT_ROOT, SUPPORTED_LANGUAGES          # noqa: E402
 
 PRIMARY_DIR  = PROJECT_ROOT / "data" / "primary_collection"
 REPORTS_DIR  = PROJECT_ROOT / "reports" / "primary_collection"
 MODELS       = ["Intron Sahara", "OpenAI Whisper", "Meta MMS"]
 LOCAL_MODELS = ["OpenAI Whisper", "Meta MMS"]
+DEFAULT_SNR_LEVELS = [30.0, 20.0, 10.0, 5.0]
+
+# Optional filename tag so multiple configurations can be saved side by side, e.g.
+# --tag noise -> primary_results.noise.json / ...noise.pdf / chart_pc_*.noise.png
+_FILE_TAG = ""
+
+
+def _arg_value(flag: str, default: str | None = None) -> str | None:
+    """Read a value-bearing CLI arg: supports '--tag x' and '--tag=x'."""
+    for i, a in enumerate(sys.argv):
+        if a == flag and i + 1 < len(sys.argv):
+            return sys.argv[i + 1]
+        if a.startswith(flag + "="):
+            return a.split("=", 1)[1]
+    return default
+
+
+def _sanitize_tag(tag: str | None) -> str:
+    """Keep tags filesystem-safe (alnum, dash, underscore, dot)."""
+    if not tag:
+        return ""
+    return re.sub(r"[^A-Za-z0-9._-]", "_", tag.strip())
+
+
+def _tagged(filename: str) -> str:
+    """Insert the active _FILE_TAG before the extension of an output filename."""
+    if not _FILE_TAG:
+        return filename
+    p = Path(filename)
+    return f"{p.stem}.{_FILE_TAG}{p.suffix}"
+
+
+def _tag_from_results_name(name: str) -> str:
+    """Recover the tag from a results filename ('primary_results.noise.json' -> 'noise')."""
+    stem = name[:-5] if name.endswith(".json") else name
+    prefix = "primary_results"
+    if stem == prefix:
+        return ""
+    if stem.startswith(prefix + "."):
+        return stem[len(prefix) + 1:]
+    return ""
 
 # ── Color palette ─────────────────────────────────────────────────────────────
 C = {
@@ -95,18 +153,35 @@ def _language_code(row: dict) -> str:
 def load_metadata() -> list[dict]:
     path = PRIMARY_DIR / "metadata.csv"
     if not path.exists():
-        print(f"ERROR: {path} not found. Run bootstrap first:")
-        print("  python -m scripts.bootstrap_primary_collection")
+        print(f"ERROR: {path} not found.")
+        print("  This benchmark reads human ground-truth transcripts from metadata.csv.")
+        print("  To generate a first-pass draft to fill in, run:")
+        print("    python -m scripts.bootstrap_primary_collection")
         sys.exit(1)
     with open(path, encoding="utf-8") as fh:
         rows = [r for r in csv.DictReader(fh) if r.get("filename")]
     existing = []
+    skipped_missing_file = 0
+    skipped_no_reference = 0
     for row in rows:
         fpath = PRIMARY_DIR / row["filename"]
-        if fpath.exists():
-            existing.append(row)
-        else:
+        if not fpath.exists():
             print(f"  skipping {row['filename']} (file not found)")
+            skipped_missing_file += 1
+            continue
+        # Ground-truth benchmark: only score clips that have a human reference
+        # transcript. Clips with an empty reference_transcript are excluded so
+        # every reported WER/CER reflects a real, verifiable comparison.
+        if not (row.get("reference_transcript") or "").strip():
+            print(f"  skipping {row['filename']} (no reference_transcript — excluded from benchmark)")
+            skipped_no_reference += 1
+            continue
+        existing.append(row)
+    if skipped_missing_file or skipped_no_reference:
+        print(
+            f"  ({skipped_missing_file} skipped for missing file, "
+            f"{skipped_no_reference} skipped for missing reference transcript)"
+        )
     return existing
 
 
@@ -164,6 +239,30 @@ def run_offline_pass(rows: list[dict]) -> list[dict]:
         )
         results.append({"metadata": row, "offline": result})
     return results
+
+
+def run_noise_pass(
+    rows: list[dict],
+    snr_levels: list[float],
+    skip_api: bool = False,
+) -> list[dict]:
+    """Section 3 (noise): sweep every clip through the Gaussian-noise SNR levels."""
+    noise_results = []
+    tag = "(local only)" if skip_api else "(all models)"
+    for i, row in enumerate(rows, 1):
+        lang = _language_code(row)
+        print(f"  noise [{i:2d}/{len(rows)}] {row['filename']:50s} SNR={snr_levels} dB {tag}")
+        audio_bytes = (PRIMARY_DIR / row["filename"]).read_bytes()
+        result = run_noise_benchmark(
+            audio_bytes,
+            filename=row["filename"],
+            reference_transcript=row["reference_transcript"],
+            language_code=lang,
+            snr_levels=snr_levels,
+            skip_api=skip_api,
+        )
+        noise_results.append({"metadata": row, "noise": result})
+    return noise_results
 
 
 # ─── Aggregation ─────────────────────────────────────────────────────────────
@@ -241,11 +340,42 @@ def aggregate_offline(off_results: list[dict]) -> dict:
                 "n": len(b["wer"])} for m, b in bks.items()}
 
 
+def aggregate_noise(noise_results: list[dict], models_list: list[str]) -> dict:
+    """Build {model: {snr_str: {mean_wer, mean_cer, mean_rtf, n}}} for charting."""
+    buckets: dict = {}
+    for clip in noise_results:
+        for snr_key, level_results in clip["noise"]["levels"].items():
+            for r in level_results:
+                m = r["model"]
+                if m not in models_list:
+                    continue
+                bk = buckets.setdefault(m, {}).setdefault(
+                    snr_key, {"wer": [], "cer": [], "rtf": []}
+                )
+                if r.get("wer") is not None:
+                    bk["wer"].append(r["wer"])
+                    bk["cer"].append(r["cer"])
+                if r.get("rtf") is not None:
+                    bk["rtf"].append(r["rtf"])
+    return {
+        model: {
+            snr: {
+                "mean_wer": _mean(v["wer"]),
+                "mean_cer": _mean(v["cer"]),
+                "mean_rtf": _mean(v["rtf"]),
+                "n": len(v["wer"]),
+            }
+            for snr, v in snr_map.items()
+        }
+        for model, snr_map in buckets.items()
+    }
+
+
 # ─── Charts ───────────────────────────────────────────────────────────────────
 
 def _savefig(fig, name: str) -> Path:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    p = REPORTS_DIR / name
+    p = REPORTS_DIR / _tagged(name)
     fig.savefig(p, dpi=160, bbox_inches="tight")
     plt.close(fig)
     return p
@@ -503,6 +633,47 @@ def chart_wer_vs_duration(results: list[dict]) -> Path:
     return _savefig(fig, "chart_pc_wer_scatter.png")
 
 
+def chart_noise_wer_vs_snr(noise_agg: dict, snr_levels: list[float]) -> Path:
+    """Line chart — WER degradation as SNR drops (noisier), one line per model."""
+    snr_keys = [str(int(s)) for s in sorted(snr_levels, reverse=True)]
+
+    fig, ax = plt.subplots(figsize=(8, 4.2))
+    plotted = False
+    for model in MODELS:
+        snr_map = noise_agg.get(model, {})
+        xs, ys = [], []
+        for k in snr_keys:
+            mw = snr_map.get(k, {}).get("mean_wer")
+            if mw is not None:
+                xs.append(int(k))
+                ys.append(mw)
+        if xs:
+            plotted = True
+            ax.plot(xs, ys, marker="o", linewidth=2, markersize=6,
+                    label=model, color=MODEL_HEX.get(model, "#888888"))
+            for xi, yi in zip(xs, ys):
+                ax.text(xi, yi + 0.015, f"{yi:.2f}", ha="center", va="bottom",
+                        fontsize=6.5, color="#333")
+
+    if not plotted:
+        ax.text(0.5, 0.5, "No noise-sweep data available", ha="center", transform=ax.transAxes)
+
+    ax.set_xlabel("SNR (dB)   —   lower = noisier  →", fontsize=9)
+    ax.set_ylabel("Mean Word Error Rate", fontsize=9)
+    ax.set_title(
+        "Noise Robustness — WER vs Signal-to-Noise Ratio\n"
+        "Primary Health Collection  |  Gaussian noise added at each SNR level",
+        fontsize=10, fontweight="bold",
+    )
+    ax.invert_xaxis()  # noisier (low SNR) on the right
+    ax.axhline(0.3, color="#888", linestyle="--", linewidth=0.7, label="WER 0.30 target")
+    ax.legend(fontsize=8)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_facecolor("#fafafa")
+    fig.patch.set_facecolor("white")
+    return _savefig(fig, "chart_pc_noise_wer_vs_snr.png")
+
+
 def make_all_charts(results: list[dict], overall: dict, by_type: dict) -> dict[str, Path]:
     n_total = len(results)
     print("\nGenerating charts...")
@@ -722,15 +893,15 @@ def _cover_page(pdf: PrimaryReportPDF, results: list[dict], flags: dict):
 
     pdf.info_box(
         "HOW THE REFERENCE TRANSCRIPTS WORK\n\n"
-        "This dataset does not have hand-written ground-truth transcripts. Instead, Intron Sahara "
-        "was used in a 'bootstrap' phase to transcribe each file first. Those Sahara transcripts "
-        "became the reference that all three models are compared against.\n\n"
-        "What this means for the numbers:\n"
-        "  - Sahara WER is nearly 0 because it is compared against itself (two API calls on the "
-        "same file produce almost identical output). This confirms API consistency, not accuracy.\n"
-        "  - Whisper WER and MMS WER show how much those models diverge from Sahara's output. "
-        "A high WER does not necessarily mean they are wrong — they may just phrase things "
-        "differently. The per-clip transcripts in Section 5 let you judge this directly.\n\n"
+        "Every clip in this report is scored against a human ground-truth transcript stored in the "
+        "reference_transcript column of metadata.csv. All three models are compared against that same "
+        "reference on equal footing. Clips with no reference transcript are excluded from the benchmark "
+        "so that every reported number reflects a real, verifiable comparison.\n\n"
+        "Note on provenance: the m4a and mp3 references were seeded from an initial transcription pass "
+        "and then verified against the audio; the ogg WhatsApp references were transcribed by hand. "
+        "Because the m4a/mp3 gold text follows the original engine's spelling and punctuation "
+        "conventions, Intron Sahara may retain a small formatting advantage on those two subsets. The "
+        "ogg subset is the cleanest fully-independent three-way comparison.\n\n"
         "RECORDING TYPES:\n"
         "  m4a  — Real Swahili-English health complaints, smartphone, indoor (15-23 s)\n"
         "  ogg  — WhatsApp Push-to-Talk voice notes, ambient noise (7-31 s)\n"
@@ -745,7 +916,7 @@ def _domain1(pdf: PrimaryReportPDF, results: list[dict], overall: dict,
     pdf.body(
         "Each clip was sent to all three models after converting to 16 kHz mono WAV. "
         "Word Error Rate (WER) counts how many words were wrong, inserted or deleted "
-        "compared to the Sahara reference. Character Error Rate (CER) measures the same "
+        "compared to the human reference transcript. Character Error Rate (CER) measures the same "
         "at the character level — more useful for Swahili because one word can carry a lot "
         "of meaning through its suffixes.\n\n"
         "Lower WER / CER = closer to the reference. "
@@ -890,7 +1061,10 @@ def _domain2(pdf: PrimaryReportPDF, results: list[dict], overall: dict, charts: 
     pdf.img(charts.get("category_wer"))
 
 
-def _domain3(pdf: PrimaryReportPDF, results: list[dict], overall: dict):
+def _domain3(pdf: PrimaryReportPDF, results: list[dict], overall: dict,
+             noise_agg: dict | None = None, noise_results: list[dict] | None = None,
+             snr_levels: list[float] | None = None, charts: dict | None = None):
+    charts = charts or {}
     pdf.section_header("SECTION 3  —  Code-Switching Performance")
     pdf.body(
         "All m4a and ogg clips are real Swahili-English code-switched recordings. "
@@ -934,10 +1108,43 @@ def _domain3(pdf: PrimaryReportPDF, results: list[dict], overall: dict):
     pdf.body(
         "m4a clips: smartphone, quiet indoor room.\n"
         "ogg clips: WhatsApp PTT, ambient noise from real environments.\n"
-        "mp3 clips: laptop microphone, quiet indoor room.\n\n"
-        "To test noise robustness (Gaussian noise at different SNR levels), "
-        "run the AfriSpeech benchmark with --noise."
+        "mp3 clips: laptop microphone, quiet indoor room."
     )
+
+    pdf.subsection("3c. Noise robustness (SNR sweep)")
+    if noise_agg:
+        levels = snr_levels or DEFAULT_SNR_LEVELS
+        snr_cols = [str(int(s)) for s in sorted(levels, reverse=True)]
+        pdf.body(
+            "Each clip was re-transcribed after adding Gaussian noise at several "
+            "signal-to-noise ratios (SNR). A high SNR (30 dB) is close to clean; a low "
+            "SNR (5 dB) is heavy background noise. Rising WER as SNR falls shows how much "
+            "each model degrades in noisy, real-world conditions. WER is still measured "
+            "against the human reference transcript."
+        )
+        headers = ["Model"] + [f"WER@{s}dB" for s in snr_cols] + ["n"]
+        widths  = [46] + [26] * len(snr_cols) + [16]
+        rows = []
+        for model in MODELS:
+            snr_map = noise_agg.get(model)
+            if not snr_map:
+                continue
+            n_clips = max((snr_map.get(k, {}).get("n", 0) for k in snr_cols), default=0)
+            rows.append(
+                [model]
+                + [fmt(snr_map.get(k, {}).get("mean_wer")) for k in snr_cols]
+                + [str(n_clips)]
+            )
+        if rows:
+            pdf.wer_table(headers, rows, widths)
+        pdf.img(charts.get("noise_wer_vs_snr"))
+    else:
+        pdf.body(
+            "Noise-sweep data was not collected in this run. Re-run with --noise to add "
+            "the Gaussian-noise SNR sweep (30/20/10/5 dB). Because this multiplies the "
+            "number of model calls per clip, use --noise-local to sweep only the local "
+            "models (Whisper + MMS) and avoid extra Intron Sahara API usage."
+        )
 
 
 def _domain4(pdf: PrimaryReportPDF, overall: dict, offline_agg: dict | None, charts: dict, n_total: int):
@@ -998,7 +1205,7 @@ def _per_clip_section(pdf: PrimaryReportPDF, results: list[dict]):
     pdf.section_header("SECTION 5  —  Per-Clip Transcripts")
     pdf.body(
         "All three model outputs are shown side-by-side for each clip. "
-        "WER is against the Sahara bootstrap reference. "
+        "WER is against the human reference transcript. "
         "Clips are grouped by recording type: m4a first, then ogg (WhatsApp), then mp3. "
         "Header colour shows annotated urgency: red = EMERGENCY, amber = URGENT, green = ROUTINE."
     )
@@ -1022,7 +1229,7 @@ def _per_clip_section(pdf: PrimaryReportPDF, results: list[dict]):
 
     def _render_ref(clip: dict):
         meta = clip["metadata"]
-        ref_text = f"Reference (Sahara bootstrap): {meta.get('reference_transcript', '')}"
+        ref_text = f"Reference (ground truth): {meta.get('reference_transcript', '')}"
         pdf.set_fill_color(248, 248, 248)
         pdf.set_font("Helvetica", "I", 8)
         pdf.set_x(pdf.l_margin)
@@ -1080,7 +1287,7 @@ def _per_clip_section(pdf: PrimaryReportPDF, results: list[dict]):
 
     if mp3_clips:
         pdf.subsection(f"5c. Short triage phrases  ({len(mp3_clips)} mp3 clips)")
-        headers = ["File", "Reference (Sahara)", "Sahara WER", "Whisper WER", "MMS WER", "Best"]
+        headers = ["File", "Reference (truth)", "Sahara WER", "Whisper WER", "MMS WER", "Best"]
         widths  = [28, 58, 22, 22, 22, 15]
         rows_mp3, fills_mp3 = [], []
         for clip in mp3_clips:
@@ -1110,11 +1317,13 @@ def _per_clip_section(pdf: PrimaryReportPDF, results: list[dict]):
 def _limitations(pdf: PrimaryReportPDF, n_total: int, n_m4a: int, n_ogg: int, n_mp3: int):
     pdf.section_header("SECTION 6  —  Known Limitations")
     pdf.body(
-        f"1. NO HAND-WRITTEN GROUND TRUTH\n"
-        f"   Sahara bootstrap transcripts are used as the reference. This makes Sahara "
-        f"   WER artificially low (near 0) and means Whisper and MMS WER reflects "
-        f"   disagreement with Sahara, not actual transcription errors. Manual transcription "
-        f"   of at least the m4a and ogg files is needed for a true accuracy benchmark.\n\n"
+        f"1. REFERENCE TRANSCRIPT PROVENANCE\n"
+        f"   All clips are scored against human ground-truth transcripts (the reference_transcript "
+        f"   column in metadata.csv); clips without a reference are excluded from the benchmark. "
+        f"   The m4a and mp3 references were seeded from an initial transcription pass and verified "
+        f"   against the audio, so they follow Intron Sahara's spelling/punctuation conventions and "
+        f"   may give Sahara a small formatting edge on those two subsets. The ogg WhatsApp references "
+        f"   were transcribed independently by hand and give the cleanest three-way comparison.\n\n"
 
         f"2. SAHARA API BALANCE RAN OUT\n"
         f"   The Intron Sahara API returned an 'insufficient balance' error part-way through "
@@ -1160,72 +1369,17 @@ def _build_manifest(rows: list[dict], flags: dict) -> dict:
         "clip_count": len(rows),
         "switch_point_annotated_clips": switch_annotated,
         "downstream_annotated_clips": downstream_ann,
-        "reference_note": "Sahara bootstrap transcription used as proxy ground truth",
+        "reference_note": "Human ground-truth transcripts (reference_transcript column); clips without a reference are excluded",
         "collection": "data/primary_collection",
     }
 
 
-def main():
-    rebuild_only = "--rebuild-only" in sys.argv
-    agentic      = "--agentic"      in sys.argv
-    offline_mode = "--offline"      in sys.argv
-    flags = {"agentic": agentic, "offline": offline_mode}
-
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    results_path = REPORTS_DIR / "primary_results.json"
-    pdf_path     = REPORTS_DIR / "primary_benchmark_report.pdf"
-
-    if rebuild_only:
-        if not results_path.exists():
-            print(f"No saved results at {results_path}. Run without --rebuild-only first.")
-            sys.exit(1)
-        with open(results_path, encoding="utf-8") as fh:
-            saved = json.load(fh)
-        results     = saved["clips"]
-        overall     = saved["overall"]
-        by_type     = saved["by_recording_type"]
-        offline_agg = saved.get("offline_simulation", {}).get("aggregated")
-        print(f"Rebuilding from {results_path} ({len(results)} clips)...")
-    else:
-        rows = load_metadata()
-        if not rows:
-            print("No clips found. Run bootstrap first:")
-            print("  python -m scripts.bootstrap_primary_collection")
-            sys.exit(1)
-
-        print(f"\nBenchmarking {len(rows)} clips across 3 models...\n")
-        print(f"  agentic : {'yes' if agentic else 'no'}")
-        print(f"  offline : {'yes' if offline_mode else 'no'}\n")
-
-        results = run_all(rows, agentic=agentic)
-        overall = aggregate(results, lambda c: "all")
-        by_type = aggregate(results, lambda c: c["metadata"].get("recording_type", "unknown"))
-        by_cat  = aggregate(results, lambda c: c["metadata"].get("clinical_category", "Unknown"))
-
-        offline_agg = None
-        offline_results = None
-        if offline_mode:
-            print("\nOffline simulation...")
-            offline_results = run_offline_pass(rows)
-            offline_agg = aggregate_offline(offline_results)
-
-        manifest = _build_manifest(rows, flags)
-        payload: dict = {
-            "manifest": manifest,
-            "overall": overall,
-            "by_recording_type": by_type,
-            "by_clinical_category": by_cat,
-            "clips": results,
-        }
-        if offline_results:
-            payload["offline_simulation"] = {
-                "aggregated": offline_agg, "clips": offline_results
-            }
-        with open(results_path, "w", encoding="utf-8") as fh:
-            json.dump(payload, fh, ensure_ascii=False, indent=2)
-        print(f"\nRaw results → {results_path}")
-
+def _render_report(results, overall, by_type, offline_agg,
+                   noise_agg, noise_results, snr_levels, flags) -> None:
+    """Render charts + PDF from in-memory results, honoring the active file tag."""
     charts = make_all_charts(results, overall, by_type)
+    if noise_agg:
+        charts["noise_wer_vs_snr"] = chart_noise_wer_vs_snr(noise_agg, snr_levels)
 
     n_total = len(results)
     n_m4a   = sum(1 for c in results if c["metadata"].get("recording_type") == "naturalistic_health_complaint")
@@ -1246,7 +1400,7 @@ def main():
     _domain2(pdf, results, overall, charts)
 
     pdf.add_page()
-    _domain3(pdf, results, overall)
+    _domain3(pdf, results, overall, noise_agg, noise_results, snr_levels, charts)
 
     pdf.add_page()
     _domain4(pdf, overall, offline_agg, charts, n_total)
@@ -1257,6 +1411,7 @@ def main():
     pdf.add_page()
     _limitations(pdf, n_total, n_m4a, n_ogg, n_mp3)
 
+    pdf_path = REPORTS_DIR / _tagged("primary_benchmark_report.pdf")
     pdf.output(str(pdf_path))
     print(f"PDF report  → {pdf_path}\n")
     print(f"Charts      → {REPORTS_DIR}\n")
@@ -1266,6 +1421,121 @@ def main():
         wer_str  = fmt(s.get("mean_wer"))
         rtf_str  = fmt(s.get("mean_rtf"), 2)
         print(f"  {m:20s}  WER={wer_str}  RTF={rtf_str}  n={n_clips}")
+
+
+def _load_and_render(results_path: Path, tag: str) -> None:
+    """Load a saved results JSON and rebuild its tagged charts + PDF."""
+    global _FILE_TAG
+    _FILE_TAG = tag
+    with open(results_path, encoding="utf-8") as fh:
+        saved = json.load(fh)
+    results       = saved["clips"]
+    overall       = saved["overall"]
+    by_type       = saved["by_recording_type"]
+    offline_agg   = saved.get("offline_simulation", {}).get("aggregated")
+    noise_block   = saved.get("noise_robustness", {})
+    noise_agg     = noise_block.get("aggregated")
+    noise_results = noise_block.get("clips")
+    snr_levels    = noise_block.get("snr_levels_db", DEFAULT_SNR_LEVELS)
+    flags         = saved.get("manifest", {}).get("flags", {})
+    print(f"Rebuilding from {results_path.name} ({len(results)} clips, tag='{tag or '(none)'}')...")
+    _render_report(results, overall, by_type, offline_agg,
+                   noise_agg, noise_results, snr_levels, flags)
+
+
+def main():
+    global _FILE_TAG
+    rebuild_only = "--rebuild-only" in sys.argv
+    rebuild_all  = "--rebuild-all"  in sys.argv
+    agentic      = "--agentic"      in sys.argv
+    offline_mode = "--offline"      in sys.argv
+    noise_mode   = "--noise"        in sys.argv
+    noise_api    = "--noise-local"  not in sys.argv  # default: include API in noise sweep
+    snr_levels   = DEFAULT_SNR_LEVELS
+    tag          = _sanitize_tag(_arg_value("--tag", ""))
+    flags = {"agentic": agentic, "offline": offline_mode, "noise": noise_mode, "tag": tag}
+
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    # --rebuild-all: redo every saved primary_results*.json into its own tagged PDF.
+    if rebuild_all:
+        paths = sorted(REPORTS_DIR.glob("primary_results*.json"))
+        if not paths:
+            print(f"No primary_results*.json files found in {REPORTS_DIR}.")
+            sys.exit(1)
+        print(f"Rebuilding {len(paths)} saved result file(s)...\n")
+        for p in paths:
+            _load_and_render(p, _tag_from_results_name(p.name))
+        return
+
+    _FILE_TAG = tag
+    results_path = REPORTS_DIR / _tagged("primary_results.json")
+
+    if rebuild_only:
+        if not results_path.exists():
+            print(f"No saved results at {results_path}. Run without --rebuild-only first.")
+            sys.exit(1)
+        _load_and_render(results_path, tag)
+        return
+    else:
+        rows = load_metadata()
+        if not rows:
+            print("No clips with a reference transcript found in metadata.csv.")
+            print("  Fill in the reference_transcript column, then re-run this script.")
+            sys.exit(1)
+
+        print(f"\nBenchmarking {len(rows)} clips across 3 models...\n")
+        print(f"  agentic : {'yes' if agentic else 'no'}")
+        print(f"  offline : {'yes' if offline_mode else 'no'}")
+        print(f"  noise   : {'yes' if noise_mode else 'no'}"
+              f"{' (local only)' if noise_mode and not noise_api else ''}\n")
+
+        results = run_all(rows, agentic=agentic)
+        overall = aggregate(results, lambda c: "all")
+        by_type = aggregate(results, lambda c: c["metadata"].get("recording_type", "unknown"))
+        by_cat  = aggregate(results, lambda c: c["metadata"].get("clinical_category", "Unknown"))
+
+        offline_agg = None
+        offline_results = None
+        if offline_mode:
+            print("\nOffline simulation...")
+            offline_results = run_offline_pass(rows)
+            offline_agg = aggregate_offline(offline_results)
+
+        noise_agg = None
+        noise_results = None
+        if noise_mode:
+            print(f"\nNoise sweep at SNR {snr_levels} dB "
+                  f"({'all models' if noise_api else 'local only'})...")
+            noise_results = run_noise_pass(rows, snr_levels, skip_api=not noise_api)
+            noise_agg = aggregate_noise(
+                noise_results, MODELS if noise_api else LOCAL_MODELS
+            )
+
+        manifest = _build_manifest(rows, flags)
+        payload: dict = {
+            "manifest": manifest,
+            "overall": overall,
+            "by_recording_type": by_type,
+            "by_clinical_category": by_cat,
+            "clips": results,
+        }
+        if offline_results:
+            payload["offline_simulation"] = {
+                "aggregated": offline_agg, "clips": offline_results
+            }
+        if noise_results:
+            payload["noise_robustness"] = {
+                "aggregated": noise_agg,
+                "snr_levels_db": snr_levels,
+                "clips": noise_results,
+            }
+        with open(results_path, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, ensure_ascii=False, indent=2)
+        print(f"\nRaw results → {results_path}")
+
+    _render_report(results, overall, by_type, offline_agg,
+                   noise_agg, noise_results, snr_levels, flags)
 
 
 if __name__ == "__main__":

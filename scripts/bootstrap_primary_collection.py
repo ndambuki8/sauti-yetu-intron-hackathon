@@ -1,16 +1,26 @@
-"""Bootstrap phase: transcribe all primary_collection clips with Intron Sahara.
+"""Bootstrap helper: draft first-pass transcripts for primary_collection clips.
 
-Since the primary collection has no hand-written reference transcripts, Sahara
-is used as the proxy ground truth.  Local models (Whisper, MMS) are then
-benchmarked against that reference in generate_primary_report.py.
+This script transcribes clips with Intron Sahara to produce a *draft* metadata
+file that a human then reviews and corrects. The corrected, human-verified
+transcripts in data/primary_collection/metadata.csv are the ground truth used by
+generate_primary_report.py — that file is authoritative and must not be
+regenerated blindly.
 
-The script produces two outputs:
-  data/primary_collection/bootstrap_cache.json  — raw Sahara outputs, one per clip
-  data/primary_collection/metadata.csv          — benchmark-ready metadata
+IMPORTANT: metadata.csv is now curated by hand (it includes hand-written ogg
+WhatsApp references that this script does not generate — _collect_files() only
+globs mp3 + m4a). To protect that work, this script REFUSES to overwrite an
+existing metadata.csv and writes metadata.bootstrap_draft.csv instead, unless
+--overwrite-metadata is explicitly passed.
+
+The script produces:
+  data/primary_collection/bootstrap_cache.json         — raw Sahara outputs, one per clip
+  data/primary_collection/metadata.bootstrap_draft.csv — draft metadata (when metadata.csv exists)
+  data/primary_collection/metadata.csv                 — only when the file is absent or --overwrite-metadata is passed
 
 Usage (from project root, venv active, INTRON_API_KEY in .env):
-    python -m scripts.bootstrap_primary_collection
-    python -m scripts.bootstrap_primary_collection --force   # re-transcribe even if cached
+    python -m scripts.bootstrap_primary_collection                       # draft only if metadata.csv missing
+    python -m scripts.bootstrap_primary_collection --force               # re-transcribe even if cached
+    python -m scripts.bootstrap_primary_collection --overwrite-metadata  # DANGER: rebuild metadata.csv from scratch
 """
 
 import csv
@@ -349,7 +359,23 @@ def build_metadata(cache: dict) -> None:
             "expected_entities":    json.dumps(exp_entities),
         })
 
-    with open(META_PATH, "w", encoding="utf-8", newline="") as fh:
+    # SAFETY GUARD: metadata.csv is a curated, human-verified ground-truth file
+    # (it contains hand-written ogg references and corrected transcripts that this
+    # script does not produce). Overwriting it would destroy that work and drop the
+    # ogg rows entirely, since _collect_files() only globs mp3 + m4a. So by default
+    # we refuse to overwrite an existing metadata.csv and write a draft instead.
+    out_path = META_PATH
+    if META_PATH.exists() and "--overwrite-metadata" not in sys.argv:
+        out_path = PRIMARY_DIR / "metadata.bootstrap_draft.csv"
+        print(
+            f"\nWARNING: {META_PATH.name} already exists and is treated as curated ground truth.\n"
+            f"         Refusing to overwrite it. Writing a first-pass draft to "
+            f"{out_path.name} instead.\n"
+            f"         Pass --overwrite-metadata to force a full rebuild "
+            f"(this DESTROYS hand-written references and drops all ogg rows).\n"
+        )
+
+    with open(out_path, "w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(rows)
@@ -357,9 +383,14 @@ def build_metadata(cache: dict) -> None:
     m4a_count = sum(1 for r in rows if r["recording_type"] != "synthetic_triage_phrase")
     mp3_count  = sum(1 for r in rows if r["recording_type"] == "synthetic_triage_phrase")
     annotated  = sum(1 for r in rows if r["expected_topic"])
-    print(f"metadata.csv written → {META_PATH}")
+    print(f"metadata written → {out_path}")
     print(f"  {len(rows)} clips total: {m4a_count} m4a (naturalistic), {mp3_count} mp3 (phrase)")
     print(f"  {annotated} clips with expected_topic annotation")
+    if out_path != META_PATH:
+        print(
+            f"  NOTE: review {out_path.name} and merge any wanted rows into "
+            f"{META_PATH.name} by hand — do not blindly replace it."
+        )
 
 
 def main():

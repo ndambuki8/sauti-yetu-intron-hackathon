@@ -1,14 +1,14 @@
 {
   "manifest": {
     "schema_version": "3.0",
-    "generated_at_utc": "2026-09-14T06:31:52.066873+00:00",
-    "command": "/home/coder/Desktop/sauti-yetu-intron-hackathon/scripts/generate_benchmark_report.py",
-    "git_commit": "71e561d7d7674e1848bdff0d37ba1cfdf2b1f757",
-    "python_version": "3.12.3",
-    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+    "generated_at_utc": "2026-09-15T13:45:46.699197+00:00",
+    "command": "C:\\Users\\koome\\OneDrive\\Desktop\\GitHub Repositories\\sauti-yetu-intron-hackathon\\scripts\\generate_benchmark_report.py --agentic --tag baseline",
+    "git_commit": "854d040f73e464ff903f6d05a059b0474f0c9eaf",
+    "python_version": "3.13.5",
+    "platform": "Windows-11-10.0.26200-SP0",
     "intron_api_key_present": true,
     "flags": {
-      "agentic": false,
+      "agentic": true,
       "noise": false,
       "offline": false
     },
@@ -43,8 +43,8 @@
       "Intron Sahara": {
         "mean_wer": 0.4177,
         "mean_cer": 0.2243,
-        "mean_latency": 9.5333,
-        "mean_rtf": 1.3621,
+        "mean_latency": 10.2474,
+        "mean_rtf": 1.4517,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -52,10 +52,10 @@
         "n": 27
       },
       "OpenAI Whisper": {
-        "mean_wer": 0.6578,
-        "mean_cer": 0.3982,
-        "mean_latency": 4.0426,
-        "mean_rtf": 0.5902,
+        "mean_wer": 0.6617,
+        "mean_cer": 0.41,
+        "mean_latency": 4.1207,
+        "mean_rtf": 0.6242,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -65,8 +65,8 @@
       "Meta MMS": {
         "mean_wer": 0.5761,
         "mean_cer": 0.2708,
-        "mean_latency": 6.7826,
-        "mean_rtf": 0.7909,
+        "mean_latency": 8.0215,
+        "mean_rtf": 0.9774,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -80,8 +80,8 @@
       "Intron Sahara": {
         "mean_wer": 0.225,
         "mean_cer": 0.1423,
-        "mean_latency": 7.52,
-        "mean_rtf": 1.5849,
+        "mean_latency": 14.2833,
+        "mean_rtf": 2.8348,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -89,10 +89,10 @@
         "n": 3
       },
       "OpenAI Whisper": {
-        "mean_wer": 0.8667,
-        "mean_cer": 0.6399,
-        "mean_latency": 12.56,
-        "mean_rtf": 2.2837,
+        "mean_wer": 0.8863,
+        "mean_cer": 0.6373,
+        "mean_latency": 15.4033,
+        "mean_rtf": 2.8992,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -102,8 +102,8 @@
       "Meta MMS": {
         "mean_wer": 0.4505,
         "mean_cer": 0.1695,
-        "mean_latency": 7.1833,
-        "mean_rtf": 1.0642,
+        "mean_latency": 3.1267,
+        "mean_rtf": 0.4327,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -115,8 +115,8 @@
       "Intron Sahara": {
         "mean_wer": 0.334,
         "mean_cer": 0.1346,
-        "mean_latency": 9.15,
-        "mean_rtf": 0.9749,
+        "mean_latency": 7.7667,
+        "mean_rtf": 0.6863,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -125,9 +125,9 @@
       },
       "OpenAI Whisper": {
         "mean_wer": 0.5605,
-        "mean_cer": 0.3944,
-        "mean_latency": 3.2167,
-        "mean_rtf": 0.4439,
+        "mean_cer": 0.4457,
+        "mean_latency": 2.1933,
+        "mean_rtf": 0.266,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -137,8 +137,8 @@
       "Meta MMS": {
         "mean_wer": 0.7839,
         "mean_cer": 0.4509,
-        "mean_latency": 8.4333,
-        "mean_rtf": 0.7477,
+        "mean_latency": 12.7467,
+        "mean_rtf": 1.538,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -150,8 +150,8 @@
       "Intron Sahara": {
         "mean_wer": 0.5938,
         "mean_cer": 0.1423,
-        "mean_latency": 6.3067,
-        "mean_rtf": 0.954,
+        "mean_latency": 11.15,
+        "mean_rtf": 1.8976,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -159,10 +159,10 @@
         "n": 3
       },
       "OpenAI Whisper": {
-        "mean_wer": 0.4286,
-        "mean_cer": 0.2607,
-        "mean_latency": 1.6433,
-        "mean_rtf": 0.3055,
+        "mean_wer": 0.6508,
+        "mean_cer": 0.3181,
+        "mean_latency": 2.37,
+        "mean_rtf": 0.5195,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -172,8 +172,8 @@
       "Meta MMS": {
         "mean_wer": 0.3816,
         "mean_cer": 0.188,
-        "mean_latency": 5.3433,
-        "mean_rtf": 0.7976,
+        "mean_latency": 15.8867,
+        "mean_rtf": 2.028,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -185,19 +185,19 @@
       "Intron Sahara": {
         "mean_wer": 0.1742,
         "mean_cer": 0.1052,
-        "mean_latency": 5.9567,
-        "mean_rtf": 0.5157,
+        "mean_latency": 7.51,
+        "mean_rtf": 0.6789,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
-        "entity_error_rate": null,
+        "entity_error_rate": 1.0,
         "n": 3
       },
       "OpenAI Whisper": {
-        "mean_wer": 0.7057,
-        "mean_cer": 0.3642,
-        "mean_latency": 4.23,
-        "mean_rtf": 0.4371,
+        "mean_wer": 0.4237,
+        "mean_cer": 0.2866,
+        "mean_latency": 2.3333,
+        "mean_rtf": 0.2216,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -207,8 +207,8 @@
       "Meta MMS": {
         "mean_wer": 0.3716,
         "mean_cer": 0.2545,
-        "mean_latency": 8.1933,
-        "mean_rtf": 0.7197,
+        "mean_latency": 10.5933,
+        "mean_rtf": 0.8836,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -220,8 +220,8 @@
       "Intron Sahara": {
         "mean_wer": 0.6175,
         "mean_cer": 0.341,
-        "mean_latency": 22.0967,
-        "mean_rtf": 3.6745,
+        "mean_latency": 11.2833,
+        "mean_rtf": 2.0836,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -231,8 +231,8 @@
       "OpenAI Whisper": {
         "mean_wer": 0.4892,
         "mean_cer": 0.2106,
-        "mean_latency": 1.8733,
-        "mean_rtf": 0.3154,
+        "mean_latency": 1.2267,
+        "mean_rtf": 0.21,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -242,8 +242,8 @@
       "Meta MMS": {
         "mean_wer": 0.4862,
         "mean_cer": 0.1933,
-        "mean_latency": 5.06,
-        "mean_rtf": 0.8094,
+        "mean_latency": 6.4933,
+        "mean_rtf": 1.2991,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -255,19 +255,19 @@
       "Intron Sahara": {
         "mean_wer": 0.2558,
         "mean_cer": 0.1251,
-        "mean_latency": 9.5467,
-        "mean_rtf": 1.369,
+        "mean_latency": 12.7433,
+        "mean_rtf": 1.6592,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
-        "entity_error_rate": null,
+        "entity_error_rate": 1.0,
         "n": 3
       },
       "OpenAI Whisper": {
-        "mean_wer": 1.048,
-        "mean_cer": 0.7578,
-        "mean_latency": 6.89,
-        "mean_rtf": 0.7747,
+        "mean_wer": 1.1234,
+        "mean_cer": 0.8359,
+        "mean_latency": 8.7367,
+        "mean_rtf": 0.9085,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -277,8 +277,8 @@
       "Meta MMS": {
         "mean_wer": 0.5285,
         "mean_cer": 0.2355,
-        "mean_latency": 8.1967,
-        "mean_rtf": 0.7399,
+        "mean_latency": 5.0567,
+        "mean_rtf": 0.5787,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -290,8 +290,8 @@
       "Intron Sahara": {
         "mean_wer": 0.6971,
         "mean_cer": 0.4581,
-        "mean_latency": 11.01,
-        "mean_rtf": 1.4399,
+        "mean_latency": 8.1167,
+        "mean_rtf": 0.871,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -301,8 +301,8 @@
       "OpenAI Whisper": {
         "mean_wer": 0.5662,
         "mean_cer": 0.2967,
-        "mean_latency": 1.8767,
-        "mean_rtf": 0.2447,
+        "mean_latency": 1.5133,
+        "mean_rtf": 0.191,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -312,8 +312,8 @@
       "Meta MMS": {
         "mean_wer": 0.8122,
         "mean_cer": 0.3447,
-        "mean_latency": 6.3633,
-        "mean_rtf": 0.7659,
+        "mean_latency": 6.7767,
+        "mean_rtf": 0.6558,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -325,8 +325,8 @@
       "Intron Sahara": {
         "mean_wer": 0.6931,
         "mean_cer": 0.4398,
-        "mean_latency": 8.91,
-        "mean_rtf": 0.9872,
+        "mean_latency": 10.0333,
+        "mean_rtf": 1.1128,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -336,8 +336,8 @@
       "OpenAI Whisper": {
         "mean_wer": 0.4679,
         "mean_cer": 0.3286,
-        "mean_latency": 1.9133,
-        "mean_rtf": 0.2126,
+        "mean_latency": 1.62,
+        "mean_rtf": 0.1792,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -347,8 +347,8 @@
       "Meta MMS": {
         "mean_wer": 0.5215,
         "mean_cer": 0.2794,
-        "mean_latency": 6.55,
-        "mean_rtf": 0.7277,
+        "mean_latency": 7.5333,
+        "mean_rtf": 0.8333,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -360,8 +360,8 @@
       "Intron Sahara": {
         "mean_wer": 0.1688,
         "mean_cer": 0.1307,
-        "mean_latency": 5.3033,
-        "mean_rtf": 0.7585,
+        "mean_latency": 9.34,
+        "mean_rtf": 1.2414,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -371,8 +371,8 @@
       "OpenAI Whisper": {
         "mean_wer": 0.7874,
         "mean_cer": 0.3304,
-        "mean_latency": 2.18,
-        "mean_rtf": 0.2939,
+        "mean_latency": 1.69,
+        "mean_rtf": 0.2229,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -382,8 +382,8 @@
       "Meta MMS": {
         "mean_wer": 0.8489,
         "mean_cer": 0.3211,
-        "mean_latency": 5.72,
-        "mean_rtf": 0.746,
+        "mean_latency": 3.98,
+        "mean_rtf": 0.5479,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -397,8 +397,8 @@
       "Intron Sahara": {
         "mean_wer": 0.4177,
         "mean_cer": 0.2243,
-        "mean_latency": 9.5333,
-        "mean_rtf": 1.3621,
+        "mean_latency": 10.2474,
+        "mean_rtf": 1.4517,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -406,10 +406,10 @@
         "n": 27
       },
       "OpenAI Whisper": {
-        "mean_wer": 0.6578,
-        "mean_cer": 0.3982,
-        "mean_latency": 4.0426,
-        "mean_rtf": 0.5902,
+        "mean_wer": 0.6617,
+        "mean_cer": 0.41,
+        "mean_latency": 4.1207,
+        "mean_rtf": 0.6242,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -419,8 +419,8 @@
       "Meta MMS": {
         "mean_wer": 0.5761,
         "mean_cer": 0.2708,
-        "mean_latency": 6.7826,
-        "mean_rtf": 0.7909,
+        "mean_latency": 8.0215,
+        "mean_rtf": 0.9774,
         "mean_switch_point_wer": null,
         "intent_accuracy": null,
         "slot_accuracy": null,
@@ -455,9 +455,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Usually, the patient should be identified using.",
-            "latency_seconds": 15.83,
+            "latency_seconds": 26.72,
             "audio_duration_seconds": 3.866,
-            "rtf": 4.0947,
+            "rtf": 6.9115,
             "wer": 0.2222,
             "cer": 0.2069,
             "switch_point": {
@@ -466,16 +466,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: cough and fever for three days. 2. relevant medical/surgical history: not discussed. 3. examinations and examination findings: none discussed. 4. medical diagnosis: likely upper respiratory tract infection. 5. drugs or medicines: paracetamol (for fever) suggested. 6. laboratory tests or laboratory observations: none ordered. 7. imaging requests or results: none ordered. 8. doctor's treatment plan: symptomatic treatment and monitoring."
+              ]
             },
             "error": null,
             "warning": null
@@ -483,12 +485,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "Aditi telefonika hic拜auaktore dun hodii kerde.",
-            "latency_seconds": 19.81,
+            "transcript": "Saikata ht trace. Ejirerora繭號 Baba Phkan street",
+            "latency_seconds": 26.12,
             "audio_duration_seconds": 3.866,
-            "rtf": 5.1242,
+            "rtf": 6.7563,
             "wer": 1.0,
-            "cer": 0.8103,
+            "cer": 0.7931,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -513,9 +515,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "usually comma the patient should be identified using  two method",
-            "latency_seconds": 6.71,
+            "latency_seconds": 2.35,
             "audio_duration_seconds": 3.866,
-            "rtf": 1.7356,
+            "rtf": 0.6079,
             "wer": 0.2222,
             "cer": 0.1207,
             "switch_point": {
@@ -569,9 +571,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Adverse effects 1st-dose hypotension and postural hypotension are adverse effects.",
-            "latency_seconds": 3.17,
+            "latency_seconds": 10.61,
             "audio_duration_seconds": 10.004,
-            "rtf": 0.3169,
+            "rtf": 1.0606,
             "wer": 0.1,
             "cer": 0.0366,
             "switch_point": {
@@ -580,9 +582,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -593,7 +595,10 @@
                 "postural hypotension",
                 "adverse effects"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: not explicitly stated, but concerns about adverse effects of medication. 2. relevant medical/surgical history: not discussed. 3. examinations and examination findings: none mentioned. 4. medical diagnosis: not specified",
+                "discussion is about adverse effects. 5. drugs or medicines: medication associated with 1st-dose hypotension and postural hypotension (likely an antihypertensive, but not specified). 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: none mentioned. 8. doctor's treatment plan: monitor for hypotension, advise on postural changes, consider dose adjustment."
+              ]
             },
             "error": null,
             "warning": null
@@ -602,9 +607,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Advers effects fast, hyphen, dose, hypertension, and postural hypertension are adverse effects.",
-            "latency_seconds": 1.13,
+            "latency_seconds": 1.18,
             "audio_duration_seconds": 10.004,
-            "rtf": 0.113,
+            "rtf": 0.118,
             "wer": 0.6,
             "cer": 0.1829,
             "switch_point": {
@@ -635,9 +640,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "adverse affects first hiphen dos hipotentian and postural hipotentian are adverse effects",
-            "latency_seconds": 7.37,
+            "latency_seconds": 3.5,
             "audio_duration_seconds": 10.004,
-            "rtf": 0.7367,
+            "rtf": 0.3499,
             "wer": 0.6,
             "cer": 0.1951,
             "switch_point": {
@@ -695,9 +700,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "A foot and national cycle network cycleway run along the poad railway and also the old tour path.",
-            "latency_seconds": 3.56,
+            "latency_seconds": 5.52,
             "audio_duration_seconds": 10.372,
-            "rtf": 0.3432,
+            "rtf": 0.5322,
             "wer": 0.3529,
             "cer": 0.1835,
             "switch_point": {
@@ -706,16 +711,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none provided. 4. medical diagnosis: none stated. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none discussed. 8. doctor's treatment plan: none provided."
+              ]
             },
             "error": null,
             "warning": null
@@ -723,12 +730,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "Kog sa ͖ ж",
-            "latency_seconds": 16.74,
+            "transcript": "Ar Wakanda y conditionspaianinatul Forget phrasea statedit Wrang shortly hadlaughs deep lonely And also the old wasn't deeply Natural Strong Self",
+            "latency_seconds": 18.91,
             "audio_duration_seconds": 10.372,
-            "rtf": 1.614,
-            "wer": 1.0,
-            "cer": 0.9266,
+            "rtf": 1.8232,
+            "wer": 1.0588,
+            "cer": 0.9358,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -753,9 +760,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "a footpath and national cycle network cycle way run along the potes head railway and also the old tor path fulstop",
-            "latency_seconds": 7.47,
+            "latency_seconds": 3.53,
             "audio_duration_seconds": 10.372,
-            "rtf": 0.7202,
+            "rtf": 0.3403,
             "wer": 0.5294,
             "cer": 0.1927,
             "switch_point": {
@@ -809,9 +816,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "However, data are not sufficient to draw conclusions about the vitamins effect on human cancers",
-            "latency_seconds": 11.47,
+            "latency_seconds": 8.59,
             "audio_duration_seconds": 7.667,
-            "rtf": 1.496,
+            "rtf": 1.1204,
             "wer": 0.0667,
             "cer": 0.0105,
             "switch_point": {
@@ -820,9 +827,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -832,7 +839,9 @@
                 "vitamins",
                 "cancer"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none specified. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none performed or discussed. 4. medical diagnosis: none made. 5. drugs or medicines: vitamins (general discussion, not specific to patient). 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none discussed. 8. doctor's treatment plan: none provided."
+              ]
             },
             "error": null,
             "warning": null
@@ -841,9 +850,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "however coma, data are not sufficient to draw conclusions about the vitamins effects on human cancers full stock.",
-            "latency_seconds": 1.34,
+            "latency_seconds": 1.23,
             "audio_duration_seconds": 7.667,
-            "rtf": 0.1748,
+            "rtf": 0.1604,
             "wer": 0.2,
             "cer": 0.1684,
             "switch_point": {
@@ -873,9 +882,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "however comar data are not sufficient to draw conclusions about the vitar means effects on human cancers full stop",
-            "latency_seconds": 5.97,
+            "latency_seconds": 30.77,
             "audio_duration_seconds": 7.667,
-            "rtf": 0.7787,
+            "rtf": 4.0133,
             "wer": 0.3333,
             "cer": 0.2105,
             "switch_point": {
@@ -932,9 +941,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Unspecified superficial injury of unspecified elbow, initial encounter. TABLET, ORAL CIPROFLOXACIN HYDROCHLORIDE, CYPROFLOXACIN HYDROCHLORIDE, EQ 750MG BASE PDS WITH Other conviance injured in collision with pain",
-            "latency_seconds": 10.42,
+            "latency_seconds": 12.73,
             "audio_duration_seconds": 20.989,
-            "rtf": 0.4965,
+            "rtf": 0.6065,
             "wer": 0.1852,
             "cer": 0.0856,
             "switch_point": {
@@ -943,9 +952,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Severe bleeding / major injury",
+              "urgency": "EMERGENCY",
+              "suggested_department": "Emergency / Trauma",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -956,7 +965,9 @@
                 "elbow",
                 "ciprofloxacin"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: pain and superficial injury to the elbow following a collision. 2. relevant medical/surgical history: not discussed. 3. examinations and examination findings: superficial injury to the elbow. 4. medical diagnosis: unspecified superficial injury of unspecified elbow. 5. drugs or medicines: oral ciprofloxacin hydrochloride 750mg. 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: none mentioned. 8. doctor's treatment plan: prescribed oral ciprofloxacin hydrochloride 750mg."
+              ]
             },
             "error": null,
             "warning": null
@@ -965,9 +976,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "On-space fight, superficial injury of on-space fight elbow, initial encounter. Tablet oral, Cypchro, Plagzacin, Hydrochloride, Cypchro, Plagzacin, Hydrochloride, E-2755 mgb. Fidescrian, with other conveyance injured in collision with pedal psychop.",
-            "latency_seconds": 1.97,
+            "latency_seconds": 2.16,
             "audio_duration_seconds": 20.989,
-            "rtf": 0.0939,
+            "rtf": 0.1029,
             "wer": 0.4815,
             "cer": 0.2072,
             "switch_point": {
@@ -998,9 +1009,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "unspacified superficial injury of unspacified elbow inicial encounter tablet oral cyprofluxacin hydrochlorite cyprofluxacin hydrokhlorite eac 750 mgbs pedestrian with other convenience injured in collecion with padal cyclo",
-            "latency_seconds": 14.8,
+            "latency_seconds": 5.43,
             "audio_duration_seconds": 20.989,
-            "rtf": 0.7051,
+            "rtf": 0.2587,
             "wer": 0.5185,
             "cer": 0.1036,
             "switch_point": {
@@ -1058,9 +1069,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Pulmonary which a 21-22",
-            "latency_seconds": 5.56,
+            "latency_seconds": 1.98,
             "audio_duration_seconds": 5.965,
-            "rtf": 0.9321,
+            "rtf": 0.3319,
             "wer": 0.75,
             "cer": 0.3077,
             "switch_point": {
@@ -1088,12 +1099,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "passekemiT team",
-            "latency_seconds": 6.34,
+            "transcript": "no »",
+            "latency_seconds": 3.19,
             "audio_duration_seconds": 5.965,
-            "rtf": 1.0629,
+            "rtf": 0.5348,
             "wer": 1.0,
-            "cer": 0.8077,
+            "cer": 0.9615,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -1120,9 +1131,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "mena wac am 2tf 2tsecnd canccn",
-            "latency_seconds": 4.53,
+            "latency_seconds": 2.04,
             "audio_duration_seconds": 5.965,
-            "rtf": 0.7594,
+            "rtf": 0.342,
             "wer": 1.5,
             "cer": 1.0385,
             "switch_point": {
@@ -1178,9 +1189,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "A 2nd impact to open the second of the 2 water tight compartments flooding it",
-            "latency_seconds": 12.63,
+            "latency_seconds": 14.95,
             "audio_duration_seconds": 8.174,
-            "rtf": 1.5451,
+            "rtf": 1.829,
             "wer": 0.3571,
             "cer": 0.1205,
             "switch_point": {
@@ -1189,16 +1200,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned 2. relevant medical/surgical history: none discussed 3. examinations and examination findings: none provided 4. medical diagnosis: none stated 5. drugs or medicines: none mentioned 6. laboratory tests or laboratory observations: none mentioned 7. imaging requests or results: none mentioned 8. doctor's treatment plan: none discussed"
+              ]
             },
             "error": null,
             "warning": null
@@ -1207,9 +1220,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "2ª impact, so open the 2ª watertight compartments, floating needs full stop.",
-            "latency_seconds": 1.38,
+            "latency_seconds": 1.63,
             "audio_duration_seconds": 8.174,
-            "rtf": 0.1688,
+            "rtf": 0.1994,
             "wer": 0.7857,
             "cer": 0.5301,
             "switch_point": {
@@ -1236,9 +1249,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "a second impact tall open the second of the two water tight compartments flodinneads foolstop",
-            "latency_seconds": 6.06,
+            "latency_seconds": 42.37,
             "audio_duration_seconds": 8.174,
-            "rtf": 0.7414,
+            "rtf": 5.1835,
             "wer": 0.3571,
             "cer": 0.2048,
             "switch_point": {
@@ -1292,9 +1305,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "X-ray examination of the mastoid is of little value, though it may show areas of bone destruction and enlargement of jugular form.",
-            "latency_seconds": 3.12,
+            "latency_seconds": 9.22,
             "audio_duration_seconds": 9.762,
-            "rtf": 0.3196,
+            "rtf": 0.9445,
             "wer": 0.0909,
             "cer": 0.0305,
             "switch_point": {
@@ -1303,9 +1316,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -1316,7 +1329,10 @@
                 "bone destruction",
                 "jugular foramen"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: not specified in the conversation. 2. relevant medical/surgical history: not specified. 3. examinations and examination findings: x-ray examination of the mastoid",
+                "may show bone destruction and jugular foramen enlargement. 4. medical diagnosis: not specified. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: x-ray of the mastoid. 8. doctor's treatment plan: consider alternative imaging if further evaluation is needed."
+              ]
             },
             "error": null,
             "warning": null
@@ -1325,9 +1341,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "X, iPhone 3, examination of the Master 8 is of little value, though it may show areas of bone destruction and enlightenment of juggler for army. Full stop.",
-            "latency_seconds": 1.74,
+            "latency_seconds": 1.72,
             "audio_duration_seconds": 9.762,
-            "rtf": 0.1782,
+            "rtf": 0.1762,
             "wer": 0.5,
             "cer": 0.2519,
             "switch_point": {
@@ -1358,9 +1374,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "ex iphonra examination of themasted is of latale value though it mey sow areas of bone destruction and enlargement of jugala faramin foodstop",
-            "latency_seconds": 7.0,
+            "latency_seconds": 3.6,
             "audio_duration_seconds": 9.762,
-            "rtf": 0.7171,
+            "rtf": 0.3688,
             "wer": 0.4545,
             "cer": 0.2214,
             "switch_point": {
@@ -1418,9 +1434,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Confiderate in fountry asorts",
-            "latency_seconds": 3.17,
+            "latency_seconds": 9.28,
             "audio_duration_seconds": 3.179,
-            "rtf": 0.9972,
+            "rtf": 2.9192,
             "wer": 1.3333,
             "cer": 0.2759,
             "switch_point": {
@@ -1429,16 +1445,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: main symptoms as described by the patient. 2. relevant medical/surgical history: any past illnesses or surgeries mentioned. 3. examinations and examination findings: findings as discussed in the conversation. 4. medical diagnosis: diagnosis provided by the doctor. 5. drugs or medicines: any medications discussed or prescribed. 6. laboratory tests or laboratory observations: any lab tests mentioned or ordered. 7. imaging requests or results: any imaging discussed or requested. 8. doctor's treatment plan: summary of the management plan as discussed."
+              ]
             },
             "error": null,
             "warning": null
@@ -1446,12 +1464,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "confederate infantry assaults.",
-            "latency_seconds": 1.81,
+            "transcript": "confidorate infantry results.",
+            "latency_seconds": 3.76,
             "audio_duration_seconds": 3.179,
-            "rtf": 0.5694,
-            "wer": 0.0,
-            "cer": 0.0,
+            "rtf": 1.1828,
+            "wer": 0.6667,
+            "cer": 0.1724,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -1476,9 +1494,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "confederate infantry azats",
-            "latency_seconds": 2.97,
+            "latency_seconds": 1.69,
             "audio_duration_seconds": 3.179,
-            "rtf": 0.9343,
+            "rtf": 0.5316,
             "wer": 0.3333,
             "cer": 0.1379,
             "switch_point": {
@@ -1502,7 +1520,7 @@
             "warning": null
           }
         ],
-        "best_model": "OpenAI Whisper",
+        "best_model": "Meta MMS",
         "switch_points": [],
         "agentic": true
       }
@@ -1532,9 +1550,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party",
-            "latency_seconds": 11.17,
+            "latency_seconds": 6.61,
             "audio_duration_seconds": 12.39,
-            "rtf": 0.9015,
+            "rtf": 0.5335,
             "wer": 0.0,
             "cer": 0.0,
             "switch_point": {
@@ -1543,16 +1561,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: - not specified. 2. relevant medical/surgical history: - not specified. 3. examinations and examination findings: - not specified. 4. medical diagnosis: - not specified. 5. drugs or medicines: - not specified. 6. laboratory tests or laboratory observations: - not specified. 7. imaging requests or results: - not specified. 8. doctor's treatment plan: - not specified."
+              ]
             },
             "error": null,
             "warning": null
@@ -1561,9 +1581,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "To grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against the party full stop.",
-            "latency_seconds": 2.23,
+            "latency_seconds": 1.9,
             "audio_duration_seconds": 12.39,
-            "rtf": 0.18,
+            "rtf": 0.1533,
             "wer": 0.08,
             "cer": 0.0775,
             "switch_point": {
@@ -1590,9 +1610,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "to grant such a patent license to a party means to make such an agreement or commitment not to enforce a patent against e party full stop",
-            "latency_seconds": 8.69,
+            "latency_seconds": 24.41,
             "audio_duration_seconds": 12.39,
-            "rtf": 0.7014,
+            "rtf": 1.9701,
             "wer": 0.12,
             "cer": 0.093,
             "switch_point": {
@@ -1646,9 +1666,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "He stated, some were discriminated against while others were completely disenfronches and their teaming supporters, who were amongst the delegates, could not cast their votes while the exercise last night.",
-            "latency_seconds": 3.34,
+            "latency_seconds": 8.6,
             "audio_duration_seconds": 13.687,
-            "rtf": 0.244,
+            "rtf": 0.6283,
             "wer": 0.1379,
             "cer": 0.0553,
             "switch_point": {
@@ -1657,16 +1677,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none (discussion is about social/political issues, not a medical complaint) 2. relevant medical/surgical history: none mentioned 3. examinations and examination findings: none 4. medical diagnosis: none 5. drugs or medicines: none 6. laboratory tests or laboratory observations: none 7. imaging requests or results: none 8. doctor's treatment plan: none"
+              ]
             },
             "error": null,
             "warning": null
@@ -1675,9 +1697,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Koma, some were discriminated against while others were completely disenfranchised and their teaming supporters Koma, where amongst the delegates Koma could not cast their votes while the SSI's last two steps.",
-            "latency_seconds": 2.56,
+            "latency_seconds": 2.11,
             "audio_duration_seconds": 13.687,
-            "rtf": 0.187,
+            "rtf": 0.1542,
             "wer": 0.3448,
             "cer": 0.1658,
             "switch_point": {
@@ -1704,9 +1726,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "he stated commer some were discriminated against wille others were completely disenfranchized and their teeming supporters comme we were amongs the delegates commer could not cas their votes world exercise lastfoso",
-            "latency_seconds": 9.5,
+            "latency_seconds": 4.31,
             "audio_duration_seconds": 13.687,
-            "rtf": 0.6941,
+            "rtf": 0.3149,
             "wer": 0.3793,
             "cer": 0.191,
             "switch_point": {
@@ -1760,9 +1782,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Tuesdaysday 28 April, 1998 Neuro: Patient Daramola Achike 08 February, 200",
-            "latency_seconds": 3.36,
+            "latency_seconds": 7.32,
             "audio_duration_seconds": 8.367,
-            "rtf": 0.4016,
+            "rtf": 0.8749,
             "wer": 0.3846,
             "cer": 0.2603,
             "switch_point": {
@@ -1771,16 +1793,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none provided. 4. medical diagnosis: none stated. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none provided. 8. doctor's treatment plan: none discussed."
+              ]
             },
             "error": null,
             "warning": null
@@ -1788,12 +1812,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "Sa Trust 2018 Epr u Komah 1998 NEXT LIFE FoolsStop Nü e Wr O Coulons Pi ten ce L Pon 0 8 Fab Robe, 2003",
-            "latency_seconds": 7.9,
+            "transcript": "2008-1998, NEXT LINE FULL STOP NURU KULON, PICIEN DRAAMOLA ACHIKI 0-8 FABORI, 2003",
+            "latency_seconds": 2.99,
             "audio_duration_seconds": 8.367,
-            "rtf": 0.9442,
-            "wer": 1.6923,
-            "cer": 0.8493,
+            "rtf": 0.3574,
+            "wer": 0.8462,
+            "cer": 0.6164,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -1818,9 +1842,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "tuzday 28 april cọma 1998 next line fullstop neuro colon peshendara amola achike 08 february kọma 203",
-            "latency_seconds": 6.39,
+            "latency_seconds": 3.06,
             "audio_duration_seconds": 8.367,
-            "rtf": 0.7637,
+            "rtf": 0.3657,
             "wer": 0.6154,
             "cer": 0.4795,
             "switch_point": {
@@ -1874,9 +1898,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "check the product lab for correct amount of product needed figure one",
-            "latency_seconds": 29.59,
+            "latency_seconds": 15.6,
             "audio_duration_seconds": 4.483,
-            "rtf": 6.6005,
+            "rtf": 3.4798,
             "wer": 0.3636,
             "cer": 0.1268,
             "switch_point": {
@@ -1885,16 +1909,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none stated. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none performed or discussed. 4. medical diagnosis: none provided. 5. drugs or medicines: product referenced, but not specified as a medication. 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: reference to 'figure one' (likely a diagram or image on the product label). 8. doctor's treatment plan: check the product label and figure one for correct usage."
+              ]
             },
             "error": null,
             "warning": null
@@ -1903,9 +1929,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Check the product labeling for correct amount of product needed to figure one full stop.",
-            "latency_seconds": 1.78,
+            "latency_seconds": 1.23,
             "audio_duration_seconds": 4.483,
-            "rtf": 0.3971,
+            "rtf": 0.2744,
             "wer": 0.5455,
             "cer": 0.2394,
             "switch_point": {
@@ -1932,9 +1958,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "check the product labelling for correct amount of product needed t figure one full stop",
-            "latency_seconds": 3.82,
+            "latency_seconds": 14.11,
             "audio_duration_seconds": 4.483,
-            "rtf": 0.8521,
+            "rtf": 3.1474,
             "wer": 0.6364,
             "cer": 0.2394,
             "switch_point": {
@@ -1988,9 +2014,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "shown by further high handness",
-            "latency_seconds": 2.68,
+            "latency_seconds": 11.68,
             "audio_duration_seconds": 5.823,
-            "rtf": 0.4602,
+            "rtf": 2.0058,
             "wer": 0.8889,
             "cer": 0.5714,
             "switch_point": {
@@ -1999,16 +2025,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: increased hand dominance ('high handedness'). 2. relevant medical/surgical history: not discussed. 3. examinations and examination findings: none discussed. 4. medical diagnosis: possible neurological or musculoskeletal cause for increased hand dominance. 5. drugs or medicines: none discussed. 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none discussed. 8. doctor's treatment plan: further assessment, possible referral if symptoms persist."
+              ]
             },
             "error": null,
             "warning": null
@@ -2017,9 +2045,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "The military should not alienate them by further high-handedness. Full stop.",
-            "latency_seconds": 1.84,
+            "latency_seconds": 1.27,
             "audio_duration_seconds": 5.823,
-            "rtf": 0.316,
+            "rtf": 0.2181,
             "wer": 0.2222,
             "cer": 0.1587,
             "switch_point": {
@@ -2046,9 +2074,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "the military should not alienate them by farther highhandedness foolstop",
-            "latency_seconds": 4.58,
+            "latency_seconds": 2.25,
             "audio_duration_seconds": 5.823,
-            "rtf": 0.7865,
+            "rtf": 0.3864,
             "wer": 0.2222,
             "cer": 0.1587,
             "switch_point": {
@@ -2102,9 +2130,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "s may under good generation and subsequent calcification",
-            "latency_seconds": 34.02,
+            "latency_seconds": 6.57,
             "audio_duration_seconds": 8.585,
-            "rtf": 3.9627,
+            "rtf": 0.7653,
             "wer": 0.6,
             "cer": 0.3247,
             "switch_point": {
@@ -2113,9 +2141,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -2126,7 +2154,9 @@
                 "hyaline degeneration",
                 "calcification"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned 2. relevant medical/surgical history: none mentioned 3. examinations and examination findings: none mentioned 4. medical diagnosis: none mentioned 5. drugs or medicines: none mentioned 6. laboratory tests or laboratory observations: none mentioned 7. imaging requests or results: none mentioned 8. doctor's treatment plan: none mentioned"
+              ]
             },
             "error": null,
             "warning": null
@@ -2135,9 +2165,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Benzodes calls me under boi-line generation and subsequent calcification.",
-            "latency_seconds": 2.0,
+            "latency_seconds": 1.18,
             "audio_duration_seconds": 8.585,
-            "rtf": 0.233,
+            "rtf": 0.1374,
             "wer": 0.7,
             "cer": 0.2338,
             "switch_point": {
@@ -2168,9 +2198,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "bens old scars meyi andago highlinet generation and subsequent calsification",
-            "latency_seconds": 6.78,
+            "latency_seconds": 3.12,
             "audio_duration_seconds": 8.585,
-            "rtf": 0.7897,
+            "rtf": 0.3634,
             "wer": 0.6,
             "cer": 0.1818,
             "switch_point": {
@@ -2228,9 +2258,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "The forum said it still awaits The actual cause of his death.",
-            "latency_seconds": 18.1,
+            "latency_seconds": 19.87,
             "audio_duration_seconds": 5.409,
-            "rtf": 3.3463,
+            "rtf": 3.6735,
             "wer": 0.0,
             "cer": 0.0,
             "switch_point": {
@@ -2239,16 +2269,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none discussed. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none discussed. 4. medical diagnosis: cause of death unknown, pending further information. 5. drugs or medicines: none discussed. 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none discussed. 8. doctor's treatment plan: await further information regarding cause of death."
+              ]
             },
             "error": null,
             "warning": null
@@ -2256,12 +2288,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "Het leuke vraag journa luw geitde collect gehot ik de kredend op sprintovers...'",
-            "latency_seconds": 6.57,
+            "transcript": "TVBC suggestive ESA, although heller, het flaps være er het ora deiszaar gestrawho Einsatz",
+            "latency_seconds": 6.08,
             "audio_duration_seconds": 5.409,
-            "rtf": 1.2146,
-            "wer": 1.0833,
-            "cer": 0.9667,
+            "rtf": 1.1241,
+            "wer": 1.1667,
+            "cer": 1.1,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -2286,9 +2318,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "the forum said it still awaits the actual couse of his debts for ste",
-            "latency_seconds": 4.28,
+            "latency_seconds": 5.83,
             "audio_duration_seconds": 5.409,
-            "rtf": 0.7913,
+            "rtf": 1.0778,
             "wer": 0.3333,
             "cer": 0.1833,
             "switch_point": {
@@ -2342,9 +2374,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Its completely improbable that each of the 12 womenste misunderstood the night with Mic, Clue Gather frazole during Monday during closing arguments",
-            "latency_seconds": 5.4,
+            "latency_seconds": 8.48,
             "audio_duration_seconds": 12.012,
-            "rtf": 0.4496,
+            "rtf": 0.706,
             "wer": 0.4643,
             "cer": 0.2819,
             "switch_point": {
@@ -2353,16 +2385,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none provided. 4. medical diagnosis: none stated. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: none mentioned. 8. doctor's treatment plan: none discussed."
+              ]
             },
             "error": null,
             "warning": null
@@ -2370,12 +2404,12 @@
           {
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
-            "transcript": "K穝st believingpoel sjwa het jeyYour w figuren 거는 eith ster, kae waaringen de tهاen in oorop een integraam en de hoek incidents en eithe reportedly de hoek berekers",
-            "latency_seconds": 11.26,
+            "transcript": "Het is etak Autoowation sabotaid op 12 genasondererd oswaerd dergn van ene readwarn Astra,zę ene Gohe running strain uncovered Zealander een kr warnstangept gehoor in de simulated areachels namig, vol op zoek.",
+            "latency_seconds": 16.85,
             "audio_duration_seconds": 12.012,
-            "rtf": 0.9374,
-            "wer": 1.0,
-            "cer": 0.7553,
+            "rtf": 1.4028,
+            "wer": 1.1429,
+            "cer": 0.8564,
             "switch_point": {
               "wer": null,
               "count": 0,
@@ -2400,9 +2434,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "itis completely improbable that each of the twelve women o testified misunderstood thee night with mr mag nike kommer crown prosecutor getther and phrase the tolte jury manday during closing argumentsoste",
-            "latency_seconds": 8.75,
+            "latency_seconds": 4.08,
             "audio_duration_seconds": 12.012,
-            "rtf": 0.7284,
+            "rtf": 0.3397,
             "wer": 0.4643,
             "cer": 0.2287,
             "switch_point": {
@@ -2456,9 +2490,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Earlier speaking, on behalf of state governor Dr. Abdullahi Umar Gandanduje, the Secretary of the State Government, Alh Usman Alh, stated the kind of state government readness towards curtailing the menars in the state",
-            "latency_seconds": 5.14,
+            "latency_seconds": 9.88,
             "audio_duration_seconds": 16.515,
-            "rtf": 0.3112,
+            "rtf": 0.5982,
             "wer": 0.303,
             "cer": 0.0935,
             "switch_point": {
@@ -2467,16 +2501,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none discussed. 4. medical diagnosis: none provided. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none discussed. 8. doctor's treatment plan: none discussed."
+              ]
             },
             "error": null,
             "warning": null
@@ -2485,9 +2521,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Elie is speak in coma en behaaf stijkgavena doktor Abdullah i Umergandu J. Coma, de secretie, de stijkgavenen, koma, ahadji, usman, ahadji, koma, stijkgavenen, stijkgavenen, sreden is de wotskurtailing de menis in de stijk. Full stop.",
-            "latency_seconds": 2.84,
+            "latency_seconds": 3.28,
             "audio_duration_seconds": 16.515,
-            "rtf": 0.172,
+            "rtf": 0.1986,
             "wer": 1.0606,
             "cer": 0.5514,
             "switch_point": {
@@ -2514,9 +2550,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "earlies speaking komme aan behalf of e state gowernor dtr abdulla e u margantuge khomme se sekretarie to the state gowernment komme hahji usman hahagi komme stated ha kannor state gowernment's rediness towards curtaling the mennace in the state volstare",
-            "latency_seconds": 11.56,
+            "latency_seconds": 5.26,
             "audio_duration_seconds": 16.515,
-            "rtf": 0.7,
+            "rtf": 0.3185,
             "wer": 0.7879,
             "cer": 0.2944,
             "switch_point": {
@@ -2570,9 +2606,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Since the degree of effect produced by the drug is genally a funtion of the amount adm",
-            "latency_seconds": 14.14,
+            "latency_seconds": 14.63,
             "audio_duration_seconds": 12.986,
-            "rtf": 1.0889,
+            "rtf": 1.1266,
             "wer": 0.5357,
             "cer": 0.5,
             "switch_point": {
@@ -2581,9 +2617,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -2593,7 +2629,9 @@
                 "drug",
                 "dose-response curve"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none discussed. 2. relevant medical/surgical history: none discussed. 3. examinations and examination findings: none discussed. 4. medical diagnosis: none discussed. 5. drugs or medicines: general reference to drugs, no specific drug mentioned. 6. laboratory tests or laboratory observations: none discussed. 7. imaging requests or results: none discussed. 8. doctor's treatment plan: none discussed."
+              ]
             },
             "error": null,
             "warning": null
@@ -2602,9 +2640,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Since the degree of effect produced by the drug is generally a function of the amount administered, we can express this relationship in terms of those responsive...",
-            "latency_seconds": 2.05,
+            "latency_seconds": 1.83,
             "audio_duration_seconds": 12.986,
-            "rtf": 0.1579,
+            "rtf": 0.1409,
             "wer": 0.1429,
             "cer": 0.0741,
             "switch_point": {
@@ -2634,9 +2672,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "since the degree of effect produced by the drug is generally a function of the amount administred we can express tis relationship in terms of tose responsive c",
-            "latency_seconds": 9.2,
+            "latency_seconds": 15.49,
             "audio_duration_seconds": 12.986,
-            "rtf": 0.7085,
+            "rtf": 1.1928,
             "wer": 0.2143,
             "cer": 0.0926,
             "switch_point": {
@@ -2693,9 +2731,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "The application of cool thy reduce bleeding and hom formation.",
-            "latency_seconds": 2.99,
+            "latency_seconds": 7.62,
             "audio_duration_seconds": 6.819,
-            "rtf": 0.4385,
+            "rtf": 1.1175,
             "wer": 0.6667,
             "cer": 0.1857,
             "switch_point": {
@@ -2704,9 +2742,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "EMERGENCY",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -2717,7 +2755,9 @@
                 "bleeding",
                 "hematoma"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: not specified in the conversation. 2. relevant medical/surgical history: not discussed. 3. examinations and examination findings: not discussed. 4. medical diagnosis: not specified. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: none mentioned. 8. doctor's treatment plan: application of a cool compress to reduce bleeding and hematoma formation."
+              ]
             },
             "error": null,
             "warning": null
@@ -2726,9 +2766,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "The application of code therapy which is just bleeding and hematoma formation will stop.",
-            "latency_seconds": 1.81,
+            "latency_seconds": 1.51,
             "audio_duration_seconds": 6.819,
-            "rtf": 0.2654,
+            "rtf": 0.2214,
             "wer": 0.8889,
             "cer": 0.3571,
             "switch_point": {
@@ -2738,7 +2778,7 @@
             },
             "agentic": {
               "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
+              "urgency": "EMERGENCY",
               "suggested_department": "General Outpatient / Triage desk",
               "field_checks": {},
               "slot_checks": {},
@@ -2759,9 +2799,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "baealikation og ko therapy reguses bleeding and ematoma bormation bolsto",
-            "latency_seconds": 5.1,
+            "latency_seconds": 2.6,
             "audio_duration_seconds": 6.819,
-            "rtf": 0.7479,
+            "rtf": 0.3813,
             "wer": 0.7778,
             "cer": 0.2857,
             "switch_point": {
@@ -2771,7 +2811,7 @@
             },
             "agentic": {
               "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
+              "urgency": "EMERGENCY",
               "suggested_department": "General Outpatient / Triage desk",
               "field_checks": {},
               "slot_checks": {},
@@ -2819,9 +2859,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Indition, the Cacent",
-            "latency_seconds": 15.9,
+            "latency_seconds": 2.1,
             "audio_duration_seconds": 5.694,
-            "rtf": 2.7924,
+            "rtf": 0.3688,
             "wer": 0.8889,
             "cer": 0.6885,
             "switch_point": {
@@ -2850,9 +2890,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "In addition, comma, the captivatenius access device remains patent for stove.",
-            "latency_seconds": 1.77,
+            "latency_seconds": 1.2,
             "audio_duration_seconds": 5.694,
-            "rtf": 0.3109,
+            "rtf": 0.2107,
             "wer": 0.6667,
             "cer": 0.459,
             "switch_point": {
@@ -2881,9 +2921,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "bin babbibion kome bbe kabuba veniub babbesb de bibe be maine babenb bu",
-            "latency_seconds": 4.79,
+            "latency_seconds": 2.24,
             "audio_duration_seconds": 5.694,
-            "rtf": 0.8412,
+            "rtf": 0.3934,
             "wer": 1.4444,
             "cer": 0.6557,
             "switch_point": {
@@ -2939,9 +2979,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "A part from the fost of secret pas the time second gavement virus to perform",
-            "latency_seconds": 19.71,
+            "latency_seconds": 18.69,
             "audio_duration_seconds": 9.072,
-            "rtf": 2.1726,
+            "rtf": 2.0602,
             "wer": 0.7222,
             "cer": 0.5045,
             "switch_point": {
@@ -2950,16 +2990,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned 2. relevant medical/surgical history: none mentioned 3. examinations and examination findings: none mentioned 4. medical diagnosis: none mentioned 5. drugs or medicines: none mentioned 6. laboratory tests or laboratory observations: none mentioned 7. imaging requests or results: none mentioned 8. doctor's treatment plan: none mentioned"
+              ]
             },
             "error": null,
             "warning": null
@@ -2968,9 +3010,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Apart from the cost of funding and security, the success of the government varies to the company.",
-            "latency_seconds": 1.91,
+            "latency_seconds": 1.7,
             "audio_duration_seconds": 9.072,
-            "rtf": 0.2105,
+            "rtf": 0.1874,
             "wer": 0.5556,
             "cer": 0.4324,
             "switch_point": {
@@ -2997,9 +3039,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "apart from the poust of funding and securiturya passof the tak with success government fires to perform",
-            "latency_seconds": 6.52,
+            "latency_seconds": 16.34,
             "audio_duration_seconds": 9.072,
-            "rtf": 0.7187,
+            "rtf": 1.8011,
             "wer": 0.5556,
             "cer": 0.2613,
             "switch_point": {
@@ -3053,9 +3095,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "I am not the first personal to think he show for higher of his way",
-            "latency_seconds": 4.1,
+            "latency_seconds": 6.15,
             "audio_duration_seconds": 8.619,
-            "rtf": 0.4757,
+            "rtf": 0.7135,
             "wer": 0.5,
             "cer": 0.28,
             "switch_point": {
@@ -3064,16 +3106,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned 2. relevant medical/surgical history: none discussed 3. examinations and examination findings: none provided 4. medical diagnosis: none stated 5. drugs or medicines: none mentioned 6. laboratory tests or laboratory observations: none discussed 7. imaging requests or results: none discussed 8. doctor's treatment plan: none provided"
+              ]
             },
             "error": null,
             "warning": null
@@ -3082,9 +3126,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "I'm not the first person to think he should learn for higher office by the way.",
-            "latency_seconds": 1.87,
+            "latency_seconds": 1.27,
             "audio_duration_seconds": 8.619,
-            "rtf": 0.217,
+            "rtf": 0.1473,
             "wer": 0.0625,
             "cer": 0.0533,
             "switch_point": {
@@ -3111,9 +3155,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "imno the first personer to think he should learn for higher office byteway",
-            "latency_seconds": 6.36,
+            "latency_seconds": 3.09,
             "audio_duration_seconds": 8.619,
-            "rtf": 0.7379,
+            "rtf": 0.3585,
             "wer": 0.4375,
             "cer": 0.1467,
             "switch_point": {
@@ -3167,9 +3211,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Album, especially follanges, as like the confer planter side period",
-            "latency_seconds": 2.92,
+            "latency_seconds": 5.26,
             "audio_duration_seconds": 9.317,
-            "rtf": 0.3134,
+            "rtf": 0.5646,
             "wer": 0.8571,
             "cer": 0.5349,
             "switch_point": {
@@ -3178,9 +3222,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -3190,7 +3234,9 @@
                 "phalanges",
                 "plantar"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none provided 2. relevant medical/surgical history: none provided 3. examinations and examination findings: none provided 4. medical diagnosis: none provided 5. drugs or medicines: none provided 6. laboratory tests or laboratory observations: none provided 7. imaging requests or results: none provided 8. doctor's treatment plan: none provided"
+              ]
             },
             "error": null,
             "warning": null
@@ -3199,9 +3245,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "All of them come, especially for land-ease, I slightly conquer one day in the area, plant-as-like period.",
-            "latency_seconds": 1.96,
+            "latency_seconds": 1.89,
             "audio_duration_seconds": 9.317,
-            "rtf": 0.2104,
+            "rtf": 0.2029,
             "wer": 0.7857,
             "cer": 0.5,
             "switch_point": {
@@ -3231,9 +3277,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "all of them commer especialy forlandges comer are slightly conkuerve on the imperior planterside period",
-            "latency_seconds": 6.77,
+            "latency_seconds": 3.17,
             "audio_duration_seconds": 9.317,
-            "rtf": 0.7266,
+            "rtf": 0.3402,
             "wer": 0.5714,
             "cer": 0.4302,
             "switch_point": {
@@ -3290,9 +3336,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "She was selected best young player awards in 2000 season",
-            "latency_seconds": 10.15,
+            "latency_seconds": 7.22,
             "audio_duration_seconds": 6.476,
-            "rtf": 1.5673,
+            "rtf": 1.1149,
             "wer": 0.0,
             "cer": 0.0,
             "switch_point": {
@@ -3301,16 +3347,18 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
               "slot_accuracy": null,
-              "entity_error_rate": null,
+              "entity_error_rate": 1.0,
               "missing_entities": [],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: none mentioned 2. relevant medical/surgical history: none discussed 3. examinations and examination findings: none 4. medical diagnosis: none 5. drugs or medicines: none 6. laboratory tests or laboratory observations: none 7. imaging requests or results: none 8. doctor's treatment plan: none"
+              ]
             },
             "error": null,
             "warning": null
@@ -3319,9 +3367,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "She was selected Best Young Player Awards in 2000 season. Full stop.",
-            "latency_seconds": 2.52,
+            "latency_seconds": 1.48,
             "audio_duration_seconds": 6.476,
-            "rtf": 0.3891,
+            "rtf": 0.2285,
             "wer": 0.2,
             "cer": 0.1786,
             "switch_point": {
@@ -3348,9 +3396,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "she was selected best yong player award en t 000 sizon for stop",
-            "latency_seconds": 4.97,
+            "latency_seconds": 5.95,
             "audio_duration_seconds": 6.476,
-            "rtf": 0.7674,
+            "rtf": 0.9188,
             "wer": 0.8,
             "cer": 0.2857,
             "switch_point": {
@@ -3404,9 +3452,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Management and primary hyperpyxin surgical removal of the parathyroids is created.",
-            "latency_seconds": 2.89,
+            "latency_seconds": 11.89,
             "audio_duration_seconds": 7.103,
-            "rtf": 0.4069,
+            "rtf": 1.6739,
             "wer": 0.3636,
             "cer": 0.2111,
             "switch_point": {
@@ -3415,9 +3463,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -3428,7 +3476,9 @@
                 "parathyroids",
                 "surgical removal"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: not specified in the conversation. 2. relevant medical/surgical history: primary hyperparathyroidism. 3. examinations and examination findings: not discussed. 4. medical diagnosis: primary hyperparathyroidism. 5. drugs or medicines: none mentioned. 6. laboratory tests or laboratory observations: none mentioned. 7. imaging requests or results: none mentioned. 8. doctor's treatment plan: surgical removal of the parathyroid glands."
+              ]
             },
             "error": null,
             "warning": null
@@ -3437,9 +3487,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "On it meant I'm primary hyperpilot deraising, so the car removal of the pirate words is great.",
-            "latency_seconds": 1.97,
+            "latency_seconds": 1.77,
             "audio_duration_seconds": 7.103,
-            "rtf": 0.2773,
+            "rtf": 0.2492,
             "wer": 1.0909,
             "cer": 0.4222,
             "switch_point": {
@@ -3470,9 +3520,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "management and primary hyperparoderizin togical remover of di paratorit iskree",
-            "latency_seconds": 5.33,
+            "latency_seconds": 2.68,
             "audio_duration_seconds": 7.103,
-            "rtf": 0.7504,
+            "rtf": 0.3773,
             "wer": 0.8182,
             "cer": 0.3444,
             "switch_point": {
@@ -3530,9 +3580,9 @@
             "model": "Intron Sahara",
             "kind": "commercial API (African-accent optimized)",
             "transcript": "Minor anaphylactic reactions, such as tachycaria can be treated with oral or intramuscular flav.",
-            "latency_seconds": 2.87,
+            "latency_seconds": 8.91,
             "audio_duration_seconds": 9.524,
-            "rtf": 0.3013,
+            "rtf": 0.9355,
             "wer": 0.1429,
             "cer": 0.181,
             "switch_point": {
@@ -3541,9 +3591,9 @@
               "windows": []
             },
             "agentic": {
-              "topic": "Undetermined — needs nurse assessment",
-              "urgency": "ROUTINE",
-              "suggested_department": "General Outpatient / Triage desk",
+              "topic": "Pregnancy / labour concern",
+              "urgency": "URGENT",
+              "suggested_department": "Obstetrics & Gynaecology / Maternity",
               "field_checks": {},
               "slot_checks": {},
               "intent_correct": null,
@@ -3554,7 +3604,9 @@
                 "urticaria",
                 "chlorpheniramine"
               ],
-              "spurious_entities": []
+              "spurious_entities": [
+                "medical clinical extraction: 1. patient complaints: minor anaphylactic reaction, tachycardia 2. relevant medical/surgical history: not discussed 3. examinations and examination findings: not discussed 4. medical diagnosis: minor anaphylactic reaction with tachycardia 5. drugs or medicines: oral or intramuscular flav (likely refers to an antihistamine or similar agent) 6. laboratory tests or laboratory observations: not discussed 7. imaging requests or results: not discussed 8. doctor's treatment plan: treat with oral or intramuscular flav"
+              ]
             },
             "error": null,
             "warning": null
@@ -3563,9 +3615,9 @@
             "model": "OpenAI Whisper",
             "kind": "open-source, local",
             "transcript": "Mino and a Philactic Russian such as Itish Korea can be treated with ORAO in Jamo School of Prokhe, Nira 9.",
-            "latency_seconds": 2.05,
+            "latency_seconds": 1.82,
             "audio_duration_seconds": 9.524,
-            "rtf": 0.2152,
+            "rtf": 0.1911,
             "wer": 1.0714,
             "cer": 0.3905,
             "switch_point": {
@@ -3596,9 +3648,9 @@
             "model": "Meta MMS",
             "kind": "open-source, local (mms-1b-all)",
             "transcript": "minor andafilatic ration sush as e tish karrie kan bi trited with ora or intramoskula profil neramaye",
-            "latency_seconds": 6.86,
+            "latency_seconds": 3.31,
             "audio_duration_seconds": 9.524,
-            "rtf": 0.7203,
+            "rtf": 0.3475,
             "wer": 0.9286,
             "cer": 0.3333,
             "switch_point": {
